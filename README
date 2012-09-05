@@ -1,0 +1,23 @@
+connectomusic
+--
+
+a graph-based neurally-inspired composition suite.
+
+working with historical images in augmented UI (digitize.py), we
+create digital graph representations from bitmap images. nodes are
+encoded with their x,y position and edges assume a cost equal to their
+spatial distance.
+
+a suite of samples are assigned to nodes based on the total outbound
+cost of its edges, and when a node ``fires,'' it both plays whatever
+sample is associated and releases (in time proportional to distance)
+neighboring nodes for attenuated triggering.
+
+to consider:
+
+ - accumulating a ``charge'' in nodes with a certain quantity needed
+   to fire;
+
+ - repeaters, amplifiers, inhibitors;
+
+ - performance v. composition
