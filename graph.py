@@ -26,6 +26,10 @@ class Graph:
     def node_edges(self, node):
         return self.nodes.get(node, [])
 
+    def all_node_edges(self, node):
+        # ... in both directions
+        return filter(lambda x: x.a == node or x.b == node, self.edges)
+
     def get_nodes(self):
         return self.nodes.keys()
 
@@ -40,6 +44,18 @@ class Graph:
         terrain = np.array([X.pt for X in nodes])
         dist = np.hypot(*(terrain - np.array([x,y])).T)
         return nodes[dist.argmin()]
+
+    def sub(self, oldnode, newnode, recompute_nodemap=True):
+        # Replace in all edges
+        edges = self.all_node_edges(oldnode)
+        for e in edges:
+            if e.a == oldnode:
+                e.a = newnode
+            else:
+                e.b = newnode
+        if recompute_nodemap:
+            # can opt out if doing a bunch of subs
+            self._compute_nodemap()
 
 class Edge:
     def __init__(self, a, b, cost=1):
@@ -67,6 +83,10 @@ class Node:
         else:
             self.frames = numm.sound2np(payload)
 
+class AmplifierNode(Node):
+    def __init__(self, pt):
+        self.pt = pt
+
 def load_graph(pkl, directed=True):
     import pickle
     edges = pickle.load(open(pkl))
@@ -81,7 +101,7 @@ def load_graph(pkl, directed=True):
                 ptToNode[N] = Node(N)
 
         if directed and len(filter(lambda x: x.b==ptToNode[a] and x.a==ptToNode[b], edgeObjs)) > 0:
-            print 'skipping the other direction'
+            # print 'skipping the other direction'
             continue
         cost = np.hypot(a[0]-b[0], a[1]-b[1])
         edgeObjs.append(Edge(ptToNode[a], ptToNode[b], cost))
@@ -90,6 +110,15 @@ def load_graph(pkl, directed=True):
 
 def _get_group(x):
     return int(os.path.basename(x).split('_')[0])
+
+
+def in_the_void(graph):
+    "Do something with those poor nodes lacking payload"
+    nodes = graph.get_nodes()
+    for node in nodes:
+        if node.payload is None:
+            graph.sub(node, AmplifierNode(node.pt), recompute_nodemap=False)
+    graph._compute_nodemap()
 
 def connect_to_samples(graph, files):
     # Sort files based on numerical basename before first `_.'
@@ -104,3 +133,5 @@ def connect_to_samples(graph, files):
     for idx,f in enumerate(files):
         node = nodes[int((idx / float(len(files))) * len(nodes))]
         node.set_payload(f, _get_group(f))
+
+    in_the_void(graph)

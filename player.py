@@ -38,7 +38,13 @@ class NodeState:
     def iterate(self, buf):
         "Mixes into buffer; returns True if finished with sound, False otherwise"
 
+        if isinstance(self.node, graph.AmplifierNode):
+            # print 'amplify'
+            self.vol = 1.0
+            return True
         if self.node.frames is None:
+            #import pdb; pdb.set_trace()
+            print 'fail!'
             return True
 
         nframes = min(len(self.node.frames) - self.frame, len(buf))
@@ -92,6 +98,15 @@ class Player:
 
     def trigger(self, node, vol=1.0):
         """Schedule playback & cascade of node at next time unit."""
+
+        # If node is already active, amplify
+        playing_node = filter(lambda x: x.node == node, self._state_nodes)
+        if len(playing_node) > 0:
+            playing_node = playing_node[0]
+            playing_node.vol = min(1.0, playing_node.vol + vol)
+            # print 'amp'
+            return
+
         self._state_nodes.append(NodeState(node, vol))
 
     def _get_base_frame(self):
@@ -104,6 +119,14 @@ class Player:
 
             for edge in self.graph.get_edges():
                 cv2.line(out, edge.a.pt, edge.b.pt, (0, 255, 0))
+
+            for node in nodes:
+                if isinstance(node, graph.AmplifierNode):
+                    cv2.circle(out, node.pt, 3, (255, 255, 255), -1)
+                elif node.frames is None:
+                    cv2.circle(out, node.pt, 3, (255, 0, 0), -1)
+                else:
+                    cv2.circle(out, node.pt, 3, (0, 255, 0), -1)
 
             self._baseframe = out
 
