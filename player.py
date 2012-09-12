@@ -165,9 +165,7 @@ if __name__=='__main__':
     #         p.trigger(n, 1.0)
 
     # Trigger *something*
-    for n in g.get_nodes()[50:70]:
-        if n.frames is not None:
-            p.trigger(n, 1.0)
+    p.trigger(g.get_nodes()[50], 1.0)
 
     out = []
     v_out = cv2.VideoWriter()
@@ -175,7 +173,7 @@ if __name__=='__main__':
     if not v_out.open('out.avi', cv2.cv.CV_FOURCC(*'MJPG'), int(R/2048), (fr.shape[1], fr.shape[0]), True):
         raise RuntimeError
 
-    while p.active():
+    while p.active() and len(out) < 21*60:
         v_out.write(p.draw())
         out.append(p.next())
 
