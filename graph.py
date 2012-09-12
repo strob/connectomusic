@@ -35,6 +35,12 @@ class Graph:
     def node_outbound_cost(self, node):
         return sum([E.cost for E in self.node_edges(node)])
 
+    def nearest(self, x, y):
+        nodes = self.get_nodes()
+        terrain = np.array([X.pt for X in nodes])
+        dist = np.hypot(*(terrain - np.array([x,y])).T)
+        return nodes[dist.argmin()]
+
 class Edge:
     def __init__(self, a, b, cost=1):
         self.a = a
@@ -61,7 +67,7 @@ class Node:
         else:
             self.frames = numm.sound2np(payload)
 
-def load_graph(pkl):
+def load_graph(pkl, directed=True):
     import pickle
     edges = pickle.load(open(pkl))
 
@@ -74,7 +80,7 @@ def load_graph(pkl):
             if N not in ptToNode:
                 ptToNode[N] = Node(N)
 
-        if len(filter(lambda x: x.b==ptToNode[a] and x.a==ptToNode[b], edgeObjs)) > 0:
+        if directed and len(filter(lambda x: x.b==ptToNode[a] and x.a==ptToNode[b], edgeObjs)) > 0:
             print 'skipping the other direction'
             continue
         cost = np.hypot(a[0]-b[0], a[1]-b[1])
