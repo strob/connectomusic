@@ -48,7 +48,11 @@ class NodeState:
 
         nframes = min(len(self.node.frames) - self.frame, len(buf))
 
-        buf[:nframes] = self.vol * self.node.frames[self.frame:self.frame+nframes]
+        pan = self.node.pt[0]  / 400.0
+        snd = (self.vol * self.node.frames[self.frame:self.frame+nframes])[:,0]
+
+        buf[:nframes,0] += snd * pan
+        buf[:nframes,1] += snd * (1-pan)
 
         self.frame += nframes
 
@@ -151,7 +155,7 @@ class Player:
         for nodestate in self._state_nodes:
             cv2.circle(out, nodestate.node.pt, 5, (255, 0, 0), -1)
 
-        status = "%d active (t=%d)" % (len(self._state_nodes), self._target)
+        status = "%02d active (t=%02d,d=%.2f,s=%d)" % (len(self._state_nodes), self._target, self._decay, self._speed)
         cv2.putText(out, status, (10, 20), cv2.FONT_HERSHEY_PLAIN, 1, (255,255,255))
 
         return out
