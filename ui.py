@@ -36,6 +36,14 @@ def video_out(a):
     im = cv2.resize(im, (320,240))
     a[:] = im
 
+def keyboard_in(type, key):
+    print type, key
+    if type=='key-press':
+        if key=='p':
+            p._target += 1
+        elif key=='n':
+            p._target -= 1
+
 if __name__=='__main__':
     import numm
     numm.run(**globals())

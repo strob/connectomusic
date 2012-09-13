@@ -39,12 +39,11 @@ class NodeState:
         "Mixes into buffer; returns True if finished with sound, False otherwise"
 
         if isinstance(self.node, graph.AmplifierNode):
-            # print 'amplify'
-            self.vol = 1.0
             return True
+
         if self.node.frames is None:
             #import pdb; pdb.set_trace()
-            print 'fail!'
+            #print 'fail!'
             return True
 
         nframes = min(len(self.node.frames) - self.frame, len(buf))
@@ -61,7 +60,7 @@ class NodeState:
 DECAY_CUTOFF = 0.05
 
 class Player:
-    def __init__(self, graph, speed=50, decay=0.95):
+    def __init__(self, graph, speed=50, decay=0.95, target_nnodes=10):
         self.graph = graph
 
         self._state_edges = []  # [EdgeState]
@@ -70,10 +69,12 @@ class Player:
         self._speed = speed     # px/sec
         self._decay = decay     # %/px
 
+        self._target = target_nnodes
+
     def next(self, buffer_size=2048):
         "Increment time unit and return sound buffer (as np-array)"
 
-        print '%d active edges' % (len(self._state_edges))
+        # print '%d active edges' % (len(self._state_edges))
         t = buffer_size / R
         for edgestate in self._state_edges:
             # print '    %d%% (%.2f)' % (edgestate.percentage * 100, edgestate.decay)
@@ -82,7 +83,7 @@ class Player:
                 self.trigger(edgestate.edge.b, vol=edgestate.decay)
 
         out = np.zeros((buffer_size, 2), dtype=np.int)
-        print '%d active nodes' % (len(self._state_nodes))
+        # print '%d active nodes' % (len(self._state_nodes))
         for nodestate in self._state_nodes:
             # print '    %.2f (%d)' % (nodestate.vol, nodestate.frame)
             if nodestate.iterate(out):
@@ -103,11 +104,19 @@ class Player:
         playing_node = filter(lambda x: x.node == node, self._state_nodes)
         if len(playing_node) > 0:
             playing_node = playing_node[0]
-            playing_node.vol = min(1.0, playing_node.vol + vol)
+            playing_node.vol = playing_node.vol + vol
             # print 'amp'
             return
 
+        # If node is an AmplifierNode, regulate
+        elif isinstance(node, graph.AmplifierNode):
+            # print 'amplify'
+            vol = max(0.0, vol + self.get_regulation())
+
         self._state_nodes.append(NodeState(node, vol))
+
+    def get_regulation(self):
+        return (self._target - len(self._state_nodes)) / 5.0
 
     def _get_base_frame(self):
         if not hasattr(self, '_baseframe'):
@@ -141,6 +150,9 @@ class Player:
             cv2.line(out, edgestate.edge.a.pt, edgestate.get_position(), (255, 0, 0))
         for nodestate in self._state_nodes:
             cv2.circle(out, nodestate.node.pt, 5, (255, 0, 0), -1)
+
+        status = "%d active (t=%d)" % (len(self._state_nodes), self._target)
+        cv2.putText(out, status, (10, 20), cv2.FONT_HERSHEY_PLAIN, 1, (255,255,255))
 
         return out
 
