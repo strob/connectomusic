@@ -15,9 +15,6 @@ neighboring nodes for attenuated triggering.
 
 to consider:
 
- - accumulating a ``charge'' in nodes with a certain quantity needed
-   to fire;
+ - connecting the four corners as a single point
 
- - repeaters, amplifiers, inhibitors;
-
- - performance v. composition
+ - left-channel/right-channel (simple+complex image?)
