@@ -1,4 +1,4 @@
-import xml
+import xml.dom.minidom
 import re
 
 class Node:
@@ -29,7 +29,10 @@ class Correction(Node):
             self.ty = 0
 
     def get_center(self):
-        return (self.node.cx+self.tx, self.node.cy+self.ty)
+        # the image is offset by (2,-3) in Inkscape
+        return (self.node.cx+self.tx-2, self.node.cy+self.ty+3)
+    def get_radius(self):
+        return self.node.rx
 
     @classmethod
     def fromlist(cls, transform, nodelist):
