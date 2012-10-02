@@ -1,6 +1,7 @@
 import numpy as np
 import os
 import numm
+import svgToGraph
 
 class Graph:
     def __init__(self, edges):
@@ -87,26 +88,24 @@ class AmplifierNode(Node):
     def __init__(self, pt):
         self.pt = pt
 
-def load_graph(pkl, directed=True):
-    import pickle
-    edges = pickle.load(open(pkl))
+def load_graph():
+    edges = svgToGraph.Graph('node_map.svg').getEdges()
 
-    ptToNode = {}
+    id_to_node = {}
+    def _intpt(pt):
+        return (int(pt[0]), int(pt[1]))
 
-    edgeObjs = []
+    def _node(X):
+        if X._id not in id_to_node:
+            id_to_node[X._id] = Node(_intpt(X.get_center()))
+        return id_to_node[X._id]
 
-    for a,b in edges:
-        for N in [a,b]:
-            if N not in ptToNode:
-                ptToNode[N] = Node(N)
+    edges = [Edge(_node(X[0]), _node(X[1]),
+                        cost=np.hypot(*(np.array(X[0].get_center())-X[1].get_center())))
+             for X in edges]
 
-        if directed and len(filter(lambda x: x.b==ptToNode[a] and x.a==ptToNode[b], edgeObjs)) > 0:
-            # print 'skipping the other direction'
-            continue
-        cost = np.hypot(a[0]-b[0], a[1]-b[1])
-        edgeObjs.append(Edge(ptToNode[a], ptToNode[b], cost))
+    return Graph(edges)
 
-    return Graph(edgeObjs)
 
 def _get_group(x):
     return int(os.path.basename(x).split('_')[0])

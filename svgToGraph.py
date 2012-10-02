@@ -1,5 +1,6 @@
 import xml.dom.minidom
 import re
+import pickle
 
 class Node:
     def __init__(self, el):
@@ -51,3 +52,13 @@ class Graph:
         self.left_nodes = [Node(X) for X in self.layers['Dots'].getElementsByTagName('path')]
         self.right_nodes = [Node(X) for X in self.layers['Right_Dots'].getElementsByTagName('path')] + \
                            [Correction.fromlist(X, self.left_nodes) for X in self.layers['Right_Adjustments'].getElementsByTagName('use')]
+
+    def getEdges(self):
+        _edges = set()
+        for _n1,_n2 in pickle.load(open('ALL_EDGES.pkl')):
+            n1 = filter(lambda x: x._id == _n1._id, self.right_nodes)[0]
+            n2 = filter(lambda x: x._id == _n2._id, self.right_nodes)[0]
+
+            # update to latest object ...
+            _edges.add((n1,n2))
+        return _edges

@@ -30,7 +30,7 @@ view = MView(scene)
 right = QtGui.QPixmap('right_aligned.png')
 scene.addPixmap(right)
 
-EDGES = pickle.load(open('ALL_EDGES.pkl'))
+EDGES = graph.getEdges()
 def saveEdges():
     pickle.dump(EDGES, open('ALL_EDGES.pkl', 'w'))
 def addEdge(node1, node2):
@@ -103,16 +103,9 @@ class QGEdge(QtGui.QGraphicsLineItem):
         self.setLine(x1, y1, x2, y2)
 
 _EDGES = set()
-for _n1,_n2 in EDGES:
-    n1 = filter(lambda x: x._id == _n1._id, graph.right_nodes)[0]
-    n2 = filter(lambda x: x._id == _n2._id, graph.right_nodes)[0]
-
-    # update to latest object ...
-    _EDGES.add((n1,n2))
-
+for n1,n2 in EDGES:
     qe = QGEdge(n1, n2)
     scene.addItem(qe)
-EDGES = _EDGES
 
 class QGNode(QtGui.QGraphicsEllipseItem):
     def __init__(self, node):
