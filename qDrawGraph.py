@@ -13,8 +13,16 @@ graph = Graph('node_map.svg')
 app = QtGui.QApplication(sys.argv)
 app.setApplicationName('connectomusic')
 
+class MView(QtGui.QGraphicsView):
+    def wheelEvent(self, event):
+        factor = 1.2
+        if (event.delta() < 0):
+            factor = 1.0 / factor
+        self.scale(factor, factor)
+
 scene = QtGui.QGraphicsScene()
-view = QtGui.QGraphicsView(scene)
+#view = QtGui.QGraphicsView(scene)
+view = MView(scene)
 
 # left = QtGui.QPixmap('linke_seite.png')
 # scene.addPixmap(left)
