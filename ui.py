@@ -3,18 +3,42 @@ import sys
 import numpy as np
 
 import graph
+import pickle
 from player import Player
 
-USAGE = 'python ui.py EDGES SOUND [SOUND [SOUND ...]]'
+USAGE = 'python ui.py (left|right) EDGES SOUND [SOUND [SOUND ...]]'
 
 if len(sys.argv) < 3:
     print USAGE
     sys.exit(1)
 
-g = graph.load_graph(sys.argv[1], directed=True)
+new_edges = pickle.load(open("ALL_EDGES.pkl"))
+
+if sys.argv[1] == 'left':
+    # XXX: Prune to left_nodes
+    pass
+elif sys.argv[1] != 'right':
+    print USAGE
+    sys.exit(1)
+
+id_to_node = {}
+def _intpt(pt):
+    return (int(pt[0]), int(pt[1]))
+
+def _node(X):
+    if X._id not in id_to_node:
+        id_to_node[X._id] = graph.Node(_intpt(X.get_center()))
+    return id_to_node[X._id]
+
+edges = [graph.Edge(_node(X[0]), _node(X[1]),
+                    cost=np.hypot(*(np.array(X[0].get_center())-X[1].get_center())))
+         for X in new_edges]
+g = graph.Graph(edges)
+
+#g = graph.load_graph(sys.argv[1], directed=True)
 graph.connect_to_samples(g, sys.argv[2:])
 
-p = Player(g, speed=50)
+p = Player(g, speed=150, decay=0.98)
 
 H,W,_depth = p.draw().shape
 divisor = 1
@@ -56,6 +80,7 @@ def video_out(a):
         rec_video.write(im)
 
     im = cv2.resize(im, (320,240))
+    # im = im[:240,:320]
     a[:] = im
 
 def keyboard_in(type, key):
@@ -91,46 +116,3 @@ def keyboard_in(type, key):
 if __name__=='__main__':
     import numm
     numm.run(**globals())
-
-# def key_press(k):
-#     print 'key', k
-# def mouse_event(ev, x, y, button, flags):
-#     if ev == cv2.EVENT_LBUTTONDOWN:
-#         print 'click', x, y
-#         nearest = g.nearest(x, y)
-#         p.trigger(nearest, 1.0)
-
-# cv2.namedWindow("CONNECTOMUSIC")
-# cv2.setMouseCallback("CONNECTOMUSIC", mouse_event)
-
-# import pyaudio
-# audio = pyaudio.PyAudio()
-# stream = audio.open(format = pyaudio.paInt16,
-#                 channels = 2,
-#                 rate = 44100,
-#                 output = True)
-
-# while 1:
-#     cv2.imshow("CONNECTOMUSIC", p.draw())
-
-#     out = p.next(44100/10)
-#     print out.shape, out.min(), out.max()
-#     if out.max() > 0:
-#         out /= out.max() / float(2**15-1)
-#     else:
-#         print 'zero'
-#     print out.shape, out.min(), out.max()
-    
-#     stream.write(out.astype(np.int16).tostring())
-
-#     ch = cv2.waitKey(30)
-#     if ch == 27:                # quit
-#         break
-#     elif ch > -1 and ch < 256:
-#         key_press(chr(ch))
-
-# cv2.destroyAllWindows()
-# stream.stop_stream()
-# stream.close()
-# audio.terminate()
-
