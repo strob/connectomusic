@@ -73,6 +73,8 @@ class QGEdge(QtGui.QGraphicsLineItem):
 
         self.setPen(pen)
 
+        self.setZValue(5)
+
     def hoverEnterEvent(self, event):
         pen = self.pen()
         pen.setColor(QtCore.Qt.red)
@@ -113,6 +115,8 @@ class QGNode(QtGui.QGraphicsEllipseItem):
         QtGui.QGraphicsEllipseItem.__init__(self, x-r, y-r, 2*r, 2*r)
         self.setBrush(QtCore.Qt.green)
         self.setAcceptHoverEvents(True)
+
+        self.setZValue(10)
 
     def hoverEnterEvent(self, event):
         self.setBrush(QtCore.Qt.yellow)
