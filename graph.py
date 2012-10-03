@@ -38,7 +38,8 @@ class Graph:
         return self.edges
 
     def node_outbound_cost(self, node):
-        return sum([E.cost for E in self.node_edges(node)])
+        return len(self.node_edges(node))
+        #return sum([E.cost for E in self.node_edges(node)])
 
     def nearest(self, x, y):
         nodes = self.get_nodes()
