@@ -4,6 +4,7 @@ import numpy as np
 import cv2
 
 R = 44100.0
+MAX_VOL = 1.5
 
 class EdgeState:
     def __init__(self, edge, decay=1.0):
@@ -94,8 +95,12 @@ class Player:
             if nodestate.iterate(out):
                 self._state_nodes.pop(self._state_nodes.index(nodestate))
                 if nodestate.vol >= DECAY_CUTOFF:
-                    self._state_edges.extend(
-                        [EdgeState(X, nodestate.vol) for X in self.graph.node_edges(nodestate.node)])
+                    for target_edge in self.graph.node_edges(nodestate.node):
+                        active_edges = filter(lambda x: x.edge == target_edge, self._state_edges)
+                        if len(active_edges) > 0:
+                            active_edges[0].decay = min(MAX_VOL, active_edges[0].decay + nodestate.vol)
+                        else:
+                            self._state_edges.append(EdgeState(target_edge, nodestate.vol))
 
         return out
 
@@ -109,7 +114,7 @@ class Player:
         playing_node = filter(lambda x: x.node == node, self._state_nodes)
         if len(playing_node) > 0:
             playing_node = playing_node[0]
-            playing_node.vol = playing_node.vol + vol
+            playing_node.vol = min(MAX_VOL, playing_node.vol + vol)
             # print 'amp'
             return
 
