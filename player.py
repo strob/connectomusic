@@ -132,15 +132,14 @@ class Player:
             out = np.zeros((h,w,3), dtype=np.uint8)
 
             for edge in self.graph.get_edges():
-                cv2.line(out, edge.a.pt, edge.b.pt, (0, 255, 0))
+                cv2.line(out, edge.a.pt, edge.b.pt, (100, 100, 100))
 
             for node in nodes:
                 if isinstance(node, graph.AmplifierNode):
-                    cv2.circle(out, node.pt, 3, (255, 255, 255), -1)
-                elif node.frames is None:
-                    cv2.circle(out, node.pt, 3, (255, 0, 0), -1)
+                    cv2.circle(out, node.pt, 3, (50, 50, 50), -1)
                 else:
-                    cv2.circle(out, node.pt, 3, (0, 255, 0), -1)
+                    cv2.circle(out, node.pt, 3, (200, 200, 200), -1)
+                    # cv2.putText(out, "%d" % (node.group), node.pt, cv2.FONT_HERSHEY_PLAIN, 1, (255,255,255))
 
             self._baseframe = out
 
@@ -152,9 +151,9 @@ class Player:
         out = self._get_base_frame().copy()
 
         for edgestate in self._state_edges:
-            cv2.line(out, edgestate.edge.a.pt, edgestate.get_position(), (255, 0, 0))
+            cv2.line(out, edgestate.edge.a.pt, edgestate.get_position(), (0, 255, 255))
         for nodestate in self._state_nodes:
-            cv2.circle(out, nodestate.node.pt, 5, (255, 0, 0), -1)
+            cv2.circle(out, nodestate.node.pt, 5, (0, 255, 255), -1)
 
         status = "%02d active (t=%02d,d=%.2f,s=%d)" % (len(self._state_nodes), self._target, self._decay, self._speed)
         cv2.putText(out, status, (10, 20), cv2.FONT_HERSHEY_PLAIN, 1, (255,255,255))
