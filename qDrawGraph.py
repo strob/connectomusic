@@ -128,7 +128,6 @@ class QGNode(QtGui.QGraphicsEllipseItem):
         self.setBrush(QtCore.Qt.red)
 
         pos = event.scenePos()
-        print pos
 
         self.nearest_node = nearest_node(self.node, pos.x(), pos.y())
         print 'nn', self.node, self.nearest_node

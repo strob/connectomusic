@@ -12,6 +12,8 @@ class Node:
         return (self.cx, self.cy)
     def get_radius(self):
         return self.rx
+    def get_id(self):
+        return self._id
 
     def __repr__(self):
         return '<node: (%.2f,%.2f) r=%.2f>' % (self.get_center()[0], self.get_center()[1], self.get_radius())
@@ -34,6 +36,9 @@ class Correction(Node):
         return (self.node.cx+self.tx-2, self.node.cy+self.ty+3)
     def get_radius(self):
         return self.node.rx
+    def get_id(self):
+        return self.node._id
+
 
     @classmethod
     def fromlist(cls, transform, nodelist):
@@ -62,3 +67,15 @@ class Graph:
             # update to latest object ...
             _edges.add((n1,n2))
         return _edges
+
+    def getLeftEdges(self):
+        _edges = set()
+        for _n1,_n2 in pickle.load(open('ALL_EDGES.pkl')):
+            
+            n1s = filter(lambda x: x._id == _n1.get_id(), self.left_nodes)
+            n2s = filter(lambda x: x._id == _n2.get_id(), self.left_nodes)
+
+            if len(n1s)>0 and len(n2s)>0:
+                _edges.add((n1s[0],n2s[0]))
+        return _edges
+        
