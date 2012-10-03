@@ -48,11 +48,12 @@ class NodeState:
 
         nframes = min(len(self.node.frames) - self.frame, len(buf))
 
-        pan = self.node.pt[0]  / 400.0
+        #pan = self.node.pt[0]  / 400.0
+        pan = self.node.pt[0]  / 1250.0
         snd = (self.vol * self.node.frames[self.frame:self.frame+nframes])[:,0]
 
-        buf[:nframes,0] += snd * pan
-        buf[:nframes,1] += snd * (1-pan)
+        buf[:nframes,1] += snd * pan
+        buf[:nframes,0] += snd * (1-pan)
 
         self.frame += nframes
 
