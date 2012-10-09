@@ -38,7 +38,7 @@ class QView(QtGui.QGraphicsView):
 
         QtGui.QGraphicsView.__init__(self, scene)
 
-        self.startTimer(100)
+        self.startTimer(200)
 
     def keyPressEvent(self, event):
         print event.text()
@@ -56,8 +56,6 @@ class QView(QtGui.QGraphicsView):
             p._speed *= 1.1
         if event.key() == QtCore.Qt.Key_W:
             p._speed *= 0.9
-
-
 
     def timerEvent(self, ev):
         self.qplay.update()

@@ -89,10 +89,7 @@ class Player:
                 self.trigger(edgestate.edge.b, vol=edgestate.decay)
 
                 # destroy edge
-                if edgestate.edge in self.graph.edges:
-                    self.destroy_edge(edgestate.edge)
-                else:
-                    print 'edge already removed (?)', edgestate.edge
+                self.destroy_edge(edgestate.edge)
 
         out = np.zeros((buffer_size, 2), dtype=np.int)
         # print '%d active nodes' % (len(self._state_nodes))
