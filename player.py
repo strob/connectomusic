@@ -88,6 +88,12 @@ class Player:
                 self._state_edges.pop(self._state_edges.index(edgestate))
                 self.trigger(edgestate.edge.b, vol=edgestate.decay)
 
+                # destroy edge
+                if edgestate.edge in self.graph.edges:
+                    self.destroy_edge(edgestate.edge)
+                else:
+                    print 'edge already removed (?)', edgestate.edge
+
         out = np.zeros((buffer_size, 2), dtype=np.int)
         # print '%d active nodes' % (len(self._state_nodes))
         for nodestate in self._state_nodes:
@@ -127,6 +133,12 @@ class Player:
 
     def get_regulation(self):
         return (self._target - len(self._state_nodes)) / 5.0
+
+    def destroy_edge(self, edge):
+        self.graph.remove_edge(edge, biremoval=True)
+        # Update base frame, if it exists
+        base = self._get_base_frame()
+        cv2.line(base, edge.a.pt, edge.b.pt, (200, 0, 0))
 
     def _get_base_frame(self):
         if not hasattr(self, '_baseframe'):

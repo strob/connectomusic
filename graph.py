@@ -37,6 +37,21 @@ class Graph:
     def get_edges(self):
         return self.edges
 
+    def _remove_edge_effects(self, edge):
+        # Remove all mentions from nodemap
+        for node,edges in self.nodes.items():
+            self.nodes[node] = filter(lambda x: x != edge, edges)
+
+    def remove_edge(self, edge, biremoval=False):
+        self.edges.remove(edge)
+        self._remove_edge_effects(edge)
+        if biremoval:
+            for e in self.edges:
+                if e.a == edge.b and e.b == edge.a:
+                    self.edges.remove(e)
+                    self._remove_edge_effects(e)
+                    break
+
     def node_outbound_cost(self, node):
         return len(self.node_edges(node))
         #return sum([E.cost for E in self.node_edges(node)])
@@ -104,9 +119,13 @@ def load_graph(left=False):
             id_to_node[X._id] = Node(_intpt(X.get_center()))
         return id_to_node[X._id]
 
+    # (don't) make all edges bi-directional
     edges = [Edge(_node(X[0]), _node(X[1]),
                         cost=np.hypot(*(np.array(X[0].get_center())-X[1].get_center())))
-             for X in edges]
+             for X in edges]#  + \
+                 # [Edge(_node(X[1]), _node(X[0]),
+                 #       cost=np.hypot(*(np.array(X[0].get_center())-X[1].get_center())))
+                  # for X in edges]
 
     return Graph(edges)
 
