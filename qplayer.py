@@ -57,8 +57,6 @@ class QView(QtGui.QGraphicsView):
         if event.key() == QtCore.Qt.Key_W:
             p._speed *= 0.9
 
-
-
     def timerEvent(self, ev):
         self.qplay.update()
         QtGui.QGraphicsView.timerEvent(self, ev)
@@ -67,11 +65,13 @@ if __name__=='__main__':
     app = QtGui.QApplication(sys.argv)
     app.setApplicationName('qplayer')
 
+    print 'load graph'
     g = graph.load_graph(sys.argv[1]=='left')
+    print 'connect to samples'
     graph.connect_to_samples(g, sys.argv[2:])
 
+    print 'qview'
     p = Player(g)
-
     view = QView(p)
 
     view.show()

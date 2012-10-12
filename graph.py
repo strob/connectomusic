@@ -83,7 +83,8 @@ class Node:
         if self.payload is None:
             self.frames = None
         else:
-            self.frames = numm.sound2np(payload)
+            #self.frames = numm.sound2np(payload)
+            self.frames = np.load(payload)
 
 class AmplifierNode(Node):
     def __init__(self, pt):

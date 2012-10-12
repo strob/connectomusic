@@ -51,7 +51,7 @@ class NodeState:
 
         #pan = self.node.pt[0]  / 400.0
         pan = self.node.pt[0]  / 1250.0
-        snd = (self.vol * self.node.frames[self.frame:self.frame+nframes])[:,0]
+        snd = (self.vol * self.node.frames[self.frame:self.frame+nframes])
 
         buf[:nframes,1] += snd * pan
         buf[:nframes,0] += snd * (1-pan)
