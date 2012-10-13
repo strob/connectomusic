@@ -149,6 +149,7 @@ def in_the_void(graph):
     graph._compute_nodemap()
 
 def connect_to_samples(graph, files):
+    print '>sorting'
     # Sort files based on numerical basename before first `_.'
     files.sort(key=_get_group)
 
@@ -158,8 +159,10 @@ def connect_to_samples(graph, files):
 
     assert len(nodes) >= len(files), "More sounds than nodes!"
 
+    print '>loading'
     for idx,f in enumerate(files):
         node = nodes[int((idx / float(len(files))) * len(nodes))]
         node.set_payload(f, _get_group(f))
 
+    print '>amplifier nodes'
     in_the_void(graph)

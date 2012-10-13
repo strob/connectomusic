@@ -11,19 +11,52 @@ from player import Player
 import midi
 import graph
 
+class QEdge(QtGui.QGraphicsLineItem):
+    def __init__(self, edge):
+        self.edge = edge
+        x1,y1 = edge.a.pt
+        x2,y2 = edge.b.pt
+        QtGui.QGraphicsLineItem.__init__(self, x1, y1, x2, y2)
+        # self.setAcceptHoverEvents(True)
+        pen = QtGui.QPen()
+        pen.setColor(QtCore.Qt.yellow)
+        pen.setWidth(3)
+        self.setPen(pen)
+        self.setZValue(5)
 
-class QPlayer(QtGui.QGraphicsPixmapItem):
+class QNode(QtGui.QGraphicsEllipseItem):
+    def __init__(self, node):
+        self.node = node
+        x,y = node.pt
+        r = 5
+        QtGui.QGraphicsEllipseItem.__init__(self, x-r, y-r, 2*r, 2*r)
+        if isinstance(node, graph.AmplifierNode):
+            self.setBrush(QtCore.Qt.green)
+        else:
+            self.setBrush(QtCore.Qt.red)            
+        # self.setAcceptHoverEvents(True)
+        self.setZValue(10)
+
+class QPlayer(QtGui.QGraphicsScene):
     def __init__(self, player):
         self.player = player
-        QtGui.QGraphicsPixmapItem.__init__(self)
-        self.update()
+        QtGui.QGraphicsScene.__init__(self)
+        self.base()
+
+    def base(self):
+            for edge in self.player.graph.get_edges():
+                self.addItem(QEdge(edge))
+
+            for node in self.player.graph.get_nodes():
+                self.addItem(QNode(node))
 
     def update(self):
-        # XXX: avoid passing through disk/png!
-        t = tempfile.NamedTemporaryFile(suffix='.png')
-        Image.fromarray(self.player.draw()).save(t.name)
-        self.setPixmap(QtGui.QPixmap(t.name))
-        t.close()
+        pass
+        # # XXX: avoid passing through disk/png!
+        # t = tempfile.NamedTemporaryFile(suffix='.png')
+        # Image.fromarray(self.player.draw()).save(t.name)
+        # self.setPixmap(QtGui.QPixmap(t.name))
+        # t.close()
 
     def mousePressEvent(self, event):
         print 'press'
@@ -34,10 +67,10 @@ class QPlayer(QtGui.QGraphicsPixmapItem):
 class QView(QtGui.QGraphicsView):
     def __init__(self, player):
         self.qplay = QPlayer(p)
-        scene = QtGui.QGraphicsScene()
-        scene.addItem(self.qplay)
+        # scene = QtGui.QGraphicsScene()
+        # scene.addItem(self.qplay)
 
-        QtGui.QGraphicsView.__init__(self, scene)
+        QtGui.QGraphicsView.__init__(self, self.qplay)
 
         self.startTimer(200)
 
