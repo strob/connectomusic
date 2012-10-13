@@ -7,10 +7,11 @@ R = 44100.0
 MAX_VOL = 1.5
 
 class EdgeState:
-    def __init__(self, edge, decay=1.0):
+    def __init__(self, edge, decay=1.0, onend=None):
         self.edge = edge
         self.decay = decay
         self.percentage = 0.0
+        self.onend = onend
 
     def iterate(self, t, speed, decay):
         "Returns True if we've reached B, False otherwise"
@@ -22,6 +23,8 @@ class EdgeState:
         self.decay *= decay ** npixels
 
         if self.percentage > 1.0:
+            if self.onend:
+                self.onend(self)
             return True
 
         return False
@@ -31,20 +34,21 @@ class EdgeState:
                       for X in [0, 1]])
 
 class NodeState:
-    def __init__(self, node, vol=1.0):
+    def __init__(self, node, vol=1.0, onend=None):
         self.node = node
         self.vol = vol
         self.frame = 0
+        self.onend = onend
 
     def iterate(self, buf):
         "Mixes into buffer; returns True if finished with sound, False otherwise"
 
         if isinstance(self.node, graph.AmplifierNode):
+            if self.onend:
+                self.onend(self)
             return True
 
         if self.node.frames is None:
-            #import pdb; pdb.set_trace()
-            #print 'fail!'
             return True
 
         nframes = min(len(self.node.frames) - self.frame, len(buf))
@@ -59,6 +63,8 @@ class NodeState:
         self.frame += nframes
 
         if self.frame == len(self.node.frames):
+            if self.onend:
+                self.onend(self)
             return True
 
         return False

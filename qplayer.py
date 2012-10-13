@@ -25,9 +25,10 @@ class QEdge(QtGui.QGraphicsLineItem):
         self.setZValue(5)
 
 class QStateEdge(QtGui.QGraphicsLineItem):
-    def __init__(self, a, pt):
-        x1,y1 = a.pt
-        x2,y2 = pt
+    def __init__(self, state):
+        self.state = state
+        x1,y1 = state.edge.a.pt
+        x2,y2 = state.get_position()
         QtGui.QGraphicsLineItem.__init__(self, x1, y1, x2, y2)
         # self.setAcceptHoverEvents(True)
         pen = QtGui.QPen()
@@ -35,6 +36,10 @@ class QStateEdge(QtGui.QGraphicsLineItem):
         pen.setWidth(3)
         self.setPen(pen)
         self.setZValue(7)
+    def update(self):
+        x1,y1 = self.state.edge.a.pt
+        x2,y2 = self.state.get_position()
+        self.setLine(x1,y1,x2,y2)
 
 class QNode(QtGui.QGraphicsEllipseItem):
     def __init__(self, node):
@@ -50,9 +55,9 @@ class QNode(QtGui.QGraphicsEllipseItem):
         self.setZValue(10)
 
 class QStateNode(QtGui.QGraphicsEllipseItem):
-    def __init__(self, node):
-        self.node = node
-        x,y = node.pt
+    def __init__(self, state):
+        self.state = state
+        x,y = state.node.pt
         r = 7
         QtGui.QGraphicsEllipseItem.__init__(self, x-r, y-r, 2*r, 2*r)
         self.setBrush(QtCore.Qt.red)
@@ -63,7 +68,8 @@ class QPlayer(QtGui.QGraphicsScene):
         self.player = player
         QtGui.QGraphicsScene.__init__(self)
         self.base()
-        self._stately = []
+        self._stately = {}
+        self._remove = []
 
     def base(self):
             for edge in self.player.graph.get_edges():
@@ -72,19 +78,26 @@ class QPlayer(QtGui.QGraphicsScene):
             for node in self.player.graph.get_nodes():
                 self.addItem(QNode(node))
 
-    def update(self):
-        for item in self._stately:
-            self.removeItem(item)
-        self._stately = []
+    def remove(self, stately):
+        self._remove.append(self._stately[stately])
+        del self._stately[stately]
 
+    def update(self):
+        while len(self._remove):
+            self.removeItem(self._remove.pop())
+            
         for edgestate in self.player._state_edges:
-            edge = QStateEdge(edgestate.edge.a, edgestate.get_position())
-            self._stately.append(edge)
-            self.addItem(edge)
+            if edgestate not in self._stately:
+                self._stately[edgestate] = QStateEdge(edgestate)
+                self.addItem(self._stately[edgestate])
+                edgestate.onend = self.remove
+            self._stately[edgestate].update()
+
         for nodestate in self.player._state_nodes:
-            node = QStateNode(nodestate.node)
-            self._stately.append(node)
-            self.addItem(node)
+            if nodestate not in self._stately:
+                self._stately[nodestate] = QStateNode(nodestate)
+                self.addItem(self._stately[nodestate])
+                nodestate.onend = self.remove
 
         # # XXX: avoid passing through disk/png!
         # t = tempfile.NamedTemporaryFile(suffix='.png')
