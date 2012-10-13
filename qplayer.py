@@ -75,17 +75,21 @@ class QPlayer(QtGui.QGraphicsScene):
 
         self.setBackgroundBrush(_gray(0))
 
-
         self.base()
         self._stately = {}
         self._remove = []
 
     def base(self):
-            for edge in self.player.graph.get_edges():
-                self.addItem(QEdge(edge))
+        self.text = QtGui.QGraphicsSimpleTextItem(self.player.get_status())
+        self.text.setPos(10, 10)
+        self.text.setBrush(_gray(255))
+        self.addItem(self.text)
 
-            for node in self.player.graph.get_nodes():
-                self.addItem(QNode(node))
+        for edge in self.player.graph.get_edges():
+            self.addItem(QEdge(edge))
+
+        for node in self.player.graph.get_nodes():
+            self.addItem(QNode(node))
 
     def remove(self, stately):
         self._remove.append(self._stately[stately])
@@ -108,11 +112,7 @@ class QPlayer(QtGui.QGraphicsScene):
                 self.addItem(self._stately[nodestate])
                 nodestate.onend = self.remove
 
-        # # XXX: avoid passing through disk/png!
-        # t = tempfile.NamedTemporaryFile(suffix='.png')
-        # Image.fromarray(self.player.draw()).save(t.name)
-        # self.setPixmap(QtGui.QPixmap(t.name))
-        # t.close()
+        self.text.setText(self.player.get_status())
 
     def mousePressEvent(self, event):
         print 'press'

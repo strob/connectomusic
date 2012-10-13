@@ -178,10 +178,13 @@ class Player:
         for nodestate in self._state_nodes:
             cv2.circle(out, nodestate.node.pt, 5, (0, 255, 255), -1)
 
-        status = "%02d active (t=%02d,d=%.2f,s=%d)" % (len(self._state_nodes), self._target, self._decay, self._speed)
+        status = self.get_status()
         cv2.putText(out, status, (10, 20), cv2.FONT_HERSHEY_PLAIN, 1, (255,255,255))
 
         return out
+
+    def get_status(self):
+        return "%02d active (t=%02d,d=%.2f,s=%d)" % (len(self._state_nodes), self._target, self._decay, self._speed)
 
 if __name__=='__main__':
     import sys
