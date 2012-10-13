@@ -29,6 +29,23 @@ class QEdge(QtGui.QGraphicsLineItem):
         self.setPen(pen)
         self.setZValue(5)
 
+        # Express directionality with a sub-circle
+        self.dircirc = QtGui.QGraphicsEllipseItem()
+        self.dircirc.setBrush(_gray(255))
+        self.dircirc.setParentItem(self)
+        self.update()
+
+    def update(self):
+        x1,y1 = self.edge.a.pt
+        x2,y2 = self.edge.b.pt
+
+        ratio = self.edge.a.nedges / np.hypot(x2-x1, y2-y1)
+        cx = x1 + ratio*(x2-x1)
+        cy = y1 + ratio*(y2-y1)
+        r = 3
+        self.dircirc.setRect(cx-r,cy-r,2*r,2*r)
+        
+
 class QStateEdge(QtGui.QGraphicsLineItem):
     def __init__(self, state):
         self.state = state
@@ -101,14 +118,18 @@ class QPlayer(QtGui.QGraphicsScene):
         self._stately = {}
         self._remove = []
 
+
     def base(self):
         self.text = QtGui.QGraphicsSimpleTextItem(self.player.get_status())
         self.text.setPos(10, 10)
         self.text.setBrush(_gray(255))
         self.addItem(self.text)
+        self.qedges = []
 
         for edge in self.player.graph.get_edges():
-            self.addItem(QEdge(edge))
+            qedge = QEdge(edge)
+            self.qedges.append(qedge)
+            self.addItem(qedge)
 
         for node in self.player.graph.get_nodes():
             self.addItem(QNode(node))
@@ -161,6 +182,8 @@ class QView(QtGui.QGraphicsView):
             # Flip all edges
             print 'flip'
             p.flip()
+            for qe in self.qplay.qedges:
+                qe.update()
 
         if event.key() == QtCore.Qt.Key_P:
             p._target -= 1
