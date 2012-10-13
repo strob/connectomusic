@@ -55,7 +55,10 @@ class QNode(QtGui.QGraphicsEllipseItem):
         if isinstance(node, graph.AmplifierNode):
             self.setBrush(_gray())
         else:
-            self.setBrush(_gray(255))
+            if node.isloop:
+                self.setBrush(_rgb(0,0,255))
+            else:
+                self.setBrush(_gray(255))
 
             self.txt = QtGui.QGraphicsSimpleTextItem(str(node.group))
             self.txt.setBrush(_gray())
@@ -72,11 +75,14 @@ class QStateNode(QtGui.QGraphicsEllipseItem):
         x,y = state.node.pt
         r = int(max(3,state.node.nedges) * 1.5)
         QtGui.QGraphicsEllipseItem.__init__(self, x-r, y-r, 2*r, 2*r)
-        self.setBrush(_rgb(255,0,0))
+        if state.node.isloop:
+            self.setBrush(_rgb(0,255,255))
+        else:
+            self.setBrush(_rgb(255,0,0))
         self.setZValue(15)
     def update(self):
         state = self.state
-        if not hasattr(state.node, 'frames'):
+        if not hasattr(state.node, 'frames') or state.node.frames is None:
             return
 
         x,y = state.node.pt

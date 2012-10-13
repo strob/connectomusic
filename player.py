@@ -34,10 +34,10 @@ class EdgeState:
                       for X in [0, 1]])
 
 class NodeState:
-    def __init__(self, node, vol=1.0, onend=None):
+    def __init__(self, node, vol=1.0, frame=0, onend=None):
         self.node = node
         self.vol = vol
-        self.frame = 0
+        self.frame = frame
         self.onend = onend
 
     def iterate(self, buf):
@@ -52,18 +52,24 @@ class NodeState:
             return True
 
         nframes = min(len(self.node.frames) - self.frame, len(buf))
+        if(self.node.isloop):
+            nframes = len(buf)
 
         #pan = self.node.pt[0]  / 400.0
         pan = self.node.pt[0]  / 1250.0
         #snd = (self.vol * self.node.frames[self.frame:self.frame+nframes])
-        snd = self.node.frames[self.frame:self.frame+nframes]
+        if self.node.isloop and nframes > len(self.node.frames)-self.frame:
+            # Assume nframes < len(self.node.frames) -- beware tiny loops.
+            snd = np.roll(self.node.frames, -self.frame, axis=0)[:nframes]
+        else:
+            snd = self.node.frames[self.frame:self.frame+nframes]
 
         buf[:nframes,1] += snd * pan
         buf[:nframes,0] += snd * (1-pan)
 
         self.frame += nframes
 
-        if self.frame == len(self.node.frames):
+        if self.frame >= len(self.node.frames):
             if self.onend:
                 self.onend(self)
             return True
@@ -106,21 +112,26 @@ class Player:
         for nodestate in self._state_nodes:
             # print '    %.2f (%d)' % (nodestate.vol, nodestate.frame)
             if nodestate.iterate(out):
+                # Use looping nodes as regulators; pop only when regulation is negative.
                 self._state_nodes.pop(self._state_nodes.index(nodestate))
-                if True:#nodestate.vol >= DECAY_CUTOFF:
-                    for target_edge in self.graph.node_edges(nodestate.node):
-                        active_edges = filter(lambda x: x.edge == target_edge, self._state_edges)
-                        if len(active_edges) > 0:
-                            active_edges[0].decay = min(MAX_VOL, active_edges[0].decay + nodestate.vol)
-                        else:
-                            self._state_edges.append(EdgeState(target_edge, nodestate.vol))
+
+                if nodestate.node.isloop and self.get_regulation() > 0:
+                    # smoothly retrigger
+                    self.trigger(nodestate.node, frame=(nodestate.frame % len(nodestate.node.frames)))
+
+                for target_edge in self.graph.node_edges(nodestate.node):
+                    active_edges = filter(lambda x: x.edge == target_edge, self._state_edges)
+                    if len(active_edges) > 0:
+                        active_edges[0].decay = min(MAX_VOL, active_edges[0].decay + nodestate.vol)
+                    else:
+                        self._state_edges.append(EdgeState(target_edge, nodestate.vol))
 
         return out
 
     def active(self):
         return len(self._state_edges) > 0 or len(self._state_nodes) > 0
 
-    def trigger(self, node, vol=1.0):
+    def trigger(self, node, vol=1.0, frame=0):
         """Schedule playback & cascade of node at next time unit."""
 
         # If node is already active, amplify
@@ -139,7 +150,7 @@ class Player:
             if self.get_regulation() < 0:
                 return
 
-        self._state_nodes.append(NodeState(node, vol))
+        self._state_nodes.append(NodeState(node, vol, frame=frame))
 
     def get_regulation(self):
         return (self._target - len(self._state_nodes)) / 5.0

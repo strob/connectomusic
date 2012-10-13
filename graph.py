@@ -106,13 +106,15 @@ class Edge:
         self.b = c
 
 class Node:
-    def __init__(self, pt, payload=None, group=None):
+    def __init__(self, pt, payload=None, group=None, nedges=0):
         self.pt = pt
+        self.nedges = nedges
         self.set_payload(payload, group)
 
     def set_payload(self, payload, group):
         self.payload = payload
         self.group = group
+        self.isloop = payload is not None and 'loop' in payload
 
         if self.payload is None:
             self.frames = None
@@ -121,9 +123,7 @@ class Node:
             self.frames = np.load(payload)
 
 class AmplifierNode(Node):
-    def __init__(self, pt, nedges=0):
-        self.pt = pt
-        self.nedges = nedges
+    pass
 
 def load_graph(left=False, bidirectional=False):
     print '>svgToGraph'
@@ -211,8 +211,9 @@ def make_directed_graph():
 
 def connected_directed_graph():
     g = make_directed_graph()
-        
+
     files = glob.glob('snd/*/*.npy')
+    # files = glob.glob('snd/final_material_tt_bearbeit/*.npy')
 
     print '>split'
 
@@ -222,7 +223,10 @@ def connected_directed_graph():
         grp = _get_group(f)
         if not split.has_key(grp):
             split[grp] = []
-        split[grp].append(f)
+        if 'loop' in f:
+            split[grp].insert(0, f)
+        else:
+            split[grp].append(f)
 
     print '>assign'
 
@@ -233,7 +237,7 @@ def connected_directed_graph():
             n.set_payload(split[grp].pop(), grp)
         else:
             # swap n with an amp
-            g.sub(n, AmplifierNode(n.pt, n.nedges), recompute_nodemap=False)
+            g.sub(n, AmplifierNode(n.pt, nedges=n.nedges), recompute_nodemap=False)
 
     # un-used sounds?
     print 'unused sounds', split

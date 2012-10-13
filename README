@@ -18,10 +18,9 @@ to consider:
  - connecting the four corners as a single point
 
  - left-channel/right-channel (simple+complex image?)
+   mix two runs -- (L->L.5, R.5->R)
 
- - rederiving a connection graph from segmentation and analysis of
-   pre-existing tracks (eg. weighted by similarity)
-
- - repetition v destruction v deterioration
+ - repetition v destruction v deterioration                      
+   loop: as regulation
 
  - loopable
