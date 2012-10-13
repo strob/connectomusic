@@ -25,6 +25,11 @@ class Graph:
             self.nodes.setdefault(e.a, []).append(e)
             self.tonodes.setdefault(e.b, []).append(e)
 
+        self.grpnodes = {}      # {grp -> [nodes]}
+        for n in self.get_all_nodes():
+            if hasattr(n, 'group'):
+                self.grpnodes.setdefault(n.group, []).append(n)
+
     def node_edges(self, node):
         return self.nodes.get(node, [])
 
@@ -136,8 +141,8 @@ def load_graph(left=False, bidirectional=False):
             id_to_node[X._id] = Node(_intpt(X.get_center()))
         return id_to_node[X._id]
 
-    edges = [Edge(_node(X[0]), _node(X[1]),
-                        cost=np.hypot(*(np.array(X[0].get_center())-X[1].get_center())))
+    edges = [Edge(_node(X[0]), _node(X[1]))#,
+                  #cost=np.hypot(*(np.array(X[0].get_center())-X[1].get_center())))
              for X in edges]
 
     # make all edges (bi-)directional
@@ -146,6 +151,7 @@ def load_graph(left=False, bidirectional=False):
                        cost=np.hypot(*(np.array(X[0].get_center())-X[1].get_center())))
                   for X in edges]
 
+    print '>graph'
     return Graph(edges)
 
 def _get_group(x):
@@ -184,12 +190,15 @@ def connect_to_samples(graph, files):
 
 def make_directed_graph():
     g = load_graph()
+
+    print '>nedges'
     nodes = g.get_all_nodes()
 
     # precompute nedges
     for n in nodes:
         n.nedges = len(g.all_node_edges(n))
 
+    print '>reverse'
     # reverse backwards edges; edges flow `down' from more to fewer
     for e in g.edges:
         if e.a.nedges < e.b.nedges:

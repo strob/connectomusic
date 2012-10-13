@@ -56,8 +56,15 @@ class QNode(QtGui.QGraphicsEllipseItem):
             self.setBrush(_gray())
         else:
             self.setBrush(_gray(255))
+
+            self.txt = QtGui.QGraphicsSimpleTextItem(str(node.group))
+            self.txt.setBrush(_gray())
+            self.txt.setParentItem(self)
+            self.txt.setPos(x-r, y-r)
+
         # self.setAcceptHoverEvents(True)
         self.setZValue(10)
+
 
 class QStateNode(QtGui.QGraphicsEllipseItem):
     def __init__(self, state):
@@ -153,6 +160,27 @@ class QView(QtGui.QGraphicsView):
 
 def run():
     def mthread():
+        onetosixteen = [
+            [153, 61, 42, 0],
+            [153, 69, 85, 0],
+            [153, 65, 71, 0],
+            [153, 63, 95, 0],
+            [153, 60, 109, 0],
+            [153, 59, 121, 0],
+            [153, 57, 121, 0],
+            [153, 55, 126, 0],
+            [153, 49, 124, 0],
+            [153, 51, 117, 0],
+            [153, 68, 117, 0],
+            [153, 56, 126, 0],
+            [153, 48, 121, 0],
+            [153, 52, 121, 0],
+            [153, 54, 114, 0],
+            [153, 58, 117, 0]]
+        nummap = {}
+        for idx,(_f1,num,_f2,_f3) in enumerate(onetosixteen):
+            nummap[num] = idx+1
+
         for ev in midi.events():
             "[185, 20, 71, 0]"
             "[185, 21, 4, 0]"
@@ -163,6 +191,10 @@ def run():
             elif ev[1] == 21:
                 # right knob == speed
                 p._speed = ev[2] * 5.0
+            elif ev[1] in nummap:
+                num = nummap[ev[1]]
+                for node in p.graph.grpnodes.get(num,[]):
+                    p.trigger(node, ev[2] / 100.0)
     midithread = threading.Thread(target=mthread)
     midithread.start()
 
