@@ -74,6 +74,15 @@ class QStateNode(QtGui.QGraphicsEllipseItem):
         QtGui.QGraphicsEllipseItem.__init__(self, x-r, y-r, 2*r, 2*r)
         self.setBrush(_rgb(255,0,0))
         self.setZValue(15)
+    def update(self):
+        state = self.state
+        if not hasattr(state.node, 'frames'):
+            return
+
+        x,y = state.node.pt
+        r = ((len(state.node.frames)-state.frame) / float(len(state.node.frames))) * int(state.node.nedges * 1.5)
+        self.setRect(x-r, y-r, 2*r, 2*r)
+        
 
 class QPlayer(QtGui.QGraphicsScene):
     def __init__(self, player):
@@ -118,6 +127,7 @@ class QPlayer(QtGui.QGraphicsScene):
                 self._stately[nodestate] = QStateNode(nodestate)
                 self.addItem(self._stately[nodestate])
                 nodestate.onend = self.remove
+            self._stately[nodestate].update()
 
         self.text.setText(self.player.get_status())
 
