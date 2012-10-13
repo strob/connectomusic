@@ -55,7 +55,8 @@ class NodeState:
 
         #pan = self.node.pt[0]  / 400.0
         pan = self.node.pt[0]  / 1250.0
-        snd = (self.vol * self.node.frames[self.frame:self.frame+nframes])
+        #snd = (self.vol * self.node.frames[self.frame:self.frame+nframes])
+        snd = self.node.frames[self.frame:self.frame+nframes]
 
         buf[:nframes,1] += snd * pan
         buf[:nframes,0] += snd * (1-pan)
@@ -106,7 +107,7 @@ class Player:
             # print '    %.2f (%d)' % (nodestate.vol, nodestate.frame)
             if nodestate.iterate(out):
                 self._state_nodes.pop(self._state_nodes.index(nodestate))
-                if nodestate.vol >= DECAY_CUTOFF:
+                if True:#nodestate.vol >= DECAY_CUTOFF:
                     for target_edge in self.graph.node_edges(nodestate.node):
                         active_edges = filter(lambda x: x.edge == target_edge, self._state_edges)
                         if len(active_edges) > 0:
@@ -133,7 +134,10 @@ class Player:
         # If node is an AmplifierNode, regulate
         elif isinstance(node, graph.AmplifierNode):
             # print 'amplify'
-            vol = max(0.0, vol + self.get_regulation())
+            # vol = max(0.0, vol + self.get_regulation())
+            # binary regulation
+            if self.get_regulation() < 0:
+                return
 
         self._state_nodes.append(NodeState(node, vol))
 
