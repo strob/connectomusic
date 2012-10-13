@@ -2,6 +2,8 @@ import numpy as np
 import os
 import numm
 import svgToGraph
+import glob
+import pickle
 
 class Graph:
     def __init__(self, edges):
@@ -10,6 +12,7 @@ class Graph:
 
     def _compute_nodemap(self):
         self.nodes = {}         # {node -> [edges]}
+        self.tonodes = {}       # {node -> [edges]} (edges that point to this node)
         for e in self.edges:
             # undirected
             # for N in [e.a, e.b]:
@@ -19,10 +22,8 @@ class Graph:
             #         self.nodes[N] = [e]
 
             # directed
-            if e.a in self.nodes:
-                self.nodes[e.a].append(e)
-            else:
-                self.nodes[e.a] = [e]
+            self.nodes.setdefault(e.a, []).append(e)
+            self.tonodes.setdefault(e.b, []).append(e)
 
     def node_edges(self, node):
         return self.nodes.get(node, [])
@@ -33,6 +34,10 @@ class Graph:
 
     def get_nodes(self):
         return self.nodes.keys()
+
+    def get_all_nodes(self):
+        #not only those with outbound edges
+        return set([X.a for X in self.edges] + [X.b for X in self.edges])
 
     def get_edges(self):
         return self.edges
@@ -67,12 +72,12 @@ class Graph:
 
     def sub(self, oldnode, newnode, recompute_nodemap=True):
         # Replace in all edges
-        edges = self.all_node_edges(oldnode)
-        for e in edges:
-            if e.a == oldnode:
-                e.a = newnode
-            else:
-                e.b = newnode
+        #edges = self.all_node_edges(oldnode)
+        for e in self.nodes.get(oldnode,[]):
+            e.a = newnode
+        for e in self.tonodes.get(oldnode,[]):
+            e.b = newnode
+
         if recompute_nodemap:
             # can opt out if doing a bunch of subs
             self._compute_nodemap()
@@ -88,6 +93,11 @@ class Edge:
     def length(self):
         return np.hypot(self.a.pt[0]-self.b.pt[0],
                         self.a.pt[1]-self.b.pt[1])
+
+    def flip(self):
+        c = self.a
+        self.a = self.b
+        self.b = c
 
 class Node:
     def __init__(self, pt, payload=None, group=None):
@@ -105,8 +115,9 @@ class Node:
             self.frames = np.load(payload)
 
 class AmplifierNode(Node):
-    def __init__(self, pt):
+    def __init__(self, pt, nedges=0):
         self.pt = pt
+        self.nedges = nedges
 
 def load_graph(left=False, bidirectional=False):
     print '>svgToGraph'
@@ -131,7 +142,7 @@ def load_graph(left=False, bidirectional=False):
 
     # make all edges (bi-)directional
     if bidirectional:
-        edges += [Edge(_node(X[1]), _node(X[0]),
+        edges += [Edge(_node(X[0]), _node(X[1]),
                        cost=np.hypot(*(np.array(X[0].get_center())-X[1].get_center())))
                   for X in edges]
 
@@ -170,3 +181,53 @@ def connect_to_samples(graph, files):
     print '>amplifier nodes'
     in_the_void(graph)
     print '>done'
+
+def make_directed_graph():
+    g = load_graph()
+    nodes = g.get_all_nodes()
+
+    # precompute nedges
+    for n in nodes:
+        n.nedges = len(g.all_node_edges(n))
+
+    # reverse backwards edges; edges flow `down' from more to fewer
+    for e in g.edges:
+        if e.a.nedges < e.b.nedges:
+            e.flip()
+
+    g._compute_nodemap()
+
+    return g
+
+def connected_directed_graph():
+    g = make_directed_graph()
+        
+    files = glob.glob('snd/*/*.npy')
+
+    print '>split'
+
+    # split by nedges
+    split = {}
+    for f in files:
+        grp = _get_group(f)
+        if not split.has_key(grp):
+            split[grp] = []
+        split[grp].append(f)
+
+    print '>assign'
+
+    # assign sounds & amplifiers
+    for n in g.get_all_nodes():
+        grp = n.nedges
+        if len(split.get(grp,[])) > 0:
+            n.set_payload(split[grp].pop(), grp)
+        else:
+            # swap n with an amp
+            g.sub(n, AmplifierNode(n.pt, n.nedges), recompute_nodemap=False)
+
+    # un-used sounds?
+    print 'unused sounds', split
+
+    g._compute_nodemap()
+
+    return g

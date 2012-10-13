@@ -11,6 +11,11 @@ from player import Player
 import midi
 import graph
 
+def _gray(n=125):
+    return QtGui.QColor(n,n,n)
+def _rgb(r,g,b):
+    return QtGui.QColor(r,g,b)
+
 class QEdge(QtGui.QGraphicsLineItem):
     def __init__(self, edge):
         self.edge = edge
@@ -19,7 +24,7 @@ class QEdge(QtGui.QGraphicsLineItem):
         QtGui.QGraphicsLineItem.__init__(self, x1, y1, x2, y2)
         # self.setAcceptHoverEvents(True)
         pen = QtGui.QPen()
-        pen.setColor(QtCore.Qt.yellow)
+        pen.setColor(_gray())
         pen.setWidth(2) 
         self.setPen(pen)
         self.setZValue(5)
@@ -32,7 +37,7 @@ class QStateEdge(QtGui.QGraphicsLineItem):
         QtGui.QGraphicsLineItem.__init__(self, x1, y1, x2, y2)
         # self.setAcceptHoverEvents(True)
         pen = QtGui.QPen()
-        pen.setColor(QtCore.Qt.red)
+        pen.setColor(_rgb(255,0,0))
         pen.setWidth(3)
         self.setPen(pen)
         self.setZValue(7)
@@ -45,12 +50,12 @@ class QNode(QtGui.QGraphicsEllipseItem):
     def __init__(self, node):
         self.node = node
         x,y = node.pt
-        r = 5
+        r = node.nedges
         QtGui.QGraphicsEllipseItem.__init__(self, x-r, y-r, 2*r, 2*r)
         if isinstance(node, graph.AmplifierNode):
-            self.setBrush(QtCore.Qt.green)
+            self.setBrush(_gray())
         else:
-            self.setBrush(QtCore.Qt.black)            
+            self.setBrush(_gray(255))
         # self.setAcceptHoverEvents(True)
         self.setZValue(10)
 
@@ -58,9 +63,9 @@ class QStateNode(QtGui.QGraphicsEllipseItem):
     def __init__(self, state):
         self.state = state
         x,y = state.node.pt
-        r = 7
+        r = int(state.node.nedges * 1.5)
         QtGui.QGraphicsEllipseItem.__init__(self, x-r, y-r, 2*r, 2*r)
-        self.setBrush(QtCore.Qt.red)
+        self.setBrush(_rgb(255,0,0))
         self.setZValue(15)
 
 class QPlayer(QtGui.QGraphicsScene):
@@ -68,7 +73,7 @@ class QPlayer(QtGui.QGraphicsScene):
         self.player = player
         QtGui.QGraphicsScene.__init__(self)
 
-        self.setBackgroundBrush(QtCore.Qt.black)
+        self.setBackgroundBrush(_gray(0))
 
 
         self.base()
@@ -186,9 +191,10 @@ if __name__=='__main__':
     app.setApplicationName('qplayer')
 
     print 'load graph'
-    g = graph.load_graph(sys.argv[1]=='left')
-    print 'connect to samples'
-    graph.connect_to_samples(g, sys.argv[2:])
+    # g = graph.load_graph(sys.argv[1]=='left')
+    # print 'connect to samples'
+    # graph.connect_to_samples(g, sys.argv[2:])
+    g = graph.connected_directed_graph()
 
     print 'qview'
     p = Player(g)
