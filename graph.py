@@ -71,7 +71,7 @@ class Graph:
         #return sum([E.cost for E in self.node_edges(node)])
 
     def nearest(self, x, y):
-        nodes = self.get_nodes()
+        nodes = list(self.get_all_nodes())
         terrain = np.array([X.pt for X in nodes])
         dist = np.hypot(*(terrain - np.array([x,y])).T)
         return nodes[dist.argmin()]

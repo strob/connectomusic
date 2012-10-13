@@ -50,7 +50,7 @@ class QNode(QtGui.QGraphicsEllipseItem):
     def __init__(self, node):
         self.node = node
         x,y = node.pt
-        r = node.nedges
+        r = max(3,node.nedges)
         QtGui.QGraphicsEllipseItem.__init__(self, x-r, y-r, 2*r, 2*r)
         if isinstance(node, graph.AmplifierNode):
             self.setBrush(_gray())
@@ -70,7 +70,7 @@ class QStateNode(QtGui.QGraphicsEllipseItem):
     def __init__(self, state):
         self.state = state
         x,y = state.node.pt
-        r = int(state.node.nedges * 1.5)
+        r = int(max(3,state.node.nedges) * 1.5)
         QtGui.QGraphicsEllipseItem.__init__(self, x-r, y-r, 2*r, 2*r)
         self.setBrush(_rgb(255,0,0))
         self.setZValue(15)
@@ -80,7 +80,7 @@ class QStateNode(QtGui.QGraphicsEllipseItem):
             return
 
         x,y = state.node.pt
-        r = ((len(state.node.frames)-state.frame) / float(len(state.node.frames))) * int(state.node.nedges * 1.5)
+        r = ((len(state.node.frames)-state.frame) / float(len(state.node.frames))) * int(max(3,state.node.nedges) * 1.5)
         self.setRect(x-r, y-r, 2*r, 2*r)
         
 
@@ -150,6 +150,13 @@ class QView(QtGui.QGraphicsView):
     def keyPressEvent(self, event):
         print event.text()
         print event.key()
+
+        if event.key() == QtCore.Qt.Key_F:
+            # Flip all edges
+            print 'flip'
+            for edge in p.graph.edges:
+                edge.flip()
+            p.graph._compute_nodemap()
 
         if event.key() == QtCore.Qt.Key_P:
             p._target -= 1
