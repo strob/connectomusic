@@ -108,7 +108,7 @@ class AmplifierNode(Node):
     def __init__(self, pt):
         self.pt = pt
 
-def load_graph(left=False):
+def load_graph(left=False, bidirectional=False):
     print '>svgToGraph'
     if left:
         edges = svgToGraph.Graph('node_map.svg').getLeftEdges()
@@ -125,16 +125,17 @@ def load_graph(left=False):
             id_to_node[X._id] = Node(_intpt(X.get_center()))
         return id_to_node[X._id]
 
-    # make all edges bi-directional
     edges = [Edge(_node(X[0]), _node(X[1]),
                         cost=np.hypot(*(np.array(X[0].get_center())-X[1].get_center())))
-             for X in edges] + \
-                 [Edge(_node(X[1]), _node(X[0]),
+             for X in edges]
+
+    # make all edges (bi-)directional
+    if bidirectional:
+        edges += [Edge(_node(X[1]), _node(X[0]),
                        cost=np.hypot(*(np.array(X[0].get_center())-X[1].get_center())))
                   for X in edges]
 
     return Graph(edges)
-
 
 def _get_group(x):
     return int(os.path.basename(x).split('_')[0])

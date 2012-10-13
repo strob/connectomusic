@@ -72,7 +72,7 @@ class NodeState:
 DECAY_CUTOFF = 0.05
 
 class Player:
-    def __init__(self, graph, speed=50, decay=0.95, target_nnodes=10):
+    def __init__(self, graph, speed=50, decay=0.95, target_nnodes=10, burnbridges=False):
         self.graph = graph
 
         self._state_edges = []  # [EdgeState]
@@ -82,6 +82,8 @@ class Player:
         self._decay = decay     # %/px
 
         self._target = target_nnodes
+
+        self.burnbridges = burnbridges
 
     def next(self, buffer_size=2048):
         "Increment time unit and return sound buffer (as np-array)"
@@ -94,8 +96,9 @@ class Player:
                 self._state_edges.pop(self._state_edges.index(edgestate))
                 self.trigger(edgestate.edge.b, vol=edgestate.decay)
 
-                # destroy edge
-                self.destroy_edge(edgestate.edge)
+                # # destroy edge
+                if self.burnbridges:
+                    self.destroy_edge(edgestate.edge)
 
         out = np.zeros((buffer_size, 2), dtype=np.int)
         # print '%d active nodes' % (len(self._state_nodes))
