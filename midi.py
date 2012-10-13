@@ -1,4 +1,5 @@
 import pygame.midi as midi
+import time
 
 device = "padKONTROL MIDI 2"
 
@@ -13,8 +14,11 @@ for mid in range(nmidi):
 inp = midi.Input(mid)
 def events():
     while True:
-        for data,ts in inp.read(1):
-            yield data
+        if inp.poll():
+            for data,ts in inp.read(1):
+                yield data
+        else:
+            time.sleep(1/100.0)
 
 if __name__=='__main__':
     for ev in events():

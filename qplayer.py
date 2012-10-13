@@ -8,6 +8,7 @@ import numm
 import threading
 
 from player import Player
+import midi
 import graph
 
 
@@ -61,20 +62,21 @@ class QView(QtGui.QGraphicsView):
         self.qplay.update()
         QtGui.QGraphicsView.timerEvent(self, ev)
 
-if __name__=='__main__':
-    app = QtGui.QApplication(sys.argv)
-    app.setApplicationName('qplayer')
+def run():
+    def mthread():
+        for ev in midi.events():
+            "[185, 20, 71, 0]"
+            "[185, 21, 4, 0]"
+            print ev
+            if ev[1] == 20:
+                # left knob == target
+                p._target = ev[2] / 5.0
+            elif ev[1] == 21:
+                # right knob == speed
+                p._speed = ev[2] * 5.0
+    midithread = threading.Thread(target=mthread)
+    midithread.start()
 
-    print 'load graph'
-    g = graph.load_graph(sys.argv[1]=='left')
-    print 'connect to samples'
-    graph.connect_to_samples(g, sys.argv[2:])
-
-    print 'qview'
-    p = Player(g)
-    view = QView(p)
-
-    view.show()
 
     def audio():
         divisor = [1]
@@ -94,3 +96,23 @@ if __name__=='__main__':
     audiothread.start()
 
     app.exec_()
+
+if __name__=='__main__':
+    app = QtGui.QApplication(sys.argv)
+    app.setApplicationName('qplayer')
+
+    print 'load graph'
+    g = graph.load_graph(sys.argv[1]=='left')
+    print 'connect to samples'
+    graph.connect_to_samples(g, sys.argv[2:])
+
+    print 'qview'
+    p = Player(g)
+    view = QView(p)
+
+    view.show()
+
+    run()
+
+    # import cProfile
+    # cProfile.run('run()', 'proofile')

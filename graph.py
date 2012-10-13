@@ -109,11 +109,13 @@ class AmplifierNode(Node):
         self.pt = pt
 
 def load_graph(left=False):
+    print '>svgToGraph'
     if left:
         edges = svgToGraph.Graph('node_map.svg').getLeftEdges()
     else:
         edges = svgToGraph.Graph('node_map.svg').getEdges()
 
+    print '>nodes'
     id_to_node = {}
     def _intpt(pt):
         return (int(pt[0]), int(pt[1]))
