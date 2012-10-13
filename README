@@ -13,14 +13,23 @@ outbound edges, and when a node ``fires,'' it both plays whatever
 sample is associated and releases (in time proportional to distance)
 neighboring nodes for attenuated triggering.
 
-to consider:
+## Rules
 
- - connecting the four corners as a single point
+* Edges are directed and flow from nodes with more edges to those with fewer, unless flipped, F.
 
- - left-channel/right-channel (simple+complex image?)
-   mix two runs -- (L->L.5, R.5->R)
+* Assign letter-sounds to graph-nodes by number of connecting edges.
 
- - repetition v destruction v deterioration                      
-   loop: as regulation
+* After playing a sample, send a pulse down all outgoing edges at speed S.
 
- - loopable
+* Nodes without sounds assigned are regulation nodes; they suppress signal when active nodes exceed target T.
+
+* Looping nodes repeat after playback, unless target T is met.
+
+## Spec
+
+A piece, then, can be described by initial conditions:
+
+  { F: (1|0),
+    S: (0,1000),
+    T: (0,1000),
+    trigger: [node, [node, ...]] }
