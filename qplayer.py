@@ -67,6 +67,10 @@ class QPlayer(QtGui.QGraphicsScene):
     def __init__(self, player):
         self.player = player
         QtGui.QGraphicsScene.__init__(self)
+
+        self.setBackgroundBrush(QtCore.Qt.black)
+
+
         self.base()
         self._stately = {}
         self._remove = []
@@ -119,7 +123,7 @@ class QView(QtGui.QGraphicsView):
 
         QtGui.QGraphicsView.__init__(self, self.qplay)
 
-        self.startTimer(200)
+        self.startTimer(50)
 
     def keyPressEvent(self, event):
         print event.text()
