@@ -79,7 +79,7 @@ class NodeState:
 DECAY_CUTOFF = 0.05
 
 class Player:
-    def __init__(self, graph, speed=50, decay=0.95, target_nnodes=10, burnbridges=False):
+    def __init__(self, graph, speed=50, decay=0.95, target_nnodes=10, burnbridges=False, flipped = False):
         self.graph = graph
 
         self._state_edges = []  # [EdgeState]
@@ -90,7 +90,15 @@ class Player:
 
         self._target = target_nnodes
 
+        self._flipped = flipped
+
         self.burnbridges = burnbridges
+
+    def flip(self):
+        for e in self.graph.edges:
+            e.flip()
+        self.graph._compute_nodemap()
+        self._flipped = not self._flipped
 
     def next(self, buffer_size=2048):
         "Increment time unit and return sound buffer (as np-array)"
@@ -199,7 +207,7 @@ class Player:
         return out
 
     def get_status(self):
-        return "%02d active (t=%02d,d=%.2f,s=%d)" % (len(self._state_nodes), self._target, self._decay, self._speed)
+        return "%02d active (T=%02d,S=%d,F=%d)" % (len(self._state_nodes), self._target, self._speed, self._flipped)
 
 if __name__=='__main__':
     import sys

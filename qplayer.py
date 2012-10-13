@@ -160,9 +160,7 @@ class QView(QtGui.QGraphicsView):
         if event.key() == QtCore.Qt.Key_F:
             # Flip all edges
             print 'flip'
-            for edge in p.graph.edges:
-                edge.flip()
-            p.graph._compute_nodemap()
+            p.flip()
 
         if event.key() == QtCore.Qt.Key_P:
             p._target -= 1
