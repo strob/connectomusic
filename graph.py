@@ -35,7 +35,8 @@ class Graph:
 
     def all_node_edges(self, node):
         # ... in both directions
-        return filter(lambda x: x.a == node or x.b == node, self.edges)
+        return self.nodes.get(node,[]) + self.tonodes.get(node,[])
+        # return filter(lambda x: x.a == node or x.b == node, self.edges)
 
     def get_nodes(self):
         return self.nodes.keys()
