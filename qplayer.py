@@ -20,9 +20,21 @@ class QEdge(QtGui.QGraphicsLineItem):
         # self.setAcceptHoverEvents(True)
         pen = QtGui.QPen()
         pen.setColor(QtCore.Qt.yellow)
-        pen.setWidth(3)
+        pen.setWidth(2) 
         self.setPen(pen)
         self.setZValue(5)
+
+class QStateEdge(QtGui.QGraphicsLineItem):
+    def __init__(self, a, pt):
+        x1,y1 = a.pt
+        x2,y2 = pt
+        QtGui.QGraphicsLineItem.__init__(self, x1, y1, x2, y2)
+        # self.setAcceptHoverEvents(True)
+        pen = QtGui.QPen()
+        pen.setColor(QtCore.Qt.red)
+        pen.setWidth(3)
+        self.setPen(pen)
+        self.setZValue(7)
 
 class QNode(QtGui.QGraphicsEllipseItem):
     def __init__(self, node):
@@ -33,15 +45,25 @@ class QNode(QtGui.QGraphicsEllipseItem):
         if isinstance(node, graph.AmplifierNode):
             self.setBrush(QtCore.Qt.green)
         else:
-            self.setBrush(QtCore.Qt.red)            
+            self.setBrush(QtCore.Qt.black)            
         # self.setAcceptHoverEvents(True)
         self.setZValue(10)
+
+class QStateNode(QtGui.QGraphicsEllipseItem):
+    def __init__(self, node):
+        self.node = node
+        x,y = node.pt
+        r = 7
+        QtGui.QGraphicsEllipseItem.__init__(self, x-r, y-r, 2*r, 2*r)
+        self.setBrush(QtCore.Qt.red)
+        self.setZValue(15)
 
 class QPlayer(QtGui.QGraphicsScene):
     def __init__(self, player):
         self.player = player
         QtGui.QGraphicsScene.__init__(self)
         self.base()
+        self._stately = []
 
     def base(self):
             for edge in self.player.graph.get_edges():
@@ -51,7 +73,19 @@ class QPlayer(QtGui.QGraphicsScene):
                 self.addItem(QNode(node))
 
     def update(self):
-        pass
+        for item in self._stately:
+            self.removeItem(item)
+        self._stately = []
+
+        for edgestate in self.player._state_edges:
+            edge = QStateEdge(edgestate.edge.a, edgestate.get_position())
+            self._stately.append(edge)
+            self.addItem(edge)
+        for nodestate in self.player._state_nodes:
+            node = QStateNode(nodestate.node)
+            self._stately.append(node)
+            self.addItem(node)
+
         # # XXX: avoid passing through disk/png!
         # t = tempfile.NamedTemporaryFile(suffix='.png')
         # Image.fromarray(self.player.draw()).save(t.name)

@@ -143,9 +143,11 @@ def _get_group(x):
 def in_the_void(graph):
     "Do something with those poor nodes lacking payload"
     nodes = graph.get_nodes()
+    print '>sub'
     for node in nodes:
         if node.payload is None:
             graph.sub(node, AmplifierNode(node.pt), recompute_nodemap=False)
+    print '>nodemap'
     graph._compute_nodemap()
 
 def connect_to_samples(graph, files):
@@ -166,3 +168,4 @@ def connect_to_samples(graph, files):
 
     print '>amplifier nodes'
     in_the_void(graph)
+    print '>done'
