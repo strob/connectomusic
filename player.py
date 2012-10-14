@@ -117,6 +117,7 @@ class Player:
             # save parameters
             params = {'target': self._target,
                       'flipped': self._flipped,
+                      'sounds': self.graph.version,
                       'actions': self._actions,
                       'speed': self._speed}
             json.dump(params, open('out.params.json', 'w'))

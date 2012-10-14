@@ -9,6 +9,7 @@ class Graph:
     def __init__(self, edges):
         self.edges = edges
         self._compute_nodemap()
+        self.version = ""
 
     def _compute_nodemap(self):
         self.nodes = {}         # {node -> [edges]}
@@ -212,9 +213,17 @@ def make_directed_graph():
 def connected_directed_graph():
     g = make_directed_graph()
 
+    VERSIONS = ['final_material_tt_bearbeit', 
+                'final_material_tt_bearbeit_NEU_gekurzt',
+                'final_material_tt_bearbeit_2nd_order_NEUER',
+                '*']
+    version = 0
+
     # files = glob.glob('snd/*/*.npy')
-    files = glob.glob('snd/final_material_tt_bearbeit_2nd_order_NEUER/*.npy')
-    # files = glob.glob('snd/final_material_tt_bearbeit/*.npy')
+    # files = glob.glob('snd/final_material_tt_bearbeit_2nd_order_NEUER/*.npy')
+    files = glob.glob('snd/%s/*.npy' % (VERSIONS[version]))
+
+    g.version = VERSIONS[version]
 
     print '>split'
 

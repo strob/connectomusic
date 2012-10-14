@@ -174,7 +174,7 @@ class QPlayer(QtGui.QGraphicsScene):
         pos = event.scenePos()
         nearest_node = g.nearest(pos.x(), pos.y())
         p.trigger(nearest_node, 1.0)
-        p.log('press %d' % (nearest_node.group))
+        p.log('press %d (%d,%d)' % (nearest_node.group, nearest_node.pt[0], nearest_node.pt[1]))
 
 class QView(QtGui.QGraphicsView):
     def __init__(self, player):
