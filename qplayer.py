@@ -251,6 +251,12 @@ def run():
             elif ev[1] == 21:
                 # right knob == speed
                 p._speed = ev[2] * 5.0
+            elif ev[0] == 201:
+                # flip
+                p.flip()
+                for qe in view.qplay.qedges:
+                    qe.update()
+                
             elif ev[1] in nummap:
                 num = nummap[ev[1]]
                 for node in p.graph.grpnodes.get(num,[]):
