@@ -97,6 +97,8 @@ class Player:
 
         self._recording = False
 
+        self._divisor = 10000
+
     def flip(self):
         for e in self.graph.edges:
             e.flip()
@@ -117,9 +119,16 @@ class Player:
     def mix(self, a):
         divisor = max(max(1, a.max() / float(2**15-1)),
                       pow(len(self._state_nodes), 0.5))
+
+        if divisor != self._divisor:
+            div = np.linspace(self._divisor, divisor, len(a)).reshape((len(a),-1))
+        else:
+            div = divisor
         # print divisor
 
-        a /= divisor
+        self._divisor = divisor
+
+        a /= div
         return a.astype(np.int16)
 
     def next(self, buffer_size=2048):
