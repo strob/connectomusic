@@ -115,7 +115,10 @@ class Player:
         return self._recording
 
     def mix(self, a):
-        divisor = max(max(1, a.max() / float(2**15-1)), len(self._state_nodes))
+        divisor = max(max(1, a.max() / float(2**15-1)),
+                      pow(len(self._state_nodes), 0.5))
+        # print divisor
+
         a /= divisor
         return a.astype(np.int16)
 
