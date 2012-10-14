@@ -174,6 +174,7 @@ class QPlayer(QtGui.QGraphicsScene):
         pos = event.scenePos()
         nearest_node = g.nearest(pos.x(), pos.y())
         p.trigger(nearest_node, 1.0)
+        p.log('press %d' % (nearest_node.group))
 
 class QView(QtGui.QGraphicsView):
     def __init__(self, player):
@@ -184,6 +185,12 @@ class QView(QtGui.QGraphicsView):
         QtGui.QGraphicsView.__init__(self, self.qplay)
 
         self.startTimer(50)
+
+    def wheelEvent(self, event):
+        factor = 1.1
+        if (event.delta() < 0):
+            factor = 1.0 / factor
+        self.scale(factor, factor)
 
     def keyPressEvent(self, event):
         print event.text()
@@ -250,7 +257,7 @@ def run():
                 p._target = ev[2] / 5.0
             elif ev[1] == 21:
                 # right knob == speed
-                p._speed = ev[2] * 5.0
+                p._speed = ev[2] * 2.5
             elif ev[0] == 201:
                 # flip
                 p.flip()
@@ -261,6 +268,7 @@ def run():
                 num = nummap[ev[1]]
                 for node in p.graph.grpnodes.get(num,[]):
                     p.trigger(node, ev[2] / 100.0)
+                p.log('nummap %d' % (num))
     midithread = threading.Thread(target=mthread)
     midithread.start()
 

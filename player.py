@@ -4,6 +4,8 @@ import numpy as np
 import cv2
 import numm
 
+import json
+
 R = 44100.0
 MAX_VOL = 1.5
 
@@ -96,7 +98,8 @@ class Player:
         self.burnbridges = burnbridges
 
         self._recording = False
-
+        self._actions = []
+        self._samples = []
         self._divisor = 10000
 
     def flip(self):
@@ -110,9 +113,20 @@ class Player:
             # save recording
             numm.np2sound(np.concatenate(self._out), 'out.wav')
             print 'recording saved to out.wav'
+
+            # save parameters
+            params = {'target': self._target,
+                      'flipped': self._flipped,
+                      'actions': self._actions,
+                      'speed': self._speed}
+            json.dump(params, open('out.params.json', 'w'))
+            open('out.samples.txt', 'w').write('\n'.join(self._samples))
+
         else:
             print 'start recording'
         self._out = []
+        self._actions = []
+        self._samples = []
         self._recording = not self._recording
         return self._recording
 
@@ -122,6 +136,7 @@ class Player:
 
         if divisor != self._divisor:
             div = np.linspace(self._divisor, divisor, len(a)).reshape((len(a),-1))
+            # print 'fade', self._divisor, divisor
         else:
             div = divisor
         # print divisor
@@ -173,6 +188,10 @@ class Player:
     def active(self):
         return len(self._state_edges) > 0 or len(self._state_nodes) > 0
 
+    def log(self, action):
+        if self._recording:
+            self._actions.append(action)
+
     def trigger(self, node, vol=1.0, frame=0):
         """Schedule playback & cascade of node at next time unit."""
 
@@ -191,6 +210,14 @@ class Player:
             # binary regulation
             if self.get_regulation() < 0:
                 return
+
+        # log trigger
+        if self._recording and len(self._out) > 0:
+            timestamp = len(self._out) * len(self._out[0]) / 44100.0
+            payload = node.payload
+            if payload:
+                duration = len(node.frames) / 44100.0
+                self._samples.append("%f\t%f\t%s" % (timestamp, timestamp+duration, payload))
 
         self._state_nodes.append(NodeState(node, vol, frame=frame))
 

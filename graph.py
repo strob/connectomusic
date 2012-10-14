@@ -212,7 +212,8 @@ def make_directed_graph():
 def connected_directed_graph():
     g = make_directed_graph()
 
-    files = glob.glob('snd/*/*.npy')
+    # files = glob.glob('snd/*/*.npy')
+    files = glob.glob('snd/final_material_tt_bearbeit_2nd_order_NEUER/*.npy')
     # files = glob.glob('snd/final_material_tt_bearbeit/*.npy')
 
     print '>split'
