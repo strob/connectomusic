@@ -7,6 +7,8 @@ import sys
 import json
 import cv2
 import os
+import shutil
+import subprocess
 
 FPS = 30
 R = 44100
@@ -19,6 +21,8 @@ os.makedirs(outdir)
 
 g = graph.connected_directed_graph(version=params["sounds"])
 p = player.Player(g, speed=params["speed"], target_nnodes=params["target"], flipped=params["flipped"])
+
+shutil.copy(sys.argv[1], os.path.join(outdir, 'orig.params.json'))
 
 os.chdir(outdir)
 
@@ -35,9 +39,13 @@ while cur_t < MAX_DUR:
     p.next(buffer_size=WINDOW)
  
     im = p.draw()
+
+    # RESIZE
+    im = cv2.resize(im, (800, 800))
+
     if rec_video is None:
         rec_video = cv2.VideoWriter()
-        rec_video.open('out.avi', cv2.cv.CV_FOURCC(*'MJPG'), 30, (im.shape[1], im.shape[0]), True)
+        rec_video.open('out.avi', cv2.cv.CV_FOURCC(*'DIVX'), 30, (im.shape[1], im.shape[0]), True)
 
     rec_video.write(im)
 
@@ -48,3 +56,10 @@ while cur_t < MAX_DUR:
         break
 
 p.toggle_recording()
+
+# join a/v & delete v
+cmd = ['ffmpeg', '-i', 'out.avi', '-i', 'out.wav', '-acodec', 'copy', '-vcodec', 'copy', 'merge.avi']
+p = subprocess.Popen(cmd)
+p.wait()
+
+os.unlink('out.avi')
