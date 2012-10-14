@@ -93,12 +93,15 @@ class Player:
 
         self._target = target_nnodes
 
-        self._flipped = flipped
+        self._flipped = False
+        if flipped:
+            self.flip()
 
         self.burnbridges = burnbridges
 
         self._recording = False
         self._actions = []
+        self._mouse = []
         self._samples = []
         self._divisor = 10000
 
@@ -107,6 +110,11 @@ class Player:
             e.flip()
         self.graph._compute_nodemap()
         self._flipped = not self._flipped
+
+    def click(self, pos):
+        # just for logging
+        if self._recording:
+            self._mouse.append(pos)
 
     def toggle_recording(self):
         if self._recording:
@@ -119,6 +127,7 @@ class Player:
                       'flipped': self._flipped,
                       'sounds': self.graph.version,
                       'actions': self._actions,
+                      'mouse': self._mouse,
                       'speed': self._speed}
             json.dump(params, open('out.params.json', 'w'))
             open('out.samples.txt', 'w').write('\n'.join(self._samples))
@@ -127,6 +136,7 @@ class Player:
             print 'start recording'
         self._out = []
         self._actions = []
+        self._mouse = []
         self._samples = []
         self._recording = not self._recording
         return self._recording

@@ -175,6 +175,7 @@ class QPlayer(QtGui.QGraphicsScene):
         nearest_node = g.nearest(pos.x(), pos.y())
         p.trigger(nearest_node, 1.0)
         p.log('press %d (%d,%d)' % (nearest_node.group, nearest_node.pt[0], nearest_node.pt[1]))
+        p.click(nearest_node.pt)
 
 class QView(QtGui.QGraphicsView):
     def __init__(self, player):
@@ -299,7 +300,10 @@ if __name__=='__main__':
     # g = graph.load_graph(sys.argv[1]=='left')
     # print 'connect to samples'
     # graph.connect_to_samples(g, sys.argv[2:])
-    g = graph.connected_directed_graph()
+    sounds = None
+    if len(sys.argv) > 1:
+        sounds = sys.argv[1]
+    g = graph.connected_directed_graph(sounds)
 
     print 'qview'
     p = Player(g)

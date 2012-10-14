@@ -210,20 +210,21 @@ def make_directed_graph():
 
     return g
 
-def connected_directed_graph():
+def connected_directed_graph(version=None):
     g = make_directed_graph()
 
     VERSIONS = ['final_material_tt_bearbeit', 
                 'final_material_tt_bearbeit_NEU_gekurzt',
                 'final_material_tt_bearbeit_2nd_order_NEUER',
                 '*']
-    version = 0
+    if version is None:
+        version = VERSIONS[0]
 
     # files = glob.glob('snd/*/*.npy')
     # files = glob.glob('snd/final_material_tt_bearbeit_2nd_order_NEUER/*.npy')
-    files = glob.glob('snd/%s/*.npy' % (VERSIONS[version]))
+    files = glob.glob('snd/%s/*.npy' % (version))
 
-    g.version = VERSIONS[version]
+    g.version = version
 
     print '>split'
 
