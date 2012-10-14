@@ -2,6 +2,7 @@ import graph
 
 import numpy as np
 import cv2
+import numm
 
 R = 44100.0
 MAX_VOL = 1.5
@@ -94,11 +95,29 @@ class Player:
 
         self.burnbridges = burnbridges
 
+        self._recording = False
+
     def flip(self):
         for e in self.graph.edges:
             e.flip()
         self.graph._compute_nodemap()
         self._flipped = not self._flipped
+
+    def toggle_recording(self):
+        if self._recording:
+            # save recording
+            numm.np2sound(np.concatenate(self._out), 'out.wav')
+            print 'recording saved to out.wav'
+        else:
+            print 'start recording'
+        self._out = []
+        self._recording = not self._recording
+        return self._recording
+
+    def mix(self, a):
+        divisor = max(max(1, a.max() / float(2**15-1)), len(self._state_nodes))
+        a /= divisor
+        return a.astype(np.int16)
 
     def next(self, buffer_size=2048):
         "Increment time unit and return sound buffer (as np-array)"
@@ -134,7 +153,10 @@ class Player:
                     else:
                         self._state_edges.append(EdgeState(target_edge, nodestate.vol))
 
-        return out
+        mixed = self.mix(out)
+        if self._recording:
+            self._out.append(mixed)
+        return mixed
 
     def active(self):
         return len(self._state_edges) > 0 or len(self._state_nodes) > 0

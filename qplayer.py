@@ -118,6 +118,14 @@ class QPlayer(QtGui.QGraphicsScene):
         self._stately = {}
         self._remove = []
 
+    def showrec(self):
+        self.rec = QtGui.QGraphicsSimpleTextItem('rec');
+        self.rec.setPos(800,10)
+        self.rec.setBrush(_rgb(255,0,0))
+        self.addItem(self.rec)
+
+    def hiderec(self):
+        self.removeItem(self.rec)
 
     def base(self):
         self.text = QtGui.QGraphicsSimpleTextItem(self.player.get_status())
@@ -158,6 +166,9 @@ class QPlayer(QtGui.QGraphicsScene):
 
         self.text.setText(self.player.get_status())
 
+        if self.player._recording and len(self.player._out)>0:
+            self.rec.setText("%.2fs" % ((1.0/44100) * len(self.player._out) * len(self.player._out[0])))
+
     def mousePressEvent(self, event):
         print 'press'
         pos = event.scenePos()
@@ -178,24 +189,29 @@ class QView(QtGui.QGraphicsView):
         print event.text()
         print event.key()
 
-        if event.key() == QtCore.Qt.Key_F:
+        key = event.key()
+
+        if key == QtCore.Qt.Key_F:
             # Flip all edges
             print 'flip'
             p.flip()
             for qe in self.qplay.qedges:
                 qe.update()
+        elif key == QtCore.Qt.Key_R:
+            is_rec = p.toggle_recording()
+            if is_rec:
+                self.qplay.showrec()
+            else:
+                self.qplay.hiderec()
+        
 
-        if event.key() == QtCore.Qt.Key_P:
+        elif key == QtCore.Qt.Key_P:
             p._target -= 1
-        if event.key() == QtCore.Qt.Key_N:
+        elif key == QtCore.Qt.Key_N:
             p._target += 1
-        if event.key() == QtCore.Qt.Key_D:
-            p._decay *= 1.1
-        if event.key() == QtCore.Qt.Key_E:
-            p._decay *= 0.9
-        if event.key() == QtCore.Qt.Key_S:
+        elif key == QtCore.Qt.Key_S:
             p._speed *= 1.1
-        if event.key() == QtCore.Qt.Key_W:
+        elif key == QtCore.Qt.Key_W:
             p._speed *= 0.9
 
     def timerEvent(self, ev):
@@ -246,15 +262,14 @@ def run():
     def audio():
         divisor = [1]
         def a_out(a):
-            divisor[0] = len(p._state_nodes)
-            if divisor[0] == 0:
-                divisor[0] = 1
+            # divisor[0] = max(1, len(p._state_nodes))
 
-            out = p.next(len(a))
-            divisor[0] = max(out.max() / float(2**15-1), divisor[0])
+            # out = p.next(len(a))
+            # divisor[0] = max(out.max() / float(2**15-1), divisor[0])
 
-            out /= divisor
-            a[:] = out.astype(np.int16)
+            # out /= divisor
+            # a[:] = out.astype(np.int16)
+            a[:] = p.next(len(a))
 
         numm.run(audio_out=a_out)
     audiothread = threading.Thread(target=audio)
