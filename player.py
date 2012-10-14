@@ -277,7 +277,8 @@ class Player:
         for edgestate in self._state_edges:
             cv2.line(out, edgestate.edge.a.pt, edgestate.get_position(), (0, 255, 255))
         for nodestate in self._state_nodes:
-            cv2.circle(out, nodestate.node.pt, 5, (0, 255, 255), -1)
+            r = ((len(nodestate.node.frames)-nodestate.frame) / float(len(nodestate.node.frames))) * 10
+            cv2.circle(out, nodestate.node.pt, int(r), (0, 255, 255), -1)
 
         status = self.get_status()
         cv2.putText(out, status, (10, 20), cv2.FONT_HERSHEY_PLAIN, 1, (255,255,255))
