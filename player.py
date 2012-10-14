@@ -115,6 +115,10 @@ class Player:
         # just for logging
         if self._recording:
             self._mouse.append(pos)
+    def nummap(self, num):
+        # logging
+        if self._recording:
+            self._nummap.append(num)
 
     def toggle_recording(self):
         if self._recording:
@@ -127,6 +131,7 @@ class Player:
                       'flipped': self._flipped,
                       'sounds': self.graph.version,
                       'actions': self._actions,
+                      'nummap': self._nummap,
                       'mouse': self._mouse,
                       'speed': self._speed}
             json.dump(params, open('out.params.json', 'w'))
@@ -137,6 +142,7 @@ class Player:
         self._out = []
         self._actions = []
         self._mouse = []
+        self._nummap = []
         self._samples = []
         self._recording = not self._recording
         return self._recording

@@ -32,6 +32,10 @@ p.toggle_recording()
 for pt in params['mouse']:
     node = g.nearest(pt[0], pt[1])
     p.trigger(node)
+for num in params['nummap']:
+    for node in g.grpnodes.get(num,[]):
+        p.trigger(node)
+    
 
 cur_t = 0
 rec_video = None

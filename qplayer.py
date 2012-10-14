@@ -265,11 +265,12 @@ def run():
                 for qe in view.qplay.qedges:
                     qe.update()
                 
-            elif ev[1] in nummap:
+            elif ev[0] == 153 and ev[1] in nummap:
                 num = nummap[ev[1]]
                 for node in p.graph.grpnodes.get(num,[]):
                     p.trigger(node, ev[2] / 100.0)
                 p.log('nummap %d' % (num))
+                p.nummap(num)
     midithread = threading.Thread(target=mthread)
     midithread.start()
 
