@@ -171,7 +171,10 @@ class Player:
         for edgestate in self._state_edges:
             # print '    %d%% (%.2f)' % (edgestate.percentage * 100, edgestate.decay)
             if edgestate.iterate(t, self._speed, self._decay):
-                self._state_edges.pop(self._state_edges.index(edgestate))
+                if not self.burnbridges:
+                    # BB takes care of this.
+                    self._state_edges.pop(self._state_edges.index(edgestate))
+
                 self.trigger(edgestate.edge.b, vol=edgestate.decay)
 
                 # # destroy edge
@@ -186,7 +189,11 @@ class Player:
                 # Use looping nodes as regulators; pop only when regulation is negative.
                 self._state_nodes.pop(self._state_nodes.index(nodestate))
 
-                if nodestate.node.isloop and self.get_regulation() > 0:
+                if self.burnbridges:
+                    # burn sound
+                    nodestate.node.frames = None
+
+                if nodestate.node.isloop and self.get_regulation() > 0 and not self.burnbridges:
                     # smoothly retrigger
                     self.trigger(nodestate.node, frame=(nodestate.frame % len(nodestate.node.frames)))
 
@@ -229,7 +236,7 @@ class Player:
                 return
 
         # log trigger
-        if self._recording and len(self._out) > 0:
+        if self._recording and len(self._out) > 0 and node.frames is not None:
             timestamp = len(self._out) * len(self._out[0]) / 44100.0
             payload = node.payload
             if payload:
@@ -242,10 +249,13 @@ class Player:
         return (self._target - len(self._state_nodes)) / 5.0
 
     def destroy_edge(self, edge):
-        self.graph.remove_edge(edge, biremoval=True)
+        otheredge = self.graph.remove_edge(edge, biremoval=True)
         # Update base frame, if it exists
         base = self._get_base_frame()
         cv2.line(base, edge.a.pt, edge.b.pt, (200, 0, 0))
+
+        # remove in-progress traversals
+        self._state_edges = filter(lambda x: x.edge != edge and x.edge != otheredge, self._state_edges)
 
     def _get_base_frame(self):
         if not hasattr(self, '_baseframe'):
@@ -277,7 +287,10 @@ class Player:
         for edgestate in self._state_edges:
             cv2.line(out, edgestate.edge.a.pt, edgestate.get_position(), (0, 255, 255))
         for nodestate in self._state_nodes:
-            r = ((len(nodestate.node.frames)-nodestate.frame) / float(len(nodestate.node.frames))) * 10
+            if nodestate.node.frames is not None:
+                r = ((len(nodestate.node.frames)-nodestate.frame) / float(len(nodestate.node.frames))) * 10
+            else:
+                r = 5
             cv2.circle(out, nodestate.node.pt, int(r), (0, 255, 255), -1)
 
         status = self.get_status()

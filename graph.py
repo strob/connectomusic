@@ -65,7 +65,7 @@ class Graph:
                 if e.a == edge.b and e.b == edge.a:
                     self.edges.remove(e)
                     self._remove_edge_effects(e)
-                    break
+                    return e
 
     def node_outbound_cost(self, node):
         return len(self.node_edges(node))
@@ -143,15 +143,16 @@ def load_graph(left=False, bidirectional=False):
             id_to_node[X._id] = Node(_intpt(X.get_center()))
         return id_to_node[X._id]
 
-    edges = [Edge(_node(X[0]), _node(X[1]))#,
+    e2 = [Edge(_node(X[0]), _node(X[1]))#,
                   #cost=np.hypot(*(np.array(X[0].get_center())-X[1].get_center())))
              for X in edges]
 
     # make all edges (bi-)directional
     if bidirectional:
-        edges += [Edge(_node(X[0]), _node(X[1]),
-                       cost=np.hypot(*(np.array(X[0].get_center())-X[1].get_center())))
+        e2 += [Edge(_node(X[1]), _node(X[0]))
+                       # cost=np.hypot(*(np.array(X[0].get_center())-X[1].get_center())))
                   for X in edges]
+    edges = e2
 
     print '>graph'
     return Graph(edges)
@@ -190,8 +191,8 @@ def connect_to_samples(graph, files):
     in_the_void(graph)
     print '>done'
 
-def make_directed_graph():
-    g = load_graph()
+def make_directed_graph(bd=False):
+    g = load_graph(bidirectional=bd)
 
     print '>nedges'
     nodes = g.get_all_nodes()
@@ -202,23 +203,24 @@ def make_directed_graph():
 
     print '>reverse'
     # reverse backwards edges; edges flow `down' from more to fewer
-    for e in g.edges:
-        if e.a.nedges < e.b.nedges:
-            e.flip()
+    if not bd:
+        for e in g.edges:
+            if e.a.nedges < e.b.nedges:
+                e.flip()
 
     g._compute_nodemap()
 
     return g
 
-def connected_directed_graph(version=None):
-    g = make_directed_graph()
+def connected_directed_graph(version=None, bd=False):
+    g = make_directed_graph(bd=bd)
 
-    VERSIONS = ['final_material_tt_bearbeit', 
-                'final_material_tt_bearbeit_NEU_gekurzt',
-                'final_material_tt_bearbeit_2nd_order_NEUER',
+    VERSIONS = ['final_material_tt_bearbeit_(314)',
+                'final_material_tt_bearbeit_NEU_gekurzt_(170)',
+                'final_material_tt_bearbeit_2nd_order_NEUER_(459)',
                 '*']
     if version is None:
-        version = VERSIONS[0]
+        version = VERSIONS[-1]
 
     # files = glob.glob('snd/*/*.npy')
     # files = glob.glob('snd/final_material_tt_bearbeit_2nd_order_NEUER/*.npy')
