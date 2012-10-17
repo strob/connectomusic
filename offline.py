@@ -10,6 +10,8 @@ import os
 import shutil
 import subprocess
 
+import rerender
+
 FPS = 30
 R = 44100
 WINDOW = R/FPS
@@ -24,8 +26,8 @@ def render(params, outdir):
 
     os.makedirs(outdir)
 
-    g = graph.connected_directed_graph(version=params["sounds"], bd=params.get("bidirectional", False))
-    p = player.Player(g, speed=params["speed"], target_nnodes=params["target"], flipped=params["flipped"], burnbridges=params.get("burn", False))
+    g = graph.connected_directed_graph(version=params["sounds"], bd=params.get("bidirectional", False), files=params.get("files", None))
+    p = player.Player(g, speed=params["speed"], target_nnodes=params["target"], flipped=params.get("flipped", False), burnbridges=params.get("burn", False))
 
     # shutil.copy(sys.argv[1], os.path.join(outdir, 'orig.params.json'))
 
@@ -34,13 +36,13 @@ def render(params, outdir):
     p.toggle_recording()
 
     # trigger
-    for pt in params['mouse']:
+    for pt in params.get('mouse', []):
         node = g.nearest(pt[0], pt[1])
         p.trigger(node)
-    for num in params['nummap']:
+        print 'trigger', node.pt, pt, node.payload
+    for num in params.get('nummap',[]):
         for node in g.grpnodes.get(num,[]):
             p.trigger(node)
-    
 
     cur_t = 0
     rec_video = None
@@ -66,8 +68,12 @@ def render(params, outdir):
 
     p.toggle_recording()
 
+    # Actually, replace audio. Whatever.
+    print 're-render audio'
+    rerender.render('out.samples.txt')
+
     # join a/v & delete v
-    cmd = ['ffmpeg', '-i', 'out.avi', '-i', 'out.wav', '-acodec', 'copy', '-vcodec', 'copy', 'merge.avi']
+    cmd = ['ffmpeg', '-i', 'out.avi', '-i', 'noclip.wav', '-acodec', 'copy', '-vcodec', 'copy', 'merge.avi']
     p = subprocess.Popen(cmd)
     p.wait()
 

@@ -199,7 +199,10 @@ def make_directed_graph(bd=False):
 
     # precompute nedges
     for n in nodes:
-        n.nedges = len(g.all_node_edges(n))
+        if bd:
+            n.nedges = len(g.node_edges(n))
+        else:
+            n.nedges = len(g.all_node_edges(n))
 
     print '>reverse'
     # reverse backwards edges; edges flow `down' from more to fewer
@@ -212,7 +215,7 @@ def make_directed_graph(bd=False):
 
     return g
 
-def connected_directed_graph(version=None, bd=False):
+def connected_directed_graph(version=None, bd=False, files=None):
     g = make_directed_graph(bd=bd)
 
     VERSIONS = ['final_material_tt_bearbeit_(314)',
@@ -224,7 +227,8 @@ def connected_directed_graph(version=None, bd=False):
 
     # files = glob.glob('snd/*/*.npy')
     # files = glob.glob('snd/final_material_tt_bearbeit_2nd_order_NEUER/*.npy')
-    files = glob.glob('snd/%s/*.npy' % (version))
+    if files is None:
+        files = glob.glob('snd/%s/*.npy' % (version))
 
     g.version = version
 
@@ -241,6 +245,8 @@ def connected_directed_graph(version=None, bd=False):
         else:
             split[grp].append(f)
 
+    print 'SOUNDCOUNT', [(X, len(split[X])) for X in split.keys()]
+
     print '>assign'
 
     # assign sounds & amplifiers
@@ -250,6 +256,7 @@ def connected_directed_graph(version=None, bd=False):
             n.set_payload(split[grp].pop(), grp)
         else:
             # swap n with an amp
+            print 'OUT OF ', grp
             g.sub(n, AmplifierNode(n.pt, nedges=n.nedges), recompute_nodemap=False)
 
     # un-used sounds?

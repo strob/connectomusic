@@ -161,7 +161,7 @@ class Player:
         self._divisor = divisor
 
         a /= div
-        return a.astype(np.int16)
+        return a
 
     def next(self, buffer_size=2048):
         "Increment time unit and return sound buffer (as np-array)"
@@ -181,7 +181,7 @@ class Player:
                 if self.burnbridges:
                     self.destroy_edge(edgestate.edge)
 
-        out = np.zeros((buffer_size, 2), dtype=np.int)
+        out = np.zeros((buffer_size, 2), dtype=np.float32)
         # print '%d active nodes' % (len(self._state_nodes))
         for nodestate in self._state_nodes:
             # print '    %.2f (%d)' % (nodestate.vol, nodestate.frame)
@@ -236,12 +236,15 @@ class Player:
                 return
 
         # log trigger
-        if self._recording and len(self._out) > 0 and node.frames is not None:
-            timestamp = len(self._out) * len(self._out[0]) / 44100.0
+        if self._recording and node.frames is not None:
+            timestamp = 0
+            if len(self._out) > 0:
+                timestamp = len(self._out) * len(self._out[0]) / 44100.0
             payload = node.payload
+            pan = node.pt[0]  / 1250.0
             if payload:
                 duration = len(node.frames) / 44100.0
-                self._samples.append("%f\t%f\t%s" % (timestamp, timestamp+duration, payload))
+                self._samples.append("%f\t%f\t%f\t%s" % (timestamp, timestamp+duration, pan, payload.replace('.npy', '')))
 
         self._state_nodes.append(NodeState(node, vol, frame=frame))
 
@@ -338,7 +341,6 @@ if __name__=='__main__':
 
     out = np.concatenate(out)
 
-    out /= out.max() / float(2**15-1)
+    # out /= out.max() / float(2**15-1)
 
-    numm.np2sound(out.astype(np.int16),
-                  'out.wav')
+    numm.np2sound(out, 'out.wav')
