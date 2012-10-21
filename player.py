@@ -73,6 +73,8 @@ class NodeState:
         self.frame += nframes
 
         if self.frame >= len(self.node.frames):
+            if not self.node.isloop:
+                self.node.release_sound()
             if self.onend:
                 self.onend(self)
             return True
@@ -191,18 +193,21 @@ class Player:
 
                 if self.burnbridges:
                     # burn sound
-                    nodestate.node.frames = None
+                    nodestate.node.burn()
 
                 if nodestate.node.isloop and self.get_regulation() > 0 and not self.burnbridges:
                     # smoothly retrigger
                     self.trigger(nodestate.node, frame=(nodestate.frame % len(nodestate.node.frames)))
 
-                for target_edge in self.graph.node_edges(nodestate.node):
-                    active_edges = filter(lambda x: x.edge == target_edge, self._state_edges)
-                    if len(active_edges) > 0:
-                        active_edges[0].decay = min(MAX_VOL, active_edges[0].decay + nodestate.vol)
-                    else:
-                        self._state_edges.append(EdgeState(target_edge, nodestate.vol))
+                if self.get_regulation() > 0:
+                    # all nodes become regulatory
+
+                    for target_edge in self.graph.node_edges(nodestate.node):
+                        active_edges = filter(lambda x: x.edge == target_edge, self._state_edges)
+                        if len(active_edges) > 0:
+                            active_edges[0].decay = min(MAX_VOL, active_edges[0].decay + nodestate.vol)
+                        else:
+                            self._state_edges.append(EdgeState(target_edge, nodestate.vol))
 
         mixed = self.mix(out)
         if self._recording:

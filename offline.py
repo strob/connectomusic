@@ -31,7 +31,7 @@ def render(params, outdir):
 
     # shutil.copy(sys.argv[1], os.path.join(outdir, 'orig.params.json'))
 
-    os.chdir(outdir)
+    # os.chdir(outdir)
 
     p.toggle_recording()
 
@@ -42,6 +42,9 @@ def render(params, outdir):
         print 'trigger', node.pt, pt, node.payload
     for num in params.get('nummap',[]):
         for node in g.grpnodes.get(num,[]):
+            p.trigger(node)
+    if params.get('seizure', False):
+        for node in g.get_all_nodes():
             p.trigger(node)
 
     cur_t = 0
@@ -56,7 +59,7 @@ def render(params, outdir):
 
         if rec_video is None:
             rec_video = cv2.VideoWriter()
-            rec_video.open('out.avi', cv2.cv.CV_FOURCC(*'DIVX'), 30, (im.shape[1], im.shape[0]), True)
+            rec_video.open(os.path.join(outdir, 'out.avi'), cv2.cv.CV_FOURCC(*'DIVX'), 30, (im.shape[1], im.shape[0]), True)
 
         rec_video.write(im)
 
@@ -66,6 +69,7 @@ def render(params, outdir):
             print 'early finish', cur_t
             break
 
+    os.chdir(outdir)
     p.toggle_recording()
 
     # Actually, replace audio. Whatever.

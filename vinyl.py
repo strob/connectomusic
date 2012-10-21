@@ -11,32 +11,31 @@ def leftovers():
     return all_sounds.difference(used_sounds)
 
 NOT_SECOND_ORDER = 'final_material_tt_bearbeit_[N\(]*'
-        
 
-A = {"target": 1.5,
-     "speed": 15,
+A = {"target": 12, #5
+     "speed": 25,
      "mouse": [CENTER],
      "burn": True,
      "bidirectional": True,
      "sounds": SOUNDS[2]}
 
-B = {"target": 1.5,
-     "speed": 15,
+B = {"target": 12, #5
+     "speed": 25,
      "mouse": CORNERS,
      "burn": True,
      "bidirectional": True,
      "sounds": SOUNDS[2]}
 
-C = {"target": 25,
-     "speed": 5,
+C = {"target": 9999,
+     "speed": 7,
      "sounds": NOT_SECOND_ORDER,
-     "nummap": range(20),
+     "seizure": True,
      "flipped": False}
 
-D = {"target": 25,
-     "speed": 5,
+D = {"target": 9999,
+     "speed": 7,
      "sounds": NOT_SECOND_ORDER,
-     "nummap": range(20),
+     "seizure": True,
      "flipped": True}
 
 if __name__=='__main__':
