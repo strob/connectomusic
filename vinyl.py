@@ -12,15 +12,15 @@ def leftovers():
 
 NOT_SECOND_ORDER = 'final_material_tt_bearbeit_[N\(]*'
 
-A = {"target": 12, #5
-     "speed": 25,
+A = {"target": 3, #5
+     "speed": 20,
      "mouse": [CENTER],
      "burn": True,
      "bidirectional": True,
      "sounds": SOUNDS[2]}
 
-B = {"target": 12, #5
-     "speed": 25,
+B = {"target": 3, #5
+     "speed": 20,
      "mouse": CORNERS,
      "burn": True,
      "bidirectional": True,
@@ -42,6 +42,6 @@ if __name__=='__main__':
     render(A, "vinyl/A")
     render(B, "vinyl/B")
     # C["files"] = [X+'.npy' for X in leftovers()]
-    render(C, "vinyl/C")
-    # D["files"] = [X+'.npy' for X in leftovers()]
-    render(D, "vinyl/D")
+    # render(C, "vinyl/C")
+    # # D["files"] = [X+'.npy' for X in leftovers()]
+    # render(D, "vinyl/D")

@@ -21,10 +21,13 @@ class Graph:
             print 'using %d instead' % (nedges)
 
         samplelist = self.samplemap[nedges]
+        if len(samplelist) == 0:
+            return None
+
         sample = samplelist[0]
 
         # cycle samplemap
-        self.samplemap[nedges] = samplelist[1:] + [sample]
+        self.samplemap[nedges] = samplelist[1:]# + [sample]
 
         isloop = 'loop' in sample
 
@@ -153,7 +156,11 @@ class Node:
             print 'warning: burned! ignoring request'
             return
         print 'request new sound, degree %d' % (self.nedges)
-        self._payload, self._frames, self._isloop = self.graph.get_sample(self.nedges)
+        gotsample = self.graph.get_sample(self.nedges)
+        if gotsample is None:
+            print 'warning: all done with sample'
+            return
+        self._payload, self._frames, self._isloop = gotsample
         print 'got %s' % (self._payload)
 
     @property
