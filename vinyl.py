@@ -11,6 +11,13 @@ def leftovers():
     return all_sounds.difference(used_sounds)
 
 NOT_SECOND_ORDER = 'final_material_tt_bearbeit_[N\(]*'
+SECOND_AND_NEU = 'final_material_tt_bearbeit_[2N]*'
+
+# 2nd order sounds
+# bi-directional edges
+# don't repeat sounds
+
+# start in center
 
 A = {"target": 3, #5
      "speed": 20,
@@ -19,18 +26,30 @@ A = {"target": 3, #5
      "bidirectional": True,
      "sounds": SOUNDS[2]}
 
-B = {"target": 3, #5
-     "speed": 20,
+# start in at corners
+# half speed of A
+
+B = {"target": 4,
+     "speed": 10,
      "mouse": CORNERS,
      "burn": True,
      "bidirectional": True,
-     "sounds": SOUNDS[2]}
+     "sounds": SECOND_AND_NEU} #SOUNDS[2]}
 
+# non-2nd-order sounds
+# directed edges
+# allow repeating sounds
+# start with every node activated
+
+# move from higher-degree nodes to lower
 C = {"target": 9999,
      "speed": 7,
      "sounds": NOT_SECOND_ORDER,
      "seizure": True,
      "flipped": False}
+
+# move from lower-degree nodes to higher
+# enable loop-nodes
 
 D = {"target": 9999,
      "speed": 7,
@@ -40,7 +59,7 @@ D = {"target": 9999,
 
 if __name__=='__main__':
     render(A, "vinyl/A")
-    render(B, "vinyl/B")
+    render(B, "vinyl/B_And_Neu")
     # C["files"] = [X+'.npy' for X in leftovers()]
     # render(C, "vinyl/C")
     # # D["files"] = [X+'.npy' for X in leftovers()]
