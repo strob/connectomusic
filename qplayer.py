@@ -4,7 +4,7 @@ import tempfile
 import Image
 import numpy as np
 import sys
-import numm
+import numm.ui
 import threading
 
 from player import Player
@@ -277,7 +277,7 @@ def run():
 
     def audio():
         divisor = [1]
-        def a_out(a):
+        def a_out(a=None, **kw):
             # divisor[0] = max(1, len(p._state_nodes))
 
             # out = p.next(len(a))
@@ -287,7 +287,7 @@ def run():
             # a[:] = out.astype(np.int16)
             a[:] = p.next(len(a))
 
-        numm.run(audio_out=a_out)
+        numm.ui.NummRun(a_out).run()
     audiothread = threading.Thread(target=audio)
     audiothread.start()
 
