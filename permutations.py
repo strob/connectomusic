@@ -29,92 +29,94 @@ def _outdir(msg, params):
         params["ms"] += "%dx%d-" % (pt[0], pt[1])
     return "vid/%(msg)s-%(sounds)s-s%(speed)d-f%(flipped)d-t%(target)d-nm%(nm)s-ms%(ms)s%(extra)s" % (params)
 
-for idx, sound in enumerate(reversed(SOUNDS)):
+if __name__=='__main__':
 
-    # Corners simultaneous
-    params = baseparams.copy()
+    for idx, sound in enumerate(reversed(SOUNDS)):
 
-    params["sounds"] = sound
+        # Corners simultaneous
+        params = baseparams.copy()
 
-    params["mouse"] = CORNERS
-    for speed in [50, 20]:
-        params["speed"] = speed
+        params["sounds"] = sound
 
-        render(params, _outdir("simulcorners", params))
+        params["mouse"] = CORNERS
+        for speed in [50, 20]:
+            params["speed"] = speed
 
-    # sequential
-    params["speed"] = 150
-    for corner in CORNERS:
-        params["mouse"] = [corner]
+            render(params, _outdir("simulcorners", params))
 
-        render(params, _outdir("seqcorners", params))
+        # sequential
+        params["speed"] = 150
+        for corner in CORNERS:
+            params["mouse"] = [corner]
 
-    # center
-    params["mouse"] = [CENTER]
-    params["target"] = 2
-    params["speed"] = 20
+            render(params, _outdir("seqcorners", params))
 
-    render(params, _outdir("slowlowcenter", params))
+        # center
+        params["mouse"] = [CENTER]
+        params["target"] = 2
+        params["speed"] = 20
 
-    params["target"] = 1.5
-    params["speed"] = 8
-    render(params, _outdir("slowerlowercenter", params))
+        render(params, _outdir("slowlowcenter", params))
 
-    params["target"] = 50
-    params["speed"] = 6
-    render(params, _outdir("slowhightargetcenter", params))
+        params["target"] = 1.5
+        params["speed"] = 8
+        render(params, _outdir("slowerlowercenter", params))
 
-    params["target"] = 0.5
-    params["speed"] = 4
-    render(params, _outdir("slowestinhibitcenter", params))
+        params["target"] = 50
+        params["speed"] = 6
+        render(params, _outdir("slowhightargetcenter", params))
 
-    params["bidirectional"] = True
-    params["burn"] = True
-    params["speed"] = 8
-    render(params, _outdir("slowburningcenter", params))
+        params["target"] = 0.5
+        params["speed"] = 4
+        render(params, _outdir("slowestinhibitcenter", params))
 
-    params["speed"] = 20
-    render(params, _outdir("burningcenter", params))
+        params["bidirectional"] = True
+        params["burn"] = True
+        params["speed"] = 8
+        render(params, _outdir("slowburningcenter", params))
 
-    params["mouse"] = CORNERS
-    params["speed"] = 30
-    params["target"] = 10
-    render(params, _outdir("burningcorners", params))
+        params["speed"] = 20
+        render(params, _outdir("burningcenter", params))
 
-    params["bidirectional"] = False
-    params["burn"] = False
+        params["mouse"] = CORNERS
+        params["speed"] = 30
+        params["target"] = 10
+        render(params, _outdir("burningcorners", params))
 
-    params["target"] = 50
-    params["speed"] = 200
-    render(params, _outdir("fastcenter", params))
+        params["bidirectional"] = False
+        params["burn"] = False
 
-    # EVERYTHING
-    params["mouse"] = []
-    params["nummap"] = range(20)
+        params["target"] = 50
+        params["speed"] = 200
+        render(params, _outdir("fastcenter", params))
 
-    for speed in [20,200]:
-        params["speed"] = speed
+        # EVERYTHING
+        params["mouse"] = []
+        params["nummap"] = range(20)
+
+        for speed in [20,200]:
+            params["speed"] = speed
+            for flipped in [True, False]:
+                params["flipped"] = flipped
+                render(params, _outdir("everything", params))
+
+
+        # mid-letter
+        params["nummap"] = [7]
+        params["speed"] = 100
         for flipped in [True, False]:
             params["flipped"] = flipped
-            render(params, _outdir("everything", params))
+            render(params, _outdir("midletter", params))
 
+        # # highest point
+        # params["nummap"] = [18,19]
+        # params["flipped"] = False
+        # render(params, _outdir("highest", params))
 
-    # mid-letter
-    params["nummap"] = [7]
-    params["speed"] = 100
-    for flipped in [True, False]:
-        params["flipped"] = flipped
-        render(params, _outdir("midletter", params))
+        # lowest point
+        params["nummap"] = [1,2]
+        params["flipped"] = True
+        render(params, _outdir("lowest", params))
 
-    # # highest point
-    # params["nummap"] = [18,19]
-    # params["flipped"] = False
-    # render(params, _outdir("highest", params))
-
-    # lowest point
-    params["nummap"] = [1,2]
-    params["flipped"] = True
-    render(params, _outdir("lowest", params))
-    
-    params["speed"] = 10
-    render(params, _outdir("lowestslow", params))
+        params["speed"] = 10
+        render(params, _outdir("lowestslow", params))
