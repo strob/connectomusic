@@ -148,20 +148,22 @@ class Player:
         return self._recording
 
     def mix(self, a):
-        divisor = max(max(1, a.max() / float(2**15-1)),
-                      pow(len(self._state_nodes), 0.5))
+        return a
+        # divisor = max(max(1, a.max() / float(2**15-1)),
+        #               pow(len(self._state_nodes), 0.5))
 
-        if divisor != self._divisor:
-            div = np.linspace(self._divisor, divisor, len(a)).reshape((len(a),-1))
-            # print 'fade', self._divisor, divisor
-        else:
-            div = divisor
-        # print divisor
+        # if divisor != self._divisor:
+        #     div = np.linspace(self._divisor, divisor, len(a)).reshape((len(a),-1))
+        #     # print 'fade', self._divisor, divisor
+        # else:
+        #     div = divisor
+        # # print divisor
 
-        self._divisor = divisor
+        # self._divisor = divisor
 
-        a /= div
-        return a.astype(np.int16)
+        # print 'div', div
+        # a /= div
+        # return a.astype(np.int16)
 
     def next(self, buffer_size=2048):
         "Increment time unit and return sound buffer (as np-array)"
@@ -181,7 +183,7 @@ class Player:
                 if self.burnbridges:
                     self.destroy_edge(edgestate.edge)
 
-        out = np.zeros((buffer_size, 2), dtype=np.int)
+        out = np.zeros((buffer_size, 2), dtype=np.float32)
         # print '%d active nodes' % (len(self._state_nodes))
         for nodestate in self._state_nodes:
             # print '    %.2f (%d)' % (nodestate.vol, nodestate.frame)
@@ -252,27 +254,32 @@ class Player:
         otheredge = self.graph.remove_edge(edge, biremoval=True)
         # Update base frame, if it exists
         base = self._get_base_frame()
-        cv2.line(base, edge.a.pt, edge.b.pt, (200, 0, 0))
+        cv2.line(base, self.s(edge.a.pt), self.s(edge.b.pt), (200, 0, 0), self.scale)
 
         # remove in-progress traversals
         self._state_edges = filter(lambda x: x.edge != edge and x.edge != otheredge, self._state_edges)
 
-    def _get_base_frame(self):
+    def s(self, pt):
+        return (pt[0]*self.scale, pt[1]*self.scale)
+
+    def _get_base_frame(self, scale=1):
         if not hasattr(self, '_baseframe'):
             nodes = self.graph.get_nodes()
-            w = max([X.pt[0] for X in nodes])
-            h = max([X.pt[1] for X in nodes])
+            w = max([X.pt[0]*scale for X in nodes])
+            h = max([X.pt[1]*scale for X in nodes])
 
             out = np.zeros((h,w,3), dtype=np.uint8)
 
+            self.scale = scale
+
             for edge in self.graph.get_edges():
-                cv2.line(out, edge.a.pt, edge.b.pt, (100, 100, 100))
+                cv2.line(out, self.s(edge.a.pt), self.s(edge.b.pt), (100, 100, 100), scale)
 
             for node in nodes:
                 if isinstance(node, graph.AmplifierNode):
-                    cv2.circle(out, node.pt, 3, (50, 50, 50), -1)
+                    cv2.circle(out, self.s(node.pt), 3*scale, (50, 50, 50), -1)
                 else:
-                    cv2.circle(out, node.pt, 3, (200, 200, 200), -1)
+                    cv2.circle(out, self.s(node.pt), 3*scale, (200, 200, 200), -1)
                     # cv2.putText(out, "%d" % (node.group), node.pt, cv2.FONT_HERSHEY_PLAIN, 1, (255,255,255))
 
             self._baseframe = out
@@ -285,13 +292,13 @@ class Player:
         out = self._get_base_frame().copy()
 
         for edgestate in self._state_edges:
-            cv2.line(out, edgestate.edge.a.pt, edgestate.get_position(), (0, 255, 255))
+            cv2.line(out, self.s(edgestate.edge.a.pt), self.s(edgestate.get_position()), (0, 255, 255), self.scale)
         for nodestate in self._state_nodes:
             if nodestate.node.frames is not None:
                 r = ((len(nodestate.node.frames)-nodestate.frame) / float(len(nodestate.node.frames))) * 10
             else:
                 r = 5
-            cv2.circle(out, nodestate.node.pt, int(r), (0, 255, 255), -1)
+            cv2.circle(out, self.s(nodestate.node.pt), int(r*self.scale), (0, 255, 255), -1)
 
         status = self.get_status()
         cv2.putText(out, status, (10, 20), cv2.FONT_HERSHEY_PLAIN, 1, (255,255,255))
