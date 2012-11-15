@@ -15,6 +15,24 @@ R = 44100
 WINDOW = R/FPS
 MAX_DUR = 5*60                  # seconds
 
+def init(params):
+    g = graph.connected_directed_graph(version=params["sounds"], bd=params.get("bidirectional", False))
+    p = player.Player(g, speed=params["speed"], target_nnodes=params["target"], flipped=params.get("flipped", False), burnbridges=params.get("burn", False))
+
+    # trigger
+    for pt in params.get('mouse', []):
+        node = g.nearest(pt[0], pt[1])
+        p.trigger(node)
+    for num in params.get('nummap', []):
+        for node in g.grpnodes.get(num,[]):
+            p.trigger(node)
+    if params.get('seizure', False):
+        for node in g.get_all_nodes():
+            p.trigger(node)
+
+    return p
+    
+
 def render(params, outdir):
     curdir = os.getcwd()
 
