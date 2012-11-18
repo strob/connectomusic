@@ -28,7 +28,7 @@ view = MView(scene)
 # scene.addPixmap(left)
  
 right = QtGui.QPixmap('right_aligned.png')
-scene.addPixmap(right)
+# scene.addPixmap(right)
 
 EDGES = graph.getEdges()
 def saveEdges():
@@ -76,7 +76,7 @@ class QGEdge(QtGui.QGraphicsLineItem):
         self.setAcceptHoverEvents(True)
 
         pen = QtGui.QPen()
-        pen.setColor(QtCore.Qt.yellow)
+        pen.setColor(QtCore.Qt.black)
         pen.setWidth(3)
 
         self.setPen(pen)
@@ -85,11 +85,11 @@ class QGEdge(QtGui.QGraphicsLineItem):
 
     def hoverEnterEvent(self, event):
         pen = self.pen()
-        pen.setColor(QtCore.Qt.red)
+        pen.setColor(QtCore.Qt.yellow)
         self.setPen(pen)
     def hoverLeaveEvent(self, event):
         pen = self.pen()
-        pen.setColor(QtCore.Qt.yellow)
+        pen.setColor(QtCore.Qt.black)
         self.setPen(pen)
 
     def mousePressEvent(self, event):
@@ -114,7 +114,7 @@ class QGNode(QtGui.QGraphicsEllipseItem):
         x,y = node.get_center()
         r = node.get_radius()
         QtGui.QGraphicsEllipseItem.__init__(self, x-r, y-r, 2*r, 2*r)
-        self.setBrush(QtCore.Qt.green)
+        self.setBrush(QtCore.Qt.black)
         self.setAcceptHoverEvents(True)
 
         self.setZValue(10)
@@ -125,7 +125,7 @@ class QGNode(QtGui.QGraphicsEllipseItem):
 
     def mousePressEvent(self, event):
         print 'mousepress', self
-        self.setBrush(QtCore.Qt.red)
+        self.setBrush(QtCore.Qt.green)
 
         pos = event.scenePos()
 
@@ -141,7 +141,7 @@ class QGNode(QtGui.QGraphicsEllipseItem):
 
         scene.addItem(self.edgeline)
 
-        # If this is called, mouseReleaseEvent/move events aren't fired
+        # If this is called, mouseReleaseEvent/move events aren't fiblack
         # (I'm *sure* it's somehow internally consistent, don't worry)
         # QtGui.QGraphicsEllipseItem.mousePressEvent(self, event)
 
@@ -170,7 +170,7 @@ class QGNode(QtGui.QGraphicsEllipseItem):
         addEdge(self.node, self.nearest_node)
     
     def hoverLeaveEvent(self, event):
-        self.setBrush(QtCore.Qt.green)
+        self.setBrush(QtCore.Qt.black)
         QtGui.QGraphicsEllipseItem.hoverLeaveEvent(self, event)
 
 # nodebrush = QtGui.QBrush(QtGui.QColor('yellow'));

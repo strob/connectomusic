@@ -260,9 +260,9 @@ class Player:
         self._state_edges = filter(lambda x: x.edge != edge and x.edge != otheredge, self._state_edges)
 
     def s(self, pt):
-        return (pt[0]*self.scale, pt[1]*self.scale)
+        return (int(pt[0]*self.scale), int(pt[1]*self.scale))
 
-    def _get_base_frame(self, scale=1):
+    def _get_base_frame(self, scale=1, thick=1):
         if not hasattr(self, '_baseframe'):
             nodes = self.graph.get_nodes()
             w = max([X.pt[0]*scale for X in nodes])
@@ -271,15 +271,16 @@ class Player:
             out = np.zeros((h,w,3), dtype=np.uint8)
 
             self.scale = scale
+            self.thick = thick
 
             for edge in self.graph.get_edges():
-                cv2.line(out, self.s(edge.a.pt), self.s(edge.b.pt), (100, 100, 100), scale)
+                cv2.line(out, self.s(edge.a.pt), self.s(edge.b.pt), (100, 100, 100), int(np.ceil(scale*thick)))
 
-            for node in nodes:
-                if isinstance(node, graph.AmplifierNode):
-                    cv2.circle(out, self.s(node.pt), 3*scale, (50, 50, 50), -1)
-                else:
-                    cv2.circle(out, self.s(node.pt), 3*scale, (200, 200, 200), -1)
+            # for node in nodes:
+            #     if isinstance(node, graph.AmplifierNode):
+            #         cv2.circle(out, self.s(node.pt), int(3*scale), (50, 50, 50), -1)
+            #     else:
+            #         cv2.circle(out, self.s(node.pt), int(3*scale), (200, 200, 200), -1)
                     # cv2.putText(out, "%d" % (node.group), node.pt, cv2.FONT_HERSHEY_PLAIN, 1, (255,255,255))
 
             self._baseframe = out
@@ -292,7 +293,7 @@ class Player:
         out = self._get_base_frame().copy()
 
         for edgestate in self._state_edges:
-            cv2.line(out, self.s(edgestate.edge.a.pt), self.s(edgestate.get_position()), (0, 255, 255), self.scale)
+            cv2.line(out, self.s(edgestate.edge.a.pt), self.s(edgestate.get_position()), (0, 255, 255), int(np.ceil(self.scale*self.thick)))
         for nodestate in self._state_nodes:
             if nodestate.node.frames is not None:
                 r = ((len(nodestate.node.frames)-nodestate.frame) / float(len(nodestate.node.frames))) * 10
