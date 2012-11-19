@@ -27,7 +27,7 @@ class Graph:
         sample = samplelist[0]
 
         # cycle samplemap
-        self.samplemap[nedges] = samplelist[1:]# + [sample]
+        self.samplemap[nedges] = samplelist[1:] + [sample]
 
         isloop = 'loop' in sample
 

@@ -10,7 +10,7 @@ import os
 import shutil
 import subprocess
 
-import rerender
+# import rerender
 
 FPS = 30
 R = 44100
@@ -91,8 +91,8 @@ def render(params, outdir):
     p.toggle_recording()
 
     # Actually, replace audio. Whatever.
-    print 're-render audio'
-    rerender.render('out.samples.txt')
+    # print 're-render audio'
+    # rerender.render('out.samples.txt')
 
     # join a/v & delete v
     cmd = ['ffmpeg', '-i', 'out.avi', '-i', 'noclip.wav', '-acodec', 'copy', '-vcodec', 'copy', 'merge.avi']
