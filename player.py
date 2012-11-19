@@ -262,7 +262,7 @@ class Player:
         otheredge = self.graph.remove_edge(edge, biremoval=True)
         # Update base frame, if it exists
         base = self._get_base_frame()
-        cv2.line(base, self.s(edge.a.pt), self.s(edge.b.pt), (200, 0, 0), self.scale)
+        cv2.line(base, self.s(edge.a.pt), self.s(edge.b.pt), (200, 0, 0), int(np.ceil(self.scale*self.thick)))
 
         # remove in-progress traversals
         self._state_edges = filter(lambda x: x.edge != edge and x.edge != otheredge, self._state_edges)
