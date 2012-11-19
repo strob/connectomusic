@@ -73,6 +73,8 @@ class NodeState:
         self.frame += nframes
 
         if self.frame >= len(self.node.frames):
+            if not self.node.isloop:
+                self.node.release_sound()
             if self.onend:
                 self.onend(self)
             return True
@@ -148,22 +150,22 @@ class Player:
         return self._recording
 
     def mix(self, a):
-        return a
-        # divisor = max(max(1, a.max() / float(2**15-1)),
-        #               pow(len(self._state_nodes), 0.5))
+        # return a
+        divisor = max(max(1, a.max() / float(2**15-1)),
+                      pow(len(self._state_nodes), 0.5))
 
-        # if divisor != self._divisor:
-        #     div = np.linspace(self._divisor, divisor, len(a)).reshape((len(a),-1))
-        #     # print 'fade', self._divisor, divisor
-        # else:
-        #     div = divisor
-        # # print divisor
+        if divisor != self._divisor:
+            div = np.linspace(self._divisor, divisor, len(a)).reshape((len(a),-1))
+            # print 'fade', self._divisor, divisor
+        else:
+            div = divisor
+        # print divisor
 
-        # self._divisor = divisor
+        self._divisor = divisor
 
         # print 'div', div
-        # a /= div
-        # return a.astype(np.int16)
+        a /= div
+        return a.astype(np.int16)
 
     def next(self, buffer_size=2048):
         "Increment time unit and return sound buffer (as np-array)"
@@ -193,18 +195,21 @@ class Player:
 
                 if self.burnbridges:
                     # burn sound
-                    nodestate.node.frames = None
+                    nodestate.node.burn()
 
                 if nodestate.node.isloop and self.get_regulation() > 0 and not self.burnbridges:
                     # smoothly retrigger
                     self.trigger(nodestate.node, frame=(nodestate.frame % len(nodestate.node.frames)))
 
-                for target_edge in self.graph.node_edges(nodestate.node):
-                    active_edges = filter(lambda x: x.edge == target_edge, self._state_edges)
-                    if len(active_edges) > 0:
-                        active_edges[0].decay = min(MAX_VOL, active_edges[0].decay + nodestate.vol)
-                    else:
-                        self._state_edges.append(EdgeState(target_edge, nodestate.vol))
+                if self.get_regulation() > 0:
+                    # all nodes become regulatory
+
+                    for target_edge in self.graph.node_edges(nodestate.node):
+                        active_edges = filter(lambda x: x.edge == target_edge, self._state_edges)
+                        if len(active_edges) > 0:
+                            active_edges[0].decay = min(MAX_VOL, active_edges[0].decay + nodestate.vol)
+                        else:
+                            self._state_edges.append(EdgeState(target_edge, nodestate.vol))
 
         mixed = self.mix(out)
         if self._recording:
@@ -238,12 +243,15 @@ class Player:
                 return
 
         # log trigger
-        if self._recording and len(self._out) > 0 and node.frames is not None:
-            timestamp = len(self._out) * len(self._out[0]) / 44100.0
+        if self._recording and node.frames is not None:
+            timestamp = 0
+            if len(self._out) > 0:
+                timestamp = len(self._out) * len(self._out[0]) / 44100.0
             payload = node.payload
+            pan = node.pt[0]  / 1250.0
             if payload:
                 duration = len(node.frames) / 44100.0
-                self._samples.append("%f\t%f\t%s" % (timestamp, timestamp+duration, payload))
+                self._samples.append("%f\t%f\t%f\t%s" % (timestamp, timestamp+duration, pan, payload.replace('.npy', '')))
 
         self._state_nodes.append(NodeState(node, vol, frame=frame))
 
@@ -346,7 +354,6 @@ if __name__=='__main__':
 
     out = np.concatenate(out)
 
-    out /= out.max() / float(2**15-1)
+    # out /= out.max() / float(2**15-1)
 
-    numm.np2sound(out.astype(np.int16),
-                  'out.wav')
+    numm.np2sound(out, 'out.wav')

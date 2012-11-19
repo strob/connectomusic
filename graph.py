@@ -10,6 +10,31 @@ class Graph:
         self.edges = edges
         self._compute_nodemap()
         self.version = ""
+        self.samplemap = {}
+
+    def get_sample(self, nedges):
+        "returns (payload, frames, isloop)"
+
+        if nedges not in self.samplemap:
+            print 'warning: %d not in samplemap' % (nedges)
+            nedges = max(self.samplemap.keys())
+            print 'using %d instead' % (nedges)
+
+        samplelist = self.samplemap[nedges]
+        if len(samplelist) == 0:
+            return None
+
+        sample = samplelist[0]
+
+        # cycle samplemap
+        self.samplemap[nedges] = samplelist[1:]# + [sample]
+
+        isloop = 'loop' in sample
+
+        # xxx: cache loaded sounds?
+        frames = np.load(sample)
+
+        return (sample, frames, isloop)
 
     def _compute_nodemap(self):
         self.nodes = {}         # {node -> [edges]}
@@ -107,21 +132,54 @@ class Edge:
         self.b = c
 
 class Node:
-    def __init__(self, pt, payload=None, group=None, nedges=0):
+    def __init__(self, pt, graph=None, nedges=0):
         self.pt = pt
         self.nedges = nedges
-        self.set_payload(payload, group)
+        self.graph = graph
+        self._burned = False
 
-    def set_payload(self, payload, group):
-        self.payload = payload
-        self.group = group
-        self.isloop = payload is not None and 'loop' in payload
+        self.release_sound()
 
-        if self.payload is None:
-            self.frames = None
-        else:
-            #self.frames = numm.sound2np(payload)
-            self.frames = np.load(payload)
+    def burn(self):
+        self._burned = True
+        self.release_sound()
+
+    def release_sound(self):
+        # relinquish current assignment
+        self._payload = None
+        self._frames = None
+        self._isloop = None
+
+    def request_sound(self):
+        # get new sound from graph
+        if self._burned:
+            print 'warning: burned! ignoring request'
+            return
+        print 'request new sound, degree %d' % (self.nedges)
+        gotsample = self.graph.get_sample(self.nedges)
+        if gotsample is None:
+            print 'warning: all done with sample'
+            return
+        self._payload, self._frames, self._isloop = gotsample
+        print 'got %s' % (self._payload)
+
+    @property
+    def payload(self):
+        if self._payload is None:
+            self.request_sound()
+        return self._payload
+
+    @property
+    def frames(self):
+        if self._frames is None:
+            self.request_sound()
+        return self._frames
+
+    @property
+    def isloop(self):
+        if self._isloop is None:
+            self.request_sound()
+        return self._isloop
 
 class AmplifierNode(Node):
     pass
@@ -197,9 +255,13 @@ def make_directed_graph(bd=False):
     print '>nedges'
     nodes = g.get_all_nodes()
 
-    # precompute nedges
+    # precompute nedges & link to graph 
     for n in nodes:
-        n.nedges = len(g.all_node_edges(n))
+        n.graph = g
+        if bd:
+            n.nedges = len(g.node_edges(n))
+        else:
+            n.nedges = len(g.all_node_edges(n))
 
     print '>reverse'
     # reverse backwards edges; edges flow `down' from more to fewer
@@ -212,7 +274,7 @@ def make_directed_graph(bd=False):
 
     return g
 
-def connected_directed_graph(version=None, bd=False):
+def connected_directed_graph(version=None, bd=False, files=None):
     g = make_directed_graph(bd=bd)
 
     VERSIONS = ['final_material_tt_bearbeit_(314)',
@@ -224,7 +286,8 @@ def connected_directed_graph(version=None, bd=False):
 
     # files = glob.glob('snd/*/*.npy')
     # files = glob.glob('snd/final_material_tt_bearbeit_2nd_order_NEUER/*.npy')
-    files = glob.glob('snd/%s/*.npy' % (version))
+    if files is None:
+        files = glob.glob('snd/%s/*.npy' % (version))
 
     g.version = version
 
@@ -232,29 +295,34 @@ def connected_directed_graph(version=None, bd=False):
 
     # split by nedges
     split = {}
-    for f in files:
+    for f in sorted(files):
         grp = _get_group(f)
         if not split.has_key(grp):
             split[grp] = []
-        if 'loop' in f:
-            split[grp].insert(0, f)
+        # if 'loop' in f:
+        #     split[grp].insert(0, f)
         else:
             split[grp].append(f)
 
-    print '>assign'
+    g.samplemap = split
 
-    # assign sounds & amplifiers
-    for n in g.get_all_nodes():
-        grp = n.nedges
-        if len(split.get(grp,[])) > 0:
-            n.set_payload(split[grp].pop(), grp)
-        else:
-            # swap n with an amp
-            g.sub(n, AmplifierNode(n.pt, nedges=n.nedges), recompute_nodemap=False)
+    # print 'SOUNDCOUNT', [(X, len(split[X])) for X in split.keys()]
 
-    # un-used sounds?
-    print 'unused sounds', split
+    # print '>assign'
 
-    g._compute_nodemap()
+    # # assign sounds & amplifiers
+    # for n in g.get_all_nodes():
+    #     grp = n.nedges
+    #     if len(split.get(grp,[])) > 0:
+    #         n.set_payload(split[grp].pop(), grp)
+    #     else:
+    #         # swap n with an amp
+    #         print 'OUT OF ', grp
+    #         g.sub(n, AmplifierNode(n.pt, nedges=n.nedges), recompute_nodemap=False)
+
+    # # un-used sounds?
+    # print 'unused sounds', split
+
+    # g._compute_nodemap()
 
     return g
