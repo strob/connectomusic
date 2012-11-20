@@ -213,7 +213,7 @@ def load_graph(left=False, bidirectional=False):
     edges = e2
 
     print '>graph'
-    return Graph(edges)
+    return  Graph(edges)
 
 def _get_group(x):
     return int(os.path.basename(x).split('_')[0])
@@ -284,8 +284,6 @@ def connected_directed_graph(version=None, bd=False, files=None):
     if version is None:
         version = VERSIONS[-1]
 
-    # files = glob.glob('snd/*/*.npy')
-    # files = glob.glob('snd/final_material_tt_bearbeit_2nd_order_NEUER/*.npy')
     if files is None:
         files = glob.glob('snd/%s/*.npy' % (version))
 
@@ -306,23 +304,5 @@ def connected_directed_graph(version=None, bd=False, files=None):
 
     g.samplemap = split
 
-    # print 'SOUNDCOUNT', [(X, len(split[X])) for X in split.keys()]
-
-    # print '>assign'
-
-    # # assign sounds & amplifiers
-    # for n in g.get_all_nodes():
-    #     grp = n.nedges
-    #     if len(split.get(grp,[])) > 0:
-    #         n.set_payload(split[grp].pop(), grp)
-    #     else:
-    #         # swap n with an amp
-    #         print 'OUT OF ', grp
-    #         g.sub(n, AmplifierNode(n.pt, nedges=n.nedges), recompute_nodemap=False)
-
-    # # un-used sounds?
-    # print 'unused sounds', split
-
-    # g._compute_nodemap()
 
     return g
