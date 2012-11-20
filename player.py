@@ -374,6 +374,26 @@ class Player:
 
         return out
 
+    def zoom(self, node, factor=5):
+        "zoom in on a node and return a buffer the same size as the baseframe"
+
+        # XXX: we *could* re-render, clipping at scale...
+
+        out = self.draw()
+
+        w = out.shape[1]/factor
+        h = out.shape[0]/factor
+
+        center = self.s(node.pt)
+        center = (max(w/2, center[0]),
+                  max(h/2, center[1]))
+
+        return cv2.resize(out[center[1]-h/2:center[1]+h/2,
+                              center[0]-w/2:center[0]+w/2],
+                          (out.shape[1],out.shape[0]))
+
+        
+
     def get_status(self):
         return "%02d active (T=%02d,S=%d,F=%d)" % (len(self._state_nodes), self._target, self._speed, self._flipped)
 
