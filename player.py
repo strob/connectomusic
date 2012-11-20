@@ -88,6 +88,8 @@ class Player:
         self._state_edges = []  # [EdgeState]
         self._state_nodes = []  # [NodeState]
 
+        self._selection = []
+
         self._speed = speed     # px/sec
         self._decay = decay     # %/px
 
@@ -293,6 +295,17 @@ class Player:
     def get_regulation(self):
         return (self._target - len(self._state_nodes)) / 5.0
 
+    def trigger_selection(self):
+        for n in self._selection:
+            self.trigger(n)
+        self._selection = []
+
+    def select_by_nedges(self, N, limit=999):
+        self._selection = self.graph.grpnodes.get(N, [])[:limit]
+
+    def select_by_coords(self, pts):
+        self._selection = [self.graph.nearest(pt) for pt in pts]
+
     def destroy_edge(self, edge):
         otheredge = self.graph.remove_edge(edge, biremoval=True)
         # Update base frame, if it exists
@@ -308,8 +321,8 @@ class Player:
     def _get_base_frame(self):
         if not hasattr(self, '_baseframe') or self._baseframe is None:
             nodes = self.graph.get_nodes()
-            w = max([X.pt[0]*self.scale for X in nodes])
-            h = max([X.pt[1]*self.scale for X in nodes])
+            w = max([X.pt[0]*self.scale for X in nodes]) + 20
+            h = max([X.pt[1]*self.scale for X in nodes]) + 20
 
             out = np.zeros((h,w,3), dtype=np.uint8)
             direction = np.zeros((h,w,3), dtype=np.uint8)
@@ -351,6 +364,10 @@ class Player:
             else:
                 r = 5
             cv2.circle(out, self.s(nodestate.node.pt), int(r*self.scale), (0, 255, 255), -1)
+
+        for node in self._selection:
+            r = 10
+            cv2.circle(out, self.s(node.pt), int(r*self.scale), (255, 255, 0), -1)
 
         status = self.get_status()
         cv2.putText(out, status, (10, 20), cv2.FONT_HERSHEY_PLAIN, 1, (255,255,255))

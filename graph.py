@@ -61,8 +61,8 @@ class Graph:
 
         self.grpnodes = {}      # {grp -> [nodes]}
         for n in self.get_all_nodes():
-            if hasattr(n, 'group'):
-                self.grpnodes.setdefault(n.group, []).append(n)
+            if hasattr(n, 'nedges'):
+                self.grpnodes.setdefault(n.nedges, []).append(n)
 
     def node_edges(self, node):
         return self.nodes.get(node, [])
