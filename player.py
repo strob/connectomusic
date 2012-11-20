@@ -81,10 +81,8 @@ class NodeState:
 
         return False
 
-DECAY_CUTOFF = 0.05
-
 class Player:
-    def __init__(self, graph, speed=50, decay=0.95, target_nnodes=10, burnbridges=False, flipped = False):
+    def __init__(self, graph, speed=50, decay=0.95, target_nnodes=10, burnbridges=False, flipped=False, scale=1, thick=1):
         self.graph = graph
 
         self._state_edges = []  # [EdgeState]
@@ -107,6 +105,9 @@ class Player:
         self._samples = []
         self._divisor = 10000
 
+        self.scale = scale
+        self.thick = thick
+
     def flip(self):
         for e in self.graph.edges:
             e.flip()
@@ -122,6 +123,23 @@ class Player:
         # logging
         if self._recording:
             self._nummap.append(num)
+
+    def burntoggle(self):
+        if self.burnbridges:
+            # un-burn edges
+            for e in self.graph._burnededges:
+                self.graph.edges.append(e)
+            self.graph._compute_nodemap()
+            self.graph._burnededges = []
+
+            # un-burn nodes
+            for n in self.graph.get_all_nodes():
+                n._burned = False
+            self._baseframe = None
+        else:
+            pass
+        
+        self.burnbridges = not self.burnbridges
 
     def toggle_recording(self):
         if self._recording:
@@ -271,28 +289,25 @@ class Player:
     def s(self, pt):
         return (int(pt[0]*self.scale), int(pt[1]*self.scale))
 
-    def _get_base_frame(self, scale=1, thick=1):
+    def _get_base_frame(self):
         if not hasattr(self, '_baseframe') or self._baseframe is None:
             nodes = self.graph.get_nodes()
-            w = max([X.pt[0]*scale for X in nodes])
-            h = max([X.pt[1]*scale for X in nodes])
+            w = max([X.pt[0]*self.scale for X in nodes])
+            h = max([X.pt[1]*self.scale for X in nodes])
 
             out = np.zeros((h,w,3), dtype=np.uint8)
             direction = np.zeros((h,w,3), dtype=np.uint8)
 
-            self.scale = scale
-            self.thick = thick
-
             direction_px = 4
 
             for edge in self.graph.get_edges():
-                cv2.line(out, self.s(edge.a.pt), self.s(edge.b.pt), (100, 100, 100), int(np.ceil(scale*thick)))
+                cv2.line(out, self.s(edge.a.pt), self.s(edge.b.pt), (100, 100, 100), int(np.ceil(self.scale*self.thick)))
 
                 # indicate direction of edge with a small green startline
                 dir_percent = direction_px / edge.length
                 dir_pt = (edge.a.pt[0]+dir_percent*(edge.b.pt[0]-edge.a.pt[0]),
                           edge.a.pt[1]+dir_percent*(edge.b.pt[1]-edge.a.pt[1]))
-                cv2.line(direction, self.s(edge.a.pt), self.s(dir_pt), (100, 255, 100), int(np.ceil(scale*thick)))
+                cv2.line(direction, self.s(edge.a.pt), self.s(dir_pt), (100, 255, 100), int(np.ceil(self.scale*self.thick)))
                 
 
             # for node in nodes:

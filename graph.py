@@ -12,6 +12,14 @@ class Graph:
         self.version = ""
         self.samplemap = {}
 
+        self._burnededges = []
+
+    def cache_sounds(self):
+        self._soundcache = {}
+        for s in self.samplemap.values():
+            for sound in s:
+                self._soundcache[sound] = np.load(sound)
+
     def get_sample(self, nedges):
         "returns (payload, frames, isloop)"
 
@@ -31,8 +39,8 @@ class Graph:
 
         isloop = 'loop' in sample
 
-        # xxx: cache loaded sounds?
-        frames = np.load(sample)
+        # frames = np.load(sample)
+        frames = self._soundcache[sample]
 
         return (sample, frames, isloop)
 
@@ -80,6 +88,8 @@ class Graph:
             self.nodes[node] = filter(lambda x: x != edge, edges)
 
     def remove_edge(self, edge, biremoval=False):
+        self._burnededges.append(edge)
+
         try:
             self.edges.remove(edge)
         except:
@@ -88,6 +98,7 @@ class Graph:
         if biremoval:
             for e in self.edges:
                 if e.a == edge.b and e.b == edge.a:
+                    self._burnededges.append(e)
                     self.edges.remove(e)
                     self._remove_edge_effects(e)
                     return e
@@ -303,6 +314,6 @@ def connected_directed_graph(version=None, bd=False, files=None):
             split[grp].append(f)
 
     g.samplemap = split
-
+    g.cache_sounds()
 
     return g

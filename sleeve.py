@@ -23,9 +23,11 @@ for side in 'ABCD':
 
     params = getattr(vinyl, side)
     player = offline.init(params)
+    player.scale = scale
+    player.thick = thick
 
     # Set to high-resolution
-    base = player._get_base_frame(scale=scale,thick=thick)
+    base = player._get_base_frame()#scale=scale,thick=thick)
 
     # numm.np2image(base, '%s-base.png' % (side))
     save(base, '%s-base.png' % (side))
