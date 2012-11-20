@@ -112,6 +112,7 @@ class Player:
             e.flip()
         self.graph._compute_nodemap()
         self._flipped = not self._flipped
+        self._baseframe = None
 
     def click(self, pos):
         # just for logging
@@ -271,18 +272,28 @@ class Player:
         return (int(pt[0]*self.scale), int(pt[1]*self.scale))
 
     def _get_base_frame(self, scale=1, thick=1):
-        if not hasattr(self, '_baseframe'):
+        if not hasattr(self, '_baseframe') or self._baseframe is None:
             nodes = self.graph.get_nodes()
             w = max([X.pt[0]*scale for X in nodes])
             h = max([X.pt[1]*scale for X in nodes])
 
             out = np.zeros((h,w,3), dtype=np.uint8)
+            direction = np.zeros((h,w,3), dtype=np.uint8)
 
             self.scale = scale
             self.thick = thick
 
+            direction_px = 4
+
             for edge in self.graph.get_edges():
                 cv2.line(out, self.s(edge.a.pt), self.s(edge.b.pt), (100, 100, 100), int(np.ceil(scale*thick)))
+
+                # indicate direction of edge with a small green startline
+                dir_percent = direction_px / edge.length
+                dir_pt = (edge.a.pt[0]+dir_percent*(edge.b.pt[0]-edge.a.pt[0]),
+                          edge.a.pt[1]+dir_percent*(edge.b.pt[1]-edge.a.pt[1]))
+                cv2.line(direction, self.s(edge.a.pt), self.s(dir_pt), (100, 255, 100), int(np.ceil(scale*thick)))
+                
 
             # for node in nodes:
             #     if isinstance(node, graph.AmplifierNode):
@@ -291,6 +302,7 @@ class Player:
             #         cv2.circle(out, self.s(node.pt), int(3*scale), (200, 200, 200), -1)
                     # cv2.putText(out, "%d" % (node.group), node.pt, cv2.FONT_HERSHEY_PLAIN, 1, (255,255,255))
 
+            out[direction>0] = direction[direction>0]
             self._baseframe = out
 
         return self._baseframe
