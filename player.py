@@ -82,7 +82,7 @@ class NodeState:
         return False
 
 class Player:
-    def __init__(self, graph, speed=50, decay=0.95, target_nnodes=10, burnbridges=False, flipped=False, scale=1, thick=1):
+    def __init__(self, graph, speed=50, decay=0.95, target_nnodes=10, burnbridges=False, flipped=False, scale=1, thick=1, bidirectional=False):
         self.graph = graph
 
         self._state_edges = []  # [EdgeState]
@@ -96,6 +96,8 @@ class Player:
         self._flipped = False
         if flipped:
             self.flip()
+
+        self._bidirectional = bidirectional
 
         self.burnbridges = burnbridges
 
@@ -140,6 +142,20 @@ class Player:
             pass
         
         self.burnbridges = not self.burnbridges
+
+    def bidirectionaltoggle(self):
+        if self._bidirectional:
+            if self._flipped:
+                self.graph.edges = filter(lambda x: x.a.nedges < x.b.nedges, self.graph.edges)
+            else:
+                self.graph.edges = filter(lambda x: x.a.nedges > x.b.nedges, self.graph.edges)
+        else:
+            newedges = [graph.Edge(e.b, e.a) for e in self.graph.edges]
+            self.graph.edges += newedges
+
+        self.graph._compute_nodemap()
+        self._baseframe = None
+        self._bidirectional = not self._bidirectional
 
     def toggle_recording(self):
         if self._recording:

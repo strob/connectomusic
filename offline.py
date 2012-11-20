@@ -19,7 +19,7 @@ MAX_DUR = 5*60                  # seconds
 
 def init(params):
     g = graph.connected_directed_graph(version=params["sounds"], bd=params.get("bidirectional", False))
-    p = player.Player(g, speed=params["speed"], target_nnodes=params["target"], flipped=params.get("flipped", False), burnbridges=params.get("burn", False))
+    p = player.Player(g, speed=params["speed"], target_nnodes=params["target"], flipped=params.get("flipped", False), burnbridges=params.get("burn", False), bidirectional=params.get("bidirectional", False))
 
     # trigger
     for pt in params.get('mouse', []):
