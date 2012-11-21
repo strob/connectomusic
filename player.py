@@ -149,10 +149,22 @@ class Player:
 
     def bidirectionaltoggle(self):
         if self._bidirectional:
+            equal = filter(lambda x: x.a.nedges == x.b.nedges, self.graph.edges)
             if self._flipped:
                 self.graph.edges = filter(lambda x: x.a.nedges < x.b.nedges, self.graph.edges)
             else:
                 self.graph.edges = filter(lambda x: x.a.nedges > x.b.nedges, self.graph.edges)
+
+            # reinsert ties -- in arbitrary (*gasp*) order
+            ties = set()
+            add = []
+            for e in equal:
+                if (e.a, e.b) in ties:
+                    continue
+                ties.add((e.b, e.a))
+                add.append(e)
+            self.graph.edges.extend(add)
+
         else:
             newedges = [graph.Edge(e.b, e.a) for e in self.graph.edges]
             self.graph.edges += newedges
@@ -331,7 +343,7 @@ class Player:
         self._selection = self.graph.grpnodes.get(N, [])[:limit]
 
     def select_by_coords(self, pts):
-        self._selection = [self.graph.nearest(pt) for pt in pts]
+        self._selection = [self.graph.nearest(*pt) for pt in pts]
 
     def destroy_edge(self, edge):
         otheredge = self.graph.remove_edge(edge, biremoval=True)
@@ -347,7 +359,7 @@ class Player:
 
     def _get_base_frame(self):
         if not hasattr(self, '_baseframe') or self._baseframe is None:
-            nodes = self.graph.get_nodes()
+            nodes = self.graph.get_all_nodes()
             w = max([X.pt[0]*self.scale for X in nodes]) + 20
             h = max([X.pt[1]*self.scale for X in nodes]) + 20
 
@@ -364,7 +376,9 @@ class Player:
                 dir_pt = (edge.a.pt[0]+dir_percent*(edge.b.pt[0]-edge.a.pt[0]),
                           edge.a.pt[1]+dir_percent*(edge.b.pt[1]-edge.a.pt[1]))
                 cv2.line(direction, self.s(edge.a.pt), self.s(dir_pt), (100, 255, 100), int(np.ceil(self.scale*self.thick)))
-                
+
+            for edge in self.graph._burnededges:
+                cv2.line(out, self.s(edge.a.pt), self.s(edge.b.pt), (200, 0, 0), int(np.ceil(self.scale*self.thick)))
 
             # for node in nodes:
             #     if isinstance(node, graph.AmplifierNode):

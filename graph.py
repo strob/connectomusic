@@ -84,8 +84,12 @@ class Graph:
 
     def _remove_edge_effects(self, edge):
         # Remove all mentions from nodemap
-        for node,edges in self.nodes.items():
-            self.nodes[node] = filter(lambda x: x != edge, edges)
+        
+        # for node,edges in self.nodes.items():
+        for node in self.nodes.get(edge.a,[]) + self.nodes.get(edge.b,[]):
+            self.nodes[node] = filter(lambda x: x != edge, self.nodes.get(node, []))
+        for node in self.tonodes.get(edge.a,[]) + self.tonodes.get(edge.b,[]):
+            self.tonodes[node] = filter(lambda x: x != edge, self.tonodes.get(node, []))
 
     def remove_edge(self, edge, biremoval=False):
         self._burnededges.append(edge)
@@ -96,8 +100,8 @@ class Graph:
             pass
         self._remove_edge_effects(edge)
         if biremoval:
-            for e in self.edges:
-                if e.a == edge.b and e.b == edge.a:
+            for e in self.tonodes.get(edge.a,[]):
+                if e.b == edge.a and e in self.edges:
                     self._burnededges.append(e)
                     self.edges.remove(e)
                     self._remove_edge_effects(e)
