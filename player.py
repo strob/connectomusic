@@ -391,7 +391,7 @@ class Player:
                           edge.a.pt[1]+dir_percent*(edge.b.pt[1]-edge.a.pt[1]))
                 cv2.line(direction, self.s(edge.a.pt), self.s(dir_pt), (100, 255, 100), int(np.ceil(self.scale*self.thick)))
 
-            for edge in self.graph._burnededges:
+            for edge in self._burnededges.keys():
                 cv2.line(out, self.s(edge.a.pt), self.s(edge.b.pt), (200, 0, 0), int(np.ceil(self.scale*self.thick)))
 
             # for node in nodes:
