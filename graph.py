@@ -20,6 +20,12 @@ class Graph:
             for sound in s:
                 self._soundcache[sound] = np.load(sound)
 
+        for sound in self._soundcache.keys():
+            if 'loop' in sound:
+                print 'new sounds have loop'
+                return
+        print 'new sounds have no loops'
+
     def get_sample(self, nedges):
         "returns (payload, frames, isloop)"
 
