@@ -84,28 +84,28 @@ class Graph:
 
     def _remove_edge_effects(self, edge):
         # Remove all mentions from nodemap
-        
-        # for node,edges in self.nodes.items():
-        for node in self.nodes.get(edge.a,[]) + self.nodes.get(edge.b,[]):
-            self.nodes[node] = filter(lambda x: x != edge, self.nodes.get(node, []))
-        for node in self.tonodes.get(edge.a,[]) + self.tonodes.get(edge.b,[]):
-            self.tonodes[node] = filter(lambda x: x != edge, self.tonodes.get(node, []))
 
-    def remove_edge(self, edge, biremoval=False):
-        self._burnededges.append(edge)
+        # Look for Nodes that link to either end, and cleanse their cache.
+        self.nodes[edge.a] = filter(lambda x: x != edge, self.nodes[edge.a])
+        self.tonodes[edge.b] = filter(lambda x: x != edge, self.tonodes[edge.b])
 
+    def remove_edge(self, edge):
         try:
             self.edges.remove(edge)
+            self._burnededges.append(edge)
         except:
-            pass
+            print 'failed to remove the original edge?', edge
+
+        for e in self.tonodes.get(edge.a,[]):
+            if e.a == edge.b:
+                self._burnededges.append(e)
+                self.edges.remove(e)
+                self._remove_edge_effects(e)
+                self._remove_edge_effects(edge)
+                return e
+        print 'warning: no bidirectional to remove'
         self._remove_edge_effects(edge)
-        if biremoval:
-            for e in self.tonodes.get(edge.a,[]):
-                if e.b == edge.a and e in self.edges:
-                    self._burnededges.append(e)
-                    self.edges.remove(e)
-                    self._remove_edge_effects(e)
-                    return e
+
 
     def node_outbound_cost(self, node):
         return len(self.node_edges(node))
@@ -170,13 +170,13 @@ class Node:
         if self._burned:
             print 'warning: burned! ignoring request'
             return
-        print 'request new sound, degree %d' % (self.nedges)
+        # print 'request new sound, degree %d' % (self.nedges)
         gotsample = self.graph.get_sample(self.nedges)
         if gotsample is None:
             print 'warning: all done with sample'
             return
         self._payload, self._frames, self._isloop = gotsample
-        print 'got %s' % (self._payload)
+        # print 'got %s' % (self._payload)
 
     @property
     def payload(self):

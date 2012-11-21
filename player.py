@@ -346,7 +346,7 @@ class Player:
         self._selection = [self.graph.nearest(*pt) for pt in pts]
 
     def destroy_edge(self, edge):
-        otheredge = self.graph.remove_edge(edge, biremoval=True)
+        otheredge = self.graph.remove_edge(edge)
         # Update base frame, if it exists
         base = self._get_base_frame()
         cv2.line(base, self.s(edge.a.pt), self.s(edge.b.pt), (200, 0, 0), int(np.ceil(self.scale*self.thick)))
