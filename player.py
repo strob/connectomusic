@@ -105,6 +105,8 @@ class Player:
 
         self.burnbridges = burnbridges
 
+        self._burnededges = {}  # edge -> True
+
         self._recording = False
         self._actions = []
         self._mouse = []
@@ -133,10 +135,7 @@ class Player:
     def burntoggle(self):
         if self.burnbridges:
             # un-burn edges
-            for e in self.graph._burnededges:
-                self.graph.edges.append(e)
-            self.graph._compute_nodemap()
-            self.graph._burnededges = []
+            self._burnededges = {}
 
             # un-burn nodes
             for n in self.graph.get_all_nodes():
@@ -255,7 +254,8 @@ class Player:
                     # BB takes care of this.
                     self._state_edges.pop(self._state_edges.index(edgestate))
 
-                self.trigger(edgestate.edge.b, vol=edgestate.decay)
+                if not edgestate.edge.b._burned:
+                    self.trigger(edgestate.edge.b)
 
                 # # destroy edge
                 if self.burnbridges:
@@ -282,9 +282,7 @@ class Player:
 
                     for target_edge in self.graph.node_edges(nodestate.node):
                         active_edges = filter(lambda x: x.edge == target_edge, self._state_edges)
-                        if len(active_edges) > 0:
-                            active_edges[0].decay = min(MAX_VOL, active_edges[0].decay + nodestate.vol)
-                        else:
+                        if len(active_edges) == 0 and target_edge not in self._burnededges:
                             self._state_edges.append(EdgeState(target_edge, nodestate.vol))
 
         mixed = self.mix(out)
@@ -346,6 +344,22 @@ class Player:
         self._selection = [self.graph.nearest(*pt) for pt in pts]
 
     def destroy_edge(self, edge):
+        self._burnededges[edge] = True
+        base = self._get_base_frame()
+        cv2.line(base, self.s(edge.a.pt), self.s(edge.b.pt), (200, 0, 0), int(np.ceil(self.scale*self.thick)))
+
+        # look at edges FROM "B" that END AT "A"
+        otheredge = filter(lambda x: x.b==edge.a, self.graph.nodes.get(edge.b,[]))
+        if len(otheredge) == 1:
+            otheredge = otheredge[0]
+            self._burnededges[otheredge] = True
+        else:
+            print 'no other edge'
+
+        # remove in-progress traversals
+        self._state_edges = filter(lambda x: x.edge != edge and x.edge != otheredge, self._state_edges)
+
+    def destroy_edge_old(self, edge):
         otheredge = self.graph.remove_edge(edge)
         # Update base frame, if it exists
         base = self._get_base_frame()
