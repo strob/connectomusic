@@ -374,8 +374,12 @@ class Player:
     def _get_base_frame(self):
         if not hasattr(self, '_baseframe') or self._baseframe is None:
             nodes = self.graph.get_all_nodes()
-            w = max([X.pt[0]*self.scale for X in nodes]) + 20
-            h = max([X.pt[1]*self.scale for X in nodes]) + 20
+            w = max([X.pt[0] for X in nodes]) + 20
+            h = max([X.pt[1] for X in nodes]) + 20
+            self.origw = w
+            self.origh = h
+            w *= self.scale
+            h *= self.scale
 
             out = np.zeros((h,w,3), dtype=np.uint8)
             direction = np.zeros((h,w,3), dtype=np.uint8)
