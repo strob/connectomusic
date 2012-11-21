@@ -1,0 +1,1 @@
+a[:] = p.next(len(a))
