@@ -116,6 +116,8 @@ class Player:
         self.scale = scale
         self.thick = thick
 
+        self._version = 0
+
     def flip(self):
         for e in self.graph.edges:
             e.flip()
@@ -241,6 +243,8 @@ class Player:
 
         self.graph.samplemap = split
         self.graph.cache_sounds()
+
+        self._version = N
 
     def next(self, buffer_size=2048):
         "Increment time unit and return sound buffer (as np-array)"
@@ -457,7 +461,7 @@ class Player:
         
 
     def get_status(self):
-        return "%02d active (T=%02d,S=%d,F=%d)" % (len(self._state_nodes), self._target, self._speed, self._flipped)
+        return "%02d active (T=%02d,S=%d,F=%d,Bi=%d,Bu=%d,V=%d)" % (len(self._state_nodes), self._target, self._speed, self._flipped, self.burnbridges, self._bidirectional, self._version)
 
 if __name__=='__main__':
     import sys
