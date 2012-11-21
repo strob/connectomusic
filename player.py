@@ -4,6 +4,8 @@ import numpy as np
 import cv2
 import numm
 
+import glob
+import os
 import json
 
 R = 44100.0
@@ -204,6 +206,31 @@ class Player:
         a /= div
         return a.astype(np.int16)
 
+
+    def set_sound_version(self, N=2):
+        VERSIONS = ['final_material_tt_bearbeit_(138)',
+                    'final_material_tt_bearbeit_NEU_gekurzt_(171)',
+                    'final_material_tt_bearbeit_2nd_order_NEUER_(450)']
+        version = VERSIONS[N]
+
+        files = glob.glob('snd/%s/*.npy' % (version))
+
+        # split by nedges
+        split = {}
+
+        def _get_group(x):
+            return int(os.path.basename(x).split('_')[0])
+
+        for f in sorted(files):
+            grp = _get_group(f)
+            if not split.has_key(grp):
+                split[grp] = []
+            else:
+                split[grp].append(f)
+
+        self.graph.samplemap = split
+        self.graph.cache_sounds()
+
     def next(self, buffer_size=2048):
         "Increment time unit and return sound buffer (as np-array)"
 
@@ -363,7 +390,10 @@ class Player:
                 r = ((len(nodestate.node.frames)-nodestate.frame) / float(len(nodestate.node.frames))) * 10
             else:
                 r = 5
-            cv2.circle(out, self.s(nodestate.node.pt), int(r*self.scale), (0, 255, 255), -1)
+            color = (0, 255, 255)
+            if nodestate.node.isloop:
+                color = (255, 0, 255)
+            cv2.circle(out, self.s(nodestate.node.pt), int(r*self.scale), color, -1)
 
         for node in self._selection:
             r = 10
