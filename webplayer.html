@@ -15,7 +15,7 @@ body {
   height: 10;
   cursor: pointer;
 }
-.node:hover {
+.node:hover,.node.playing {
   background-color: yellow;
 }
     </style>
@@ -45,7 +45,27 @@ var GRAPH = function(spec) {
             .offset({left: node.pt[0]-5,
                      top: node.pt[1]-5})
             .click(function() {
-                console.log('play', node);
+
+                var a = that.get_sound(node.nedges);
+                $node.addClass('playing');
+                a.ontimeupdate = function() {
+                    var percent = a.currentTime / a.duration;
+                    $node
+                        .css({width: 10*(1-percent),
+                              height:10*(1-percent)})
+                        .offset({left: node.pt[0]-5*(1-percent),
+                                 top: node.pt[1]-5*(1-percent)});
+                };
+                a.onended = function() {    // XXX: 'bind'/'unbind'?
+                    console.log("spawn!");
+                    $node.removeClass('playing')
+                        .css({width: 10,
+                              height:10})
+                        .offset({left: node.pt[0]-5,
+                                 top: node.pt[1]-5});
+                };
+                a.play();
+
             })
             .appendTo(that.$el);
     });
@@ -64,7 +84,23 @@ GRAPH.prototype.draw_base = function() {
     ctx.stroke();
 };
 GRAPH.prototype.set_sounds = function(snds) {
-    this.sounds = snds;
+    this.sounds = {};
+    for (var key in snds) {
+        this.sounds[key] = snds[key].map(function(x) {
+            var a = new Audio(x + '.ogg'); // XXX: or mp3!
+            a.load();
+            return a;
+        });
+    }
+};
+GRAPH.prototype.get_sound = function(n) {
+    if(!n in this.sounds) {
+        console.log('no sound for n', n);
+        n = 19;
+    }
+    var out = this.sounds[n][0];
+    this.sounds[n] = this.sounds[n].slice(1).concat([out]);
+    return out;
 };
 
 var g;
