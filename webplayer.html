@@ -8,25 +8,51 @@ body {
   margin: 0;
   padding: 0;
 }
+.node {
+  position: absolute;
+  z-index: 10;
+  width: 10;
+  height: 10;
+  cursor: pointer;
+}
+.node:hover {
+  background-color: yellow;
+}
     </style>
   </head>
   <body>
     <script>
 var GRAPH = function(spec) {
+    var that = this;
+
     this.edges = spec.edges;
     this.nodes = spec.nodes;
 
     this.W = 1200;
     this.H = 1240;
 
-    this.$el = $("<canvas>")
+    this.$el = $("<div>");
+
+    this.$canvas = $("<canvas>")
         .attr({width: this.W,
-              height:this.H});
-    this.draw_base()
+              height:this.H})
+        .appendTo(this.$el);
+    this.draw_base();
+
+    this.nodes.forEach(function(node) {
+        var $node = $("<div>")
+            .addClass('node')
+            .offset({left: node.pt[0]-5,
+                     top: node.pt[1]-5})
+            .click(function() {
+                console.log('play', node);
+            })
+            .appendTo(that.$el);
+    });
 };
 GRAPH.prototype.draw_base = function() {
     var that = this;
-    var ctx = this.$el[0].getContext('2d');
+    var ctx = this.$canvas[0].getContext('2d');
     ctx.strokeStyle = "#ccc";
     ctx.beginPath();
     this.edges.forEach(function(edge) {
@@ -37,12 +63,17 @@ GRAPH.prototype.draw_base = function() {
     });
     ctx.stroke();
 };
+GRAPH.prototype.set_sounds = function(snds) {
+    this.sounds = snds;
+};
 
 var g;
 $.getJSON('graph.json', {}, function(res) {
-    console.log(res);
-    g = new GRAPH(res);
-    $("body").append(g.$el);
+    $.getJSON('s2.json', {}, function(snd) {
+        g = new GRAPH(res);
+        g.set_sounds(snd);
+        $("body").append(g.$el);
+    });
 });
     </script>
   </body>
