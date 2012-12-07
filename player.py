@@ -11,6 +11,15 @@ import json
 R = 44100.0
 MAX_VOL = 1.5
 
+def _resize(buf, size):
+    out = np.zeros((size[1],size[0],3), dtype=np.uint8)
+    x_idx = np.linspace(0, buf.shape[1], out.shape[1], endpoint=False).astype(int)
+    y_idx = np.linspace(0, buf.shape[0], out.shape[0], endpoint=False).astype(int)
+    y_idx = y_idx.reshape((-1,1))
+
+    out[:] = buf[y_idx,x_idx]
+    return out
+
 class EdgeState:
     def __init__(self, edge, decay=1.0, onend=None):
         self.edge = edge
@@ -397,7 +406,7 @@ class Player:
                 dir_percent = direction_px / edge.length
                 dir_pt = (edge.a.pt[0]+dir_percent*(edge.b.pt[0]-edge.a.pt[0]),
                           edge.a.pt[1]+dir_percent*(edge.b.pt[1]-edge.a.pt[1]))
-                cv2.line(direction, self.s(edge.a.pt), self.s(dir_pt), (100, 255, 100), int(np.ceil(self.scale*self.thick)))
+                cv2.line(direction, self.s(edge.a.pt), self.s(dir_pt), (255, 255, 255), int(np.ceil(self.scale*self.thick)))
 
             for edge in self._burnededges.keys():
                 cv2.line(out, self.s(edge.a.pt), self.s(edge.b.pt), (200, 0, 0), int(np.ceil(self.scale*self.thick)))
@@ -436,7 +445,7 @@ class Player:
             cv2.circle(out, self.s(node.pt), int(r*self.scale), (255, 255, 0), -1)
 
         status = self.get_status()
-        cv2.putText(out, status, (10, 20), cv2.FONT_HERSHEY_PLAIN, 1, (255,255,255))
+        cv2.putText(out, status, (10, 20), cv2.FONT_HERSHEY_PLAIN, 1, (150,150,150))
 
         return out
 
@@ -454,14 +463,17 @@ class Player:
         center = (max(w/2, center[0]),
                   max(h/2, center[1]))
 
-        return cv2.resize(out[center[1]-h/2:center[1]+h/2,
-                              center[0]-w/2:center[0]+w/2],
-                          (out.shape[1],out.shape[0]))
+        return _resize(out[center[1]-h/2:center[1]+h/2,
+                           center[0]-w/2:center[0]+w/2],
+                       (out.shape[1],out.shape[0]))
+        # return cv2.resize(out[center[1]-h/2:center[1]+h/2,
+        #                       center[0]-w/2:center[0]+w/2],
+        #                   (out.shape[1],out.shape[0]))
 
         
 
     def get_status(self):
-        return "%02d active (T=%02d,S=%d,F=%d,Bi=%d,Bu=%d,V=%d)" % (len(self._state_nodes), self._target, self._speed, self._flipped, self.burnbridges, self._bidirectional, self._version)
+        return "%02d active (T=%02d,S=%d,F=%d,Bi=%d,Bu=%d,V=%d)" % (len(self._state_nodes), self._target, self._speed, self._flipped, self._bidirectional, self.burnbridges, self._version)
 
 if __name__=='__main__':
     import sys

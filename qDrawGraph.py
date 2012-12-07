@@ -28,7 +28,7 @@ view = MView(scene)
 # scene.addPixmap(left)
  
 right = QtGui.QPixmap('right_aligned.png')
-# scene.addPixmap(right)
+scene.addPixmap(right)
 
 EDGES = graph.getEdges()
 def saveEdges():

@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <title>instrument</title>
+    <script src="jquery.js"></script>
+    <style>
+body {
+  background-color: black;
+  margin: 0;
+  padding: 0;
+}
+    </style>
+  </head>
+  <body>
+    <script>
+var GRAPH = function(spec) {
+    this.edges = spec.edges;
+    this.nodes = spec.nodes;
+
+    this.W = 1200;
+    this.H = 1240;
+
+    this.$el = $("<canvas>")
+        .attr({width: this.W,
+              height:this.H});
+    this.draw_base()
+};
+GRAPH.prototype.draw_base = function() {
+    var that = this;
+    var ctx = this.$el[0].getContext('2d');
+    ctx.strokeStyle = "#ccc";
+    ctx.beginPath();
+    this.edges.forEach(function(edge) {
+        var a = that.nodes[edge.a];
+        var b = that.nodes[edge.b];
+        ctx.moveTo(a.pt[0], a.pt[1]);
+        ctx.lineTo(b.pt[0], b.pt[1]);
+    });
+    ctx.stroke();
+};
+
+var g;
+$.getJSON('graph.json', {}, function(res) {
+    console.log(res);
+    g = new GRAPH(res);
+    $("body").append(g.$el);
+});
+    </script>
+  </body>
+</html>
