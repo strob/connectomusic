@@ -4,7 +4,7 @@
     <script src="jquery.js"></script>
     <style>
 body {
-  background-color: black;
+  background-color: white;
   margin: 0;
   padding: 0;
 }
@@ -20,6 +20,19 @@ body {
 }
 #base, #overlay {
   position: absolute;
+}
+#toolbar {
+  position: fixed;
+  top: 35px;
+  right: 10px;
+}
+.button, .toggle, .option {
+  cursor: pointer;
+  margin: 10px;
+}
+.knob {
+  margin: 10px;
+  cursor: ns-resize;
 }
     </style>
   </head>
@@ -62,6 +75,7 @@ EdgeState.prototype.get_position = function() {
      this.params = {
          speed: 20,
          target: 10,
+         sounds: "s2",
          mode: "DOWN"};
 
     this.nodes = spec.nodes;
@@ -85,6 +99,7 @@ EdgeState.prototype.get_position = function() {
      this.nplaying = 0;
 
      this.clearburn();
+     this.load_sounds();
 
      // Start a timer to manage edges
      var T = 0.1;               // seconds
@@ -234,7 +249,7 @@ GRAPH.prototype.compute_edges = function() {
 GRAPH.prototype.draw_base = function() {
     var that = this;
     var ctx = this.$canvas[0].getContext('2d');
-    ctx.strokeStyle = "#ccc";
+    ctx.strokeStyle = "#000";
     ctx.beginPath();
     for(var k in this.edges) {
         this.edges[k].forEach(function(edge) {
@@ -245,6 +260,12 @@ GRAPH.prototype.draw_base = function() {
         })
     }
     ctx.stroke();
+};
+GRAPH.prototype.load_sounds = function() {
+    var that = this;
+    $.getJSON(this.params.sounds + '.json', {}, function(snd) {
+        that.set_sounds(snd);
+    });
 };
 GRAPH.prototype.set_sounds = function(snds) {
     this.sounds = {};
@@ -270,6 +291,149 @@ GRAPH.prototype.get_sound = function(n) {
     return out;
 };
 
+var TOOLBAR = function(graph) {
+    var that = this;
+    this.g = graph;
+    this.$el = $("<div>", {id: "toolbar"});
+
+    var bar = [
+        {type: "select",
+         name: "mode",
+         options: ["down", "up", "bidir", "burnbridges"]},
+
+        {type: "knob",
+         name: "speed",
+         min: 0,
+         max: 250},
+
+        {type: "knob",
+         name: "target",
+         min: 0,
+         max: 100},
+
+        {type: "buttongroup",
+         buttons: ["saturate", "panic"]},
+
+        {type: "toggle",
+         name: "net"}
+    ];
+
+    var icon = function(name) {
+        return "icon/" + name + ".png";
+    }
+    var icon_on = function(name) {
+        return "icon/" + name + "_on.png";
+    }
+
+    var ux = function(x) {
+        var $el;
+
+        switch(x.type) {
+        case "select" :
+            $el = $("<div>");
+            x.options.forEach(function(opt) {
+                $("<img>", {src: icon(opt)})
+                    .addClass("option")
+                    .data("name", opt)
+                    .appendTo($el)
+                    .click(function() {
+                        this.src = icon_on(opt);
+                    })
+            });
+
+            break;
+        case "toggle" :
+            $el = $("<img>", {src: icon(x.name)})
+                .addClass("toggle")
+                .data("on", false)
+                .click(function() {
+                    if($(this).data("on")) {
+                        this.src = icon(x.name);
+                    }
+                    else {
+                        this.src = icon_on(x.name);
+                    }
+                    $(this).data("on", !$(this).data("on"))
+                });
+            break;
+        case "buttongroup" :
+            $el = $("<div>").addClass("buttongroup");
+            x.buttons.forEach(function(button) {
+                $("<img>", {src: icon(button)})
+                    .addClass("button")
+                    .mouseover(function() {this.src = icon_on(button);})
+                    .mouseout(function() {this.src = icon(button);})
+                    .click(function() {console.log(button)})
+                    .appendTo($el);
+            });
+            break;
+        case "knob" :
+            $el = $("<canvas>")
+                .addClass("knob")
+                .data("val", 0.5);
+            (function($can) {
+                var $img = $("<img>", {src: icon(x.name)})
+                    .load(function() {
+                        $can.attr({width: this.width,
+                                   height: this.height});
+                        $can.data("w", this.width);
+                        $can.data("h", this.height);
+                        $can.data("cx", this.width / 2);
+                        $can.data("cy", 16); // hardcoded...
+                        $can.data("r", 16);
+                        $can.data("img", this);
+                        var ctx = $can[0].getContext('2d');
+                        ctx.drawImage(this, 0, 0);
+                        $can.mousedown(function(ev) {
+                            ev.preventDefault();
+                            // start drag
+                            var px = ev.clientX;
+                            var py = ev.clientY;
+                            window.onmousemove = function(ev) {
+                                var dx = ev.clientX - px;
+                                var dy = ev.clientY - py;
+
+                                var val = $can.data("val");
+                                val = Math.min(1, Math.max(0, val + dy / 100));
+                                $can.data("val", val);
+
+                                // redraw
+                                $can.attr({width: $can.data("w"),
+                                           height: $can.data("h")});
+                                var ctx = $can[0].getContext('2d');
+                                ctx.drawImage($can.data("img"), 0, 0);
+                                ctx.strokeStyle = "red";
+                                ctx.lineWidth = 4;
+                                ctx.beginPath();
+                                ctx.moveTo($can.data("cx"), $can.data("cy"));
+                                var pad = 0.1;
+                                var theta = $can.data("val")*2*Math.PI*(1-pad) - Math.PI/2;
+                                var lx = $can.data("cx") + $can.data("r") * Math.cos(theta);
+                                var ly = $can.data("cy") + $can.data("r") * Math.sin(theta);
+                                ctx.lineTo(lx, ly);
+                                ctx.stroke();
+
+                                px = ev.clientX;
+                                py = ev.clientY;
+                            }
+                            window.onmouseup = function() {
+                                // stop drag
+                                window.onmousemove = undefined;
+                                window.onmouseup = undefined;
+                            }
+                        });
+                    });
+            })($el)
+            break;
+        }
+        return $el;
+    }
+
+    bar.forEach(function(b) {
+        that.$el.append(ux(b));
+    });
+}
+
         // UTILITY
 
 function _append(d, k, v) {
@@ -283,14 +447,12 @@ function _append(d, k, v) {
         // STARTUP
 var g;
 $.getJSON('graph.json', {}, function(res) {
-    $.getJSON('s2.json', {}, function(snd) {
-        g = new GRAPH(res);
-        g.set_sounds(snd);
-        $("body").append(g.$el);
-    });
+    g = new GRAPH(res);
+    t = new TOOLBAR(g);
+    $("body")
+        .append(g.$el)
+        .append(t.$el);
 });
-
-
 
     </script>
   </body>
