@@ -18,69 +18,189 @@ body {
 .node:hover,.node.playing {
   background-color: yellow;
 }
+#base, #overlay {
+  position: absolute;
+}
     </style>
   </head>
   <body>
     <script>
-var GRAPH = function(spec) {
+var EDGE = function(a, b) {
+    this.a = a;
+    this.b = b;
+    this.length = Math.sqrt(
+        Math.pow(a.pt[0] - b.pt[0], 2) + 
+        Math.pow(a.pt[1] - b.pt[1], 2));
+};
+
+var EdgeState = function(edge) {
+    this.edge = edge;
+    this.percentage = 0.0;
+};
+EdgeState.prototype.iterate = function(t, speed) {
+    var npixels = t * speed;
+    var dpercentage = npixels / this.edge.length;
+
+    this.percentage += dpercentage;
+    if(this.percentage > 1.0) {
+        return true;
+    }
+    return false;
+};
+EdgeState.prototype.get_position = function() {
+    var that = this;
+    return [0, 1].map(function(X) {
+        return that.edge.a.pt[X] + that.percentage*(that.edge.b.pt[X] - that.edge.a.pt[X]);
+    });
+};
+
+ var GRAPH = function(spec) {
     var that = this;
 
-    this.edges = spec.edges;
     this.nodes = spec.nodes;
+    this._edgespec = spec.edges;
+    this.compute_edges();
+
+     // user-controllable parameters
+     this.params = {
+         speed: 20,
+         target: 10,
+         mode: "DOWN"};
 
     this.W = 1200;
     this.H = 1240;
 
     this.$el = $("<div>");
 
-    this.$canvas = $("<canvas>")
+    this.$canvas = $("<canvas>", {id: "base"})
         .attr({width: this.W,
               height:this.H})
         .appendTo(this.$el);
+    this.$overlay = $("<canvas>", {id: "overlay"})
+        .attr({width: this.W,
+               height:this.H})
+         .appendTo(this.$el);
     this.draw_base();
 
-    this.nodes.forEach(function(node) {
+    this.state_edges = [];
+     // Start a timer to manage edges
+     var T = 0.1;               // seconds
+     this.edgeinterval = window.setInterval(function() {
+         // Clear overlays
+         that.$overlay
+             .attr({width: that.W,
+                    height:that.H})
+
+         // ...and update
+         var ctx = that.$overlay[0].getContext('2d');
+         ctx.strokeStyle = "red";
+         ctx.beginPath();
+
+         that.state_edges.forEach(function(edgestate, idx) {
+             if(edgestate.iterate(T, that.params.speed)) {
+                 // Remove edge & trigger
+                 // XXX: will "idx" be correct on the next iteration?
+                 that.state_edges.splice(idx, 1);
+                 // XXX: check against TARGET
+                 that.trigger(edgestate.edge.b);
+             }
+             else {
+                 ctx.moveTo(edgestate.edge.a.pt[0], edgestate.edge.a.pt[1]);
+                 var pos = edgestate.get_position();
+                 ctx.lineTo(pos[0], pos[1]);
+             }
+         });
+
+         ctx.stroke();
+
+     }, 1000*T);
+
+    this.$nodes = [];
+
+    this.nodes.forEach(function(node, idx) {
+        // Add "id" to each node; used as key in "this.edges"
+        node.id = idx;
+
         var $node = $("<div>")
             .addClass('node')
             .offset({left: node.pt[0]-5,
                      top: node.pt[1]-5})
             .click(function() {
-
-                var a = that.get_sound(node.nedges);
-                $node.addClass('playing');
-                a.ontimeupdate = function() {
-                    var percent = a.currentTime / a.duration;
-                    $node
-                        .css({width: 10*(1-percent),
-                              height:10*(1-percent)})
-                        .offset({left: node.pt[0]-5*(1-percent),
-                                 top: node.pt[1]-5*(1-percent)});
-                };
-                a.onended = function() {    // XXX: 'bind'/'unbind'?
-                    console.log("spawn!");
-                    $node.removeClass('playing')
-                        .css({width: 10,
-                              height:10})
-                        .offset({left: node.pt[0]-5,
-                                 top: node.pt[1]-5});
-                };
-                a.play();
-
+                that.trigger(node);
             })
             .appendTo(that.$el);
+        that.$nodes.push($node);
     });
+};
+GRAPH.prototype.trigger = function(node) {
+    var that = this;
+    var a = that.get_sound(node.nedges);
+    var $node = that.$nodes[node.id];
+    $node.addClass('playing');
+    a.ontimeupdate = function() {
+        var percent = a.currentTime / a.duration;
+        $node
+            .css({width: 10*(1-percent),
+                  height:10*(1-percent)})
+            .offset({left: node.pt[0]-5*(1-percent),
+                     top: node.pt[1]-5*(1-percent)});
+    };
+    a.onended = function() {    // XXX: 'bind'/'unbind'?
+        console.log("spawn!");
+
+        $node.removeClass('playing')
+            .css({width: 10,
+                  height:10})
+            .offset({left: node.pt[0]-5,
+                     top: node.pt[1]-5});
+
+        (that.edges[node.id] || []).forEach(function(edge) {
+            that.state_edges.push(new EdgeState(edge));
+        });
+    };
+    a.play();
+
+};
+GRAPH.prototype.compute_edges = function() {
+    var that = this;
+
+    var BD = this.BIDIRECTIONAL || false;
+    var UP = this.FLOW_UPWARDS  || false;
+
+    this.edges = {};
+    this._edgespec.forEach(function(e) {
+        var a = that.nodes[e.a];
+        var b = that.nodes[e.b];
+        
+        if(BD) {
+            _append(that.edges, e.a, new EDGE(that.nodes[e.a], that.nodes[e.b]));
+            _append(that.edges, e.b, new EDGE(that.nodes[e.b], that.nodes[e.a]));
+        }
+        else {
+            if(a.nedges < b.nedges || UP) {
+                // swap a and b
+                var c = b;
+                b = a;
+                a = b;
+            }
+            _append(that.edges, e.a, new EDGE(that.nodes[e.a], that.nodes[e.b]));
+        }
+    });
+
 };
 GRAPH.prototype.draw_base = function() {
     var that = this;
     var ctx = this.$canvas[0].getContext('2d');
     ctx.strokeStyle = "#ccc";
     ctx.beginPath();
-    this.edges.forEach(function(edge) {
-        var a = that.nodes[edge.a];
-        var b = that.nodes[edge.b];
-        ctx.moveTo(a.pt[0], a.pt[1]);
-        ctx.lineTo(b.pt[0], b.pt[1]);
-    });
+    for(var k in this.edges) {
+        this.edges[k].forEach(function(edge) {
+            var a = edge.a;
+            var b = edge.b;
+            ctx.moveTo(a.pt[0], a.pt[1]);
+            ctx.lineTo(b.pt[0], b.pt[1]);
+        })
+    }
     ctx.stroke();
 };
 GRAPH.prototype.set_sounds = function(snds) {
@@ -89,12 +209,16 @@ GRAPH.prototype.set_sounds = function(snds) {
         this.sounds[key] = snds[key].map(function(x) {
             var a = new Audio(x + '.ogg'); // XXX: or mp3!
             a.load();
+            a.onload = function() {
+                // XXX: Update visualization (?)
+                console.log("Loaded!", x);
+            }
             return a;
         });
     }
 };
 GRAPH.prototype.get_sound = function(n) {
-    if(!n in this.sounds) {
+    if(!(n in this.sounds)) {
         console.log('no sound for n', n);
         n = 19;
     }
@@ -103,6 +227,17 @@ GRAPH.prototype.get_sound = function(n) {
     return out;
 };
 
+        // UTILITY
+
+function _append(d, k, v) {
+    // Make or add to list
+    if(d[k] === undefined) {
+        d[k] = [];
+    }
+    d[k].push(v);
+}
+
+        // STARTUP
 var g;
 $.getJSON('graph.json', {}, function(res) {
     $.getJSON('s2.json', {}, function(snd) {
@@ -111,6 +246,9 @@ $.getJSON('graph.json', {}, function(res) {
         $("body").append(g.$el);
     });
 });
+
+
+
     </script>
   </body>
 </html>
