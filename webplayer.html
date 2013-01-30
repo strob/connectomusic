@@ -57,15 +57,14 @@ EdgeState.prototype.get_position = function() {
  var GRAPH = function(spec) {
     var that = this;
 
-    this.nodes = spec.nodes;
-    this._edgespec = spec.edges;
-    this.compute_edges();
-
      // user-controllable parameters
      this.params = {
          speed: 20,
          target: 10,
          mode: "DOWN"};
+
+    this.nodes = spec.nodes;
+    this._edgespec = spec.edges;
 
     this.W = 1200;
     this.H = 1240;
@@ -80,9 +79,10 @@ EdgeState.prototype.get_position = function() {
         .attr({width: this.W,
                height:this.H})
          .appendTo(this.$el);
-    this.draw_base();
 
     this.state_edges = [];
+     this.nplaying = 0;
+
      // Start a timer to manage edges
      var T = 0.1;               // seconds
      this.edgeinterval = window.setInterval(function() {
@@ -93,7 +93,7 @@ EdgeState.prototype.get_position = function() {
 
          // ...and update
          var ctx = that.$overlay[0].getContext('2d');
-         ctx.strokeStyle = "red";
+         ctx.strokeStyle = "cyan";
          ctx.beginPath();
 
          that.state_edges.forEach(function(edgestate, idx) {
@@ -131,9 +131,20 @@ EdgeState.prototype.get_position = function() {
             .appendTo(that.$el);
         that.$nodes.push($node);
     });
+
+    this.compute_edges();
+    this.draw_base();
+
 };
 GRAPH.prototype.trigger = function(node) {
     var that = this;
+
+    // Only trigger if we're below target
+    if(this.nplaying >= this.params.target) {
+        return;
+    }
+    this.nplaying += 1;
+
     var a = that.get_sound(node.nedges);
     var $node = that.$nodes[node.id];
     $node.addClass('playing');
@@ -146,7 +157,7 @@ GRAPH.prototype.trigger = function(node) {
                      top: node.pt[1]-5*(1-percent)});
     };
     a.onended = function() {    // XXX: 'bind'/'unbind'?
-        console.log("spawn!");
+        that.nplaying -= 1;
 
         $node.removeClass('playing')
             .css({width: 10,
@@ -164,8 +175,8 @@ GRAPH.prototype.trigger = function(node) {
 GRAPH.prototype.compute_edges = function() {
     var that = this;
 
-    var BD = this.BIDIRECTIONAL || false;
-    var UP = this.FLOW_UPWARDS  || false;
+    var BD = (this.params.mode === "BURNBRIDGES" || this.params.mode === "BIDIR");
+    var UP = this.params.mode === "UP";
 
     this.edges = {};
     this._edgespec.forEach(function(e) {
@@ -173,17 +184,17 @@ GRAPH.prototype.compute_edges = function() {
         var b = that.nodes[e.b];
         
         if(BD) {
-            _append(that.edges, e.a, new EDGE(that.nodes[e.a], that.nodes[e.b]));
-            _append(that.edges, e.b, new EDGE(that.nodes[e.b], that.nodes[e.a]));
+            _append(that.edges, a.id, new EDGE(a, b));
+            _append(that.edges, b.id, new EDGE(b, a));
         }
         else {
-            if(a.nedges < b.nedges || UP) {
+            if((a.nedges < b.nedges && !UP) || (a.nedges > b.nedges && UP)) {
                 // swap a and b
                 var c = b;
                 b = a;
-                a = b;
+                a = c;
             }
-            _append(that.edges, e.a, new EDGE(that.nodes[e.a], that.nodes[e.b]));
+            _append(that.edges, a.id, new EDGE(a, b));
         }
     });
 
