@@ -76,7 +76,7 @@ EdgeState.prototype.get_position = function() {
          speed: 20,
          target: 10,
          sounds: "s2",
-         mode: "DOWN"};
+         mode: "down"};
 
     this.nodes = spec.nodes;
     this._edgespec = spec.edges;
@@ -113,7 +113,7 @@ EdgeState.prototype.get_position = function() {
          var ctx = that.$overlay[0].getContext('2d');
 
          // burns
-        if(that.params.mode === "BURNBRIDGES") {
+        if(that.params.mode === "burnbridges") {
             ctx.strokeStyle = "red";
             ctx.beginPath();
             for(var key in that._edgeburn) {
@@ -134,7 +134,7 @@ EdgeState.prototype.get_position = function() {
                  // XXX: check against TARGET
                  that.trigger(edgestate.edge.b);
 
-                 if(that.params.mode === "BURNBRIDGES") {
+                 if(that.params.mode === "burnbridges") {
                      that._edgeburn[edgestate.edge.id] = edgestate.edge;
                  }
 
@@ -198,7 +198,7 @@ GRAPH.prototype.trigger = function(node) {
     a.onended = function() {    // XXX: 'bind'/'unbind'?
         that.nplaying -= 1;
 
-        if(that.params.mode === "BURNBRIDGES") {
+        if(that.params.mode === "burnbridges") {
             that._nodeburn[node.id] = node;
         }
 
@@ -220,8 +220,8 @@ GRAPH.prototype.trigger = function(node) {
 GRAPH.prototype.compute_edges = function() {
     var that = this;
 
-    var BD = (this.params.mode === "BURNBRIDGES" || this.params.mode === "BIDIR");
-    var UP = this.params.mode === "UP";
+    var BD = (this.params.mode === "burnbridges" || this.params.mode === "bidir");
+    var UP = this.params.mode === "up";
 
     this.edges = {};
     this._edgespec.forEach(function(e, idx) {
@@ -321,23 +321,27 @@ var TOOLBAR = function(graph) {
     var icon = function(name) {
         return "icon/" + name + ".png";
     }
+    this.icon = icon;
     var icon_on = function(name) {
         return "icon/" + name + "_on.png";
     }
+    this.icon_on = icon_on;
 
     var ux = function(x) {
         var $el;
 
         switch(x.type) {
         case "select" :
-            $el = $("<div>");
+            $el = $("<div>")
+                .addClass(x.name);
             x.options.forEach(function(opt) {
                 $("<img>", {src: icon(opt)})
                     .addClass("option")
+                    .addClass(opt)
                     .data("name", opt)
                     .appendTo($el)
                     .click(function() {
-                        this.src = icon_on(opt);
+                        that.set(x.name, opt);
                     })
             });
 
@@ -433,7 +437,27 @@ var TOOLBAR = function(graph) {
         that.$el.append(ux(b));
     });
 }
+TOOLBAR.prototype.set = function(k, v) {
+    // update graph
+    this.g.params[k] = v;
 
+    if(this["on"+k]) {
+        this["on"+k](v);
+    }
+};
+TOOLBAR.prototype.onmode = function(v) {
+    var that = this;
+    this.$el.find(".mode .option").each(function(idx, opt) {
+        if($(opt).data("name") === v) {
+            opt.src = that.icon_on(v);
+        }
+        else {
+            opt.src = that.icon($(opt).data("name"));
+        }
+    });
+    this.g.clearburn();
+    this.g.compute_edges();
+};
         // UTILITY
 
 function _append(d, k, v) {
