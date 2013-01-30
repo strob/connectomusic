@@ -73,10 +73,14 @@ EdgeState.prototype.get_position = function() {
 
      // user-controllable parameters
      this.params = {
-         speed: 20,
-         target: 10,
+         speed: 0.3,
+         target: 0.1,
          sounds: "s2",
-         mode: "down"};
+         mode: "down",
+         net: false
+     };
+     this.SPEED_MAX = 250;
+     this.TARGET_MAX = 100;
 
     this.nodes = spec.nodes;
     this._edgespec = spec.edges;
@@ -127,7 +131,7 @@ EdgeState.prototype.get_position = function() {
          ctx.beginPath();
 
          that.state_edges.forEach(function(edgestate, idx) {
-             if(edgestate.iterate(T, that.params.speed)) {
+             if(edgestate.iterate(T, that.params.speed*that.SPEED_MAX)) {
                  // Remove edge & trigger
                  // XXX: will "idx" be correct on the next iteration?
                  that.state_edges.splice(idx, 1);
@@ -179,7 +183,7 @@ GRAPH.prototype.trigger = function(node) {
     var that = this;
 
     // Only trigger if we're below target
-    if(this.nplaying >= this.params.target || (node.id in this._nodeburn)) {
+    if(this.nplaying >= (this.TARGET_MAX * this.params.target) || (node.id in this._nodeburn)) {
         return;
     }
     this.nplaying += 1;
@@ -351,14 +355,9 @@ var TOOLBAR = function(graph) {
                 .addClass("toggle")
                 .data("on", false)
                 .click(function() {
-                    if($(this).data("on")) {
-                        this.src = icon(x.name);
-                    }
-                    else {
-                        this.src = icon_on(x.name);
-                    }
-                    $(this).data("on", !$(this).data("on"))
+                    that.toggle(x.name);
                 });
+
             break;
         case "buttongroup" :
             $el = $("<div>").addClass("buttongroup");
@@ -367,13 +366,20 @@ var TOOLBAR = function(graph) {
                     .addClass("button")
                     .mouseover(function() {this.src = icon_on(button);})
                     .mouseout(function() {this.src = icon(button);})
-                    .click(function() {console.log(button)})
+                    .click(function() {
+                        console.log(button);
+                        if(that["on"+button]) {
+                            that["on"+button]();
+                        }
+                    })
                     .appendTo($el);
             });
+            that.set("mode", that.g.params["mode"]);
             break;
         case "knob" :
             $el = $("<canvas>")
                 .addClass("knob")
+                .addClass(x.name)
                 .data("val", 0.5);
             (function($can) {
                 var $img = $("<img>", {src: icon(x.name)})
@@ -386,8 +392,11 @@ var TOOLBAR = function(graph) {
                         $can.data("cy", 16); // hardcoded...
                         $can.data("r", 16);
                         $can.data("img", this);
-                        var ctx = $can[0].getContext('2d');
-                        ctx.drawImage(this, 0, 0);
+                        // var ctx = $can[0].getContext('2d');
+                        // ctx.drawImage(this, 0, 0);
+
+                        that.set(x.name, that.g.params[x.name]); // initialize
+
                         $can.mousedown(function(ev) {
                             ev.preventDefault();
                             // start drag
@@ -401,21 +410,7 @@ var TOOLBAR = function(graph) {
                                 val = Math.min(1, Math.max(0, val + dy / 100));
                                 $can.data("val", val);
 
-                                // redraw
-                                $can.attr({width: $can.data("w"),
-                                           height: $can.data("h")});
-                                var ctx = $can[0].getContext('2d');
-                                ctx.drawImage($can.data("img"), 0, 0);
-                                ctx.strokeStyle = "red";
-                                ctx.lineWidth = 4;
-                                ctx.beginPath();
-                                ctx.moveTo($can.data("cx"), $can.data("cy"));
-                                var pad = 0.1;
-                                var theta = $can.data("val")*2*Math.PI*(1-pad) - Math.PI/2;
-                                var lx = $can.data("cx") + $can.data("r") * Math.cos(theta);
-                                var ly = $can.data("cy") + $can.data("r") * Math.sin(theta);
-                                ctx.lineTo(lx, ly);
-                                ctx.stroke();
+                                that.set(x.name, val);
 
                                 px = ev.clientX;
                                 py = ev.clientY;
@@ -445,6 +440,9 @@ TOOLBAR.prototype.set = function(k, v) {
         this["on"+k](v);
     }
 };
+TOOLBAR.prototype.toggle = function(k) {
+    this.set(k, !this.g.params[k]);
+};
 TOOLBAR.prototype.onmode = function(v) {
     var that = this;
     this.$el.find(".mode .option").each(function(idx, opt) {
@@ -458,6 +456,58 @@ TOOLBAR.prototype.onmode = function(v) {
     this.g.clearburn();
     this.g.compute_edges();
 };
+TOOLBAR.prototype.onnet = function(net) {
+    // XXX
+    console.log("not implemented");
+
+    this.$el.find(".toggle")
+        .attr("src", net ? this.icon_on("net") : this.icon("net"));
+};
+TOOLBAR.prototype.onsaturate = function() {
+    for(var i=0; i< (this.g.params.target * this.g.TARGET_MAX); i++) {
+        var nid = Math.floor(Math.random() * this.g.nodes.length);
+        this.g.trigger(this.g.nodes[nid]);
+    }
+};
+TOOLBAR.prototype.onpanic = function() {
+    this.g.state_edges = [];
+    for(var key in this.g.sounds) {
+        this.g.sounds[key].forEach(function(a) {
+            a.pause();
+            a.currentTime = 0.0;
+        });
+    }
+    $(".node")
+        .removeClass("playing");
+    this.g.clearburn();
+    this.g.nplaying = 0;
+};
+TOOLBAR.prototype.turnKnob = function(name, val) {
+    var $can = this.$el.find(".knob."+name);
+    $can.data("val", val);
+    // redraw
+    $can.attr({width: $can.data("w"),
+               height: $can.data("h")});
+    var ctx = $can[0].getContext('2d');
+    ctx.drawImage($can.data("img"), 0, 0);
+    ctx.strokeStyle = "red";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo($can.data("cx"), $can.data("cy"));
+    var pad = 0.1;
+    var theta = $can.data("val")*2*Math.PI*(1-pad) - Math.PI/2;
+    var lx = $can.data("cx") + $can.data("r") * Math.cos(theta);
+    var ly = $can.data("cy") + $can.data("r") * Math.sin(theta);
+    ctx.lineTo(lx, ly);
+    ctx.stroke();
+};
+TOOLBAR.prototype.onspeed = function(val) {
+    this.turnKnob("speed", val);
+};
+TOOLBAR.prototype.ontarget = function(val) {
+    this.turnKnob("target", val);
+};
+
         // UTILITY
 
 function _append(d, k, v) {
