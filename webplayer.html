@@ -25,9 +25,10 @@ body {
   </head>
   <body>
     <script>
-var EDGE = function(a, b) {
+var EDGE = function(a, b, id) {
     this.a = a;
     this.b = b;
+    this.id = id;
     this.length = Math.sqrt(
         Math.pow(a.pt[0] - b.pt[0], 2) + 
         Math.pow(a.pt[1] - b.pt[1], 2));
@@ -83,6 +84,8 @@ EdgeState.prototype.get_position = function() {
     this.state_edges = [];
      this.nplaying = 0;
 
+     this.clearburn();
+
      // Start a timer to manage edges
      var T = 0.1;               // seconds
      this.edgeinterval = window.setInterval(function() {
@@ -93,6 +96,18 @@ EdgeState.prototype.get_position = function() {
 
          // ...and update
          var ctx = that.$overlay[0].getContext('2d');
+
+         // burns
+        if(that.params.mode === "BURNBRIDGES") {
+            ctx.strokeStyle = "red";
+            ctx.beginPath();
+            for(var key in that._edgeburn) {
+                var e = that._edgeburn[key];
+                ctx.moveTo(e.a.pt[0], e.a.pt[1]);
+                ctx.lineTo(e.b.pt[0], e.b.pt[1]);
+            }
+            ctx.stroke();
+        }
          ctx.strokeStyle = "cyan";
          ctx.beginPath();
 
@@ -103,6 +118,11 @@ EdgeState.prototype.get_position = function() {
                  that.state_edges.splice(idx, 1);
                  // XXX: check against TARGET
                  that.trigger(edgestate.edge.b);
+
+                 if(that.params.mode === "BURNBRIDGES") {
+                     that._edgeburn[edgestate.edge.id] = edgestate.edge;
+                 }
+
              }
              else {
                  ctx.moveTo(edgestate.edge.a.pt[0], edgestate.edge.a.pt[1]);
@@ -136,11 +156,15 @@ EdgeState.prototype.get_position = function() {
     this.draw_base();
 
 };
+GRAPH.prototype.clearburn = function() {
+    this._edgeburn = {};       // id: edge
+    this._nodeburn = {};       // id: node
+};
 GRAPH.prototype.trigger = function(node) {
     var that = this;
 
     // Only trigger if we're below target
-    if(this.nplaying >= this.params.target) {
+    if(this.nplaying >= this.params.target || (node.id in this._nodeburn)) {
         return;
     }
     this.nplaying += 1;
@@ -159,6 +183,10 @@ GRAPH.prototype.trigger = function(node) {
     a.onended = function() {    // XXX: 'bind'/'unbind'?
         that.nplaying -= 1;
 
+        if(that.params.mode === "BURNBRIDGES") {
+            that._nodeburn[node.id] = node;
+        }
+
         $node.removeClass('playing')
             .css({width: 10,
                   height:10})
@@ -166,7 +194,9 @@ GRAPH.prototype.trigger = function(node) {
                      top: node.pt[1]-5});
 
         (that.edges[node.id] || []).forEach(function(edge) {
-            that.state_edges.push(new EdgeState(edge));
+            if(!(edge.id in that._edgeburn)) {
+                that.state_edges.push(new EdgeState(edge));
+            }
         });
     };
     a.play();
@@ -179,13 +209,15 @@ GRAPH.prototype.compute_edges = function() {
     var UP = this.params.mode === "UP";
 
     this.edges = {};
-    this._edgespec.forEach(function(e) {
+    this._edgespec.forEach(function(e, idx) {
         var a = that.nodes[e.a];
         var b = that.nodes[e.b];
         
         if(BD) {
-            _append(that.edges, a.id, new EDGE(a, b));
-            _append(that.edges, b.id, new EDGE(b, a));
+            // Since these are the same edge in different directions,
+            // the index is the same.
+            _append(that.edges, a.id, new EDGE(a, b, idx));
+            _append(that.edges, b.id, new EDGE(b, a, idx));
         }
         else {
             if((a.nedges < b.nedges && !UP) || (a.nedges > b.nedges && UP)) {
@@ -194,7 +226,7 @@ GRAPH.prototype.compute_edges = function() {
                 b = a;
                 a = c;
             }
-            _append(that.edges, a.id, new EDGE(a, b));
+            _append(that.edges, a.id, new EDGE(a, b, idx));
         }
     });
 
