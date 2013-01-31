@@ -351,7 +351,7 @@ var TOOLBAR = function(graph) {
             $el = $("<div>")
                 .addClass(x.name);
             x.options.forEach(function(opt) {
-                $("<img>", {src: icon(opt)})
+                $("<img>", {src: (that.g.params.mode === opt) ? icon_on(opt) : icon(opt)})
                     .addClass("option")
                     .addClass(opt)
                     .data("name", opt)
@@ -360,6 +360,7 @@ var TOOLBAR = function(graph) {
                         that.set(x.name, opt);
                     })
             });
+            that.set(x.name, that.g.params[x.name]);
 
             break;
         case "toggle" :
@@ -392,7 +393,6 @@ var TOOLBAR = function(graph) {
                     })
                     .appendTo($el);
             });
-            that.set("mode", that.g.params["mode"]);
             break;
         case "knob" :
             $el = $("<canvas>")
@@ -413,7 +413,7 @@ var TOOLBAR = function(graph) {
                         var ctx = $can[0].getContext('2d');
                         ctx.drawImage(this, 0, 0);
 
-                        that.set(x.name, that.g.params[x.name]); // initialize
+                        that.turnKnob(x.name, that.g.params[x.name]); // initialize
 
                         $can.mousedown(function(ev) {
                             ev.preventDefault();
