@@ -164,15 +164,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.7"
-     inkscape:cx="383.59963"
-     inkscape:cy="-43.962822"
+     inkscape:cx="436.50357"
+     inkscape:cy="-221.66855"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1364"
      inkscape:window-height="747"
-     inkscape:window-x="0"
-     inkscape:window-y="19"
+     inkscape:window-x="2"
+     inkscape:window-y="21"
      inkscape:window-maximized="0"
      fit-margin-top="0"
      fit-margin-left="0"
@@ -195,234 +195,230 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(-8.1913085,-64.65625)">
-    <rect
-       style="fill:#ffff00;stroke:#000000;stroke-width:4"
-       id="rect5386"
-       width="92.142853"
-       height="116.42857"
-       x="321.07834"
-       y="66.647911"
-       rx="12.857141"
-       ry="12.857142" />
-    <path
-       style="fill:none;stroke:#000000;stroke-width:6;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Arrow1Send);marker-end:url(#Arrow1Send)"
-       d="m 112.67069,118.07647 0,-25.714288"
-       id="path2985"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
-    <text
-       xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       x="89.986115"
-       y="158.79076"
-       id="text5333"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan5335"
-         x="89.986115"
-         y="158.79076"
-         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono">FLOW</tspan></text>
-    <path
-       style="fill:none;stroke:#ff0000;stroke-width:6;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Arrow1Sstart);marker-end:url(#Arrow1Send)"
-       d="M 349.63796,119.51683 387.51868,81.636107"
-       id="path5331"
-       inkscape:connector-curvature="0" />
-    <text
-       sodipodi:linespacing="125%"
-       id="text5345"
-       y="158.79076"
-       x="346.79901"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       xml:space="preserve"><tspan
-         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
-         y="158.79076"
+    <g
+       id="g7713"
+       inkscape:export-filename="/home/rmo/src/connectomusic/icon/burnbridges.png"
+       inkscape:export-xdpi="68.550003"
+       inkscape:export-ydpi="68.550003">
+      <path
+         inkscape:connector-curvature="0"
+         id="path5331"
+         d="M 349.63796,119.51683 387.51868,81.636107"
+         style="fill:none;stroke:#ff0000;stroke-width:6;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Arrow1Sstart);marker-end:url(#Arrow1Send)" />
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
          x="346.79901"
-         id="tspan5347"
-         sodipodi:role="line">BURN</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       x="330.53925"
-       y="174.79076"
-       id="text5349"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan5351"
+         y="158.79076"
+         id="text5345"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan5347"
+           x="346.79901"
+           y="158.79076"
+           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono">BURN</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text5349"
+         y="174.79076"
          x="330.53925"
-         y="174.79076"
-         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono">BRIDGES</tspan></text>
-    <path
-       inkscape:connector-curvature="0"
-       id="path4951"
-       d="M 243.54786,119.51683 281.42858,81.636107"
-       style="fill:none;stroke:#000000;stroke-width:6;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Arrow1Sstart);marker-end:url(#Arrow1Send)" />
-    <text
-       xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       x="247.0766"
-       y="159.04564"
-       id="text5341"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan5343"
-         x="247.0766"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         xml:space="preserve"><tspan
+           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
+           y="174.79076"
+           x="330.53925"
+           id="tspan5351"
+           sodipodi:role="line">BRIDGES</tspan></text>
+    </g>
+    <g
+       id="g7706"
+       inkscape:export-filename="/home/rmo/src/connectomusic/icon/bidir.png"
+       inkscape:export-xdpi="68.550003"
+       inkscape:export-ydpi="68.550003">
+      <path
+         style="fill:none;stroke:#000000;stroke-width:6;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Arrow1Sstart);marker-end:url(#Arrow1Send)"
+         d="M 243.54786,119.51683 281.42858,81.636107"
+         id="path4951"
+         inkscape:connector-curvature="0" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text5341"
          y="159.04564"
-         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono">BI-</tspan></text>
-    <text
-       sodipodi:linespacing="125%"
-       id="text5353"
-       y="175.04564"
-       x="245.63959"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       xml:space="preserve"><tspan
-         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
-         y="175.04564"
+         x="247.0766"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         xml:space="preserve"><tspan
+           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
+           y="159.04564"
+           x="247.0766"
+           id="tspan5343"
+           sodipodi:role="line">BI-</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
          x="245.63959"
-         id="tspan5355"
-         sodipodi:role="line">DIR</tspan></text>
-    <text
-       sodipodi:linespacing="125%"
-       id="text5357"
-       y="174.79076"
-       x="101.59647"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       xml:space="preserve"><tspan
-         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
-         y="174.79076"
+         y="175.04564"
+         id="text5353"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan5355"
+           x="245.63959"
+           y="175.04564"
+           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono">DIR</tspan></text>
+    </g>
+    <g
+       id="g7692"
+       inkscape:export-filename="/home/rmo/src/connectomusic/icon/up.png"
+       inkscape:export-xdpi="68.550003"
+       inkscape:export-ydpi="68.550003">
+      <path
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0"
+         id="path2985"
+         d="m 112.67069,118.07647 0,-25.714288"
+         style="fill:none;stroke:#000000;stroke-width:6;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Arrow1Send);marker-end:url(#Arrow1Send)" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text5333"
+         y="158.79076"
+         x="89.986115"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         xml:space="preserve"><tspan
+           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
+           y="158.79076"
+           x="89.986115"
+           id="tspan5335"
+           sodipodi:role="line">FLOW</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
          x="101.59647"
-         id="tspan5359"
-         sodipodi:role="line">UP</tspan></text>
-    <text
-       sodipodi:linespacing="125%"
-       id="text5337"
-       y="158.79076"
-       x="164.22789"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       xml:space="preserve"><tspan
-         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
-         y="158.79076"
-         x="164.22789"
-         id="tspan5339"
-         sodipodi:role="line">FLOW</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       x="165.2606"
-       y="174.79076"
-       id="text5361"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan5363"
-         x="165.2606"
          y="174.79076"
-         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono">DOWN</tspan></text>
-    <path
-       sodipodi:nodetypes="cc"
-       inkscape:connector-curvature="0"
-       id="path5405"
-       d="m 186.91246,97.762182 0,25.714288"
-       style="fill:none;stroke:#000000;stroke-width:6;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Arrow1Send);marker-end:url(#Arrow1Send)" />
-    <path
-       sodipodi:type="arc"
-       style="fill:none;stroke:#000000;stroke-width:4;stroke-miterlimit:4;stroke-dasharray:none;marker-mid:url(#DotS)"
-       id="path5407"
-       sodipodi:cx="400.35715"
-       sodipodi:cy="105.57647"
-       sodipodi:rx="17.5"
-       sodipodi:ry="17.5"
-       d="m 417.85715,105.57647 a 17.5,17.5 0 1 1 -35,0 17.5,17.5 0 1 1 35,0 z"
-       transform="translate(98.529656,0)" />
-    <text
-       sodipodi:linespacing="125%"
-       id="text6025"
-       y="158.79076"
-       x="471.73077"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       xml:space="preserve"><tspan
-         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
+         id="text5357"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan5359"
+           x="101.59647"
+           y="174.79076"
+           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono">UP</tspan></text>
+    </g>
+    <g
+       id="g7699"
+       inkscape:export-filename="/home/rmo/src/connectomusic/icon/down.png"
+       inkscape:export-xdpi="68.550003"
+       inkscape:export-ydpi="68.550003">
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         x="164.22789"
          y="158.79076"
+         id="text5337"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan5339"
+           x="164.22789"
+           y="158.79076"
+           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono">FLOW</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text5361"
+         y="174.79076"
+         x="165.2606"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         xml:space="preserve"><tspan
+           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
+           y="174.79076"
+           x="165.2606"
+           id="tspan5363"
+           sodipodi:role="line">DOWN</tspan></text>
+      <path
+         style="fill:none;stroke:#000000;stroke-width:6;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Arrow1Send);marker-end:url(#Arrow1Send)"
+         d="m 186.91246,97.762182 0,25.714288"
+         id="path5405"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cc" />
+    </g>
+    <g
+       id="g7823"
+       inkscape:export-filename="/home/rmo/src/connectomusic/speed.png"
+       inkscape:export-xdpi="68.550003"
+       inkscape:export-ydpi="68.550003">
+      <path
+         transform="translate(98.529656,0)"
+         d="m 417.85715,105.57647 a 17.5,17.5 0 1 1 -35,0 17.5,17.5 0 1 1 35,0 z"
+         sodipodi:ry="17.5"
+         sodipodi:rx="17.5"
+         sodipodi:cy="105.57647"
+         sodipodi:cx="400.35715"
+         id="path5407"
+         style="fill:none;stroke:#000000;stroke-width:4;stroke-miterlimit:4;stroke-dasharray:none;marker-mid:url(#DotS)"
+         sodipodi:type="arc" />
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
          x="471.73077"
-         id="tspan6027"
-         sodipodi:role="line">SPEED</tspan></text>
-    <path
-       transform="translate(182.90266,0)"
-       d="m 417.85715,105.57647 a 17.5,17.5 0 1 1 -35,0 17.5,17.5 0 1 1 35,0 z"
-       sodipodi:ry="17.5"
-       sodipodi:rx="17.5"
-       sodipodi:cy="105.57647"
-       sodipodi:cx="400.35715"
-       id="path6029"
-       style="fill:none;stroke:#000000;stroke-width:4;stroke-miterlimit:4;stroke-dasharray:none;marker-mid:url(#DotS)"
-       sodipodi:type="arc" />
-    <text
-       xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       x="550.74243"
-       y="158.79076"
-       id="text6031"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan6033"
+         y="158.79076"
+         id="text6025"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan6027"
+           x="471.73077"
+           y="158.79076"
+           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono">SPEED</tspan></text>
+      <path
+         transform="matrix(1.7804878,0,0,1.7804878,-215.50905,-79.626918)"
+         d="m 403.80849,104.01834 a 2.588516,2.588516 0 1 1 -5.17704,0 2.588516,2.588516 0 1 1 5.17704,0 z"
+         sodipodi:ry="2.588516"
+         sodipodi:rx="2.588516"
+         sodipodi:cy="104.01834"
+         sodipodi:cx="401.21997"
+         id="path6037"
+         style="fill:#ff0000;stroke:none"
+         sodipodi:type="arc" />
+    </g>
+    <g
+       id="g7829"
+       inkscape:export-filename="/home/rmo/src/connectomusic/target.png"
+       inkscape:export-xdpi="68.550003"
+       inkscape:export-ydpi="68.550003">
+      <path
+         sodipodi:type="arc"
+         style="fill:none;stroke:#000000;stroke-width:4;stroke-miterlimit:4;stroke-dasharray:none;marker-mid:url(#DotS)"
+         id="path6029"
+         sodipodi:cx="400.35715"
+         sodipodi:cy="105.57647"
+         sodipodi:rx="17.5"
+         sodipodi:ry="17.5"
+         d="m 417.85715,105.57647 a 17.5,17.5 0 1 1 -35,0 17.5,17.5 0 1 1 35,0 z"
+         transform="translate(182.90266,0)" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text6031"
+         y="158.79076"
          x="550.74243"
-         y="158.79076"
-         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono">TARGET</tspan></text>
-    <path
-       style="fill:none;stroke:#ff0000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 498.52259,105.34417 17.29886,17.29886"
-       id="path6035"
-       inkscape:connector-curvature="0" />
-    <path
-       sodipodi:type="arc"
-       style="fill:#ff0000;stroke:none"
-       id="path6037"
-       sodipodi:cx="401.21997"
-       sodipodi:cy="104.01834"
-       sodipodi:rx="2.588516"
-       sodipodi:ry="2.588516"
-       d="m 403.80849,104.01834 a 2.588516,2.588516 0 1 1 -5.17704,0 2.588516,2.588516 0 1 1 5.17704,0 z"
-       transform="matrix(1.7804878,0,0,1.7804878,-215.50905,-79.626918)" />
-    <path
-       inkscape:connector-curvature="0"
-       id="path6039"
-       d="M 583.96204,104.78589 601.2609,87.487027"
-       style="fill:none;stroke:#ff0000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-    <path
-       transform="matrix(1.7804878,0,0,1.7804878,-131.13605,-79.626918)"
-       d="m 403.80849,104.01834 a 2.588516,2.588516 0 1 1 -5.17704,0 2.588516,2.588516 0 1 1 5.17704,0 z"
-       sodipodi:ry="2.588516"
-       sodipodi:rx="2.588516"
-       sodipodi:cy="104.01834"
-       sodipodi:cx="401.21997"
-       id="path6041"
-       style="fill:#ff0000;stroke:none"
-       sodipodi:type="arc" />
-    <text
-       xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       x="471.73077"
-       y="174.50504"
-       id="text6043"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan6045"
-         x="471.73077"
-         y="174.50504"
-         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#999999;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono">225PXS</tspan></text>
-    <text
-       sodipodi:linespacing="125%"
-       id="text6047"
-       y="174.50504"
-       x="552.88452"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       xml:space="preserve"><tspan
-         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#999999;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
-         y="174.50504"
-         x="552.88452"
-         id="tspan6049"
-         sodipodi:role="line">12NDS</tspan></text>
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         xml:space="preserve"><tspan
+           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
+           y="158.79076"
+           x="550.74243"
+           id="tspan6033"
+           sodipodi:role="line">TARGET</tspan></text>
+      <path
+         sodipodi:type="arc"
+         style="fill:#ff0000;stroke:none"
+         id="path6041"
+         sodipodi:cx="401.21997"
+         sodipodi:cy="104.01834"
+         sodipodi:rx="2.588516"
+         sodipodi:ry="2.588516"
+         d="m 403.80849,104.01834 a 2.588516,2.588516 0 1 1 -5.17704,0 2.588516,2.588516 0 1 1 5.17704,0 z"
+         transform="matrix(1.7804878,0,0,1.7804878,-131.13605,-79.626918)" />
+    </g>
     <g
        id="g6063"
-       transform="translate(628.31489,-127.27922)">
+       transform="translate(628.31489,-127.27922)"
+       inkscape:export-filename="/home/rmo/src/connectomusic/saturate.png"
+       inkscape:export-xdpi="68.550003"
+       inkscape:export-ydpi="68.550003">
       <rect
          style="fill:#00ff00;stroke:#000000;stroke-width:3.99999976"
          id="rect6059"
@@ -447,7 +443,10 @@
     </g>
     <g
        id="g6068"
-       transform="translate(505.07628,-68.690373)">
+       transform="translate(505.07628,-68.690373)"
+       inkscape:export-filename="/home/rmo/src/connectomusic/panic.png"
+       inkscape:export-xdpi="68.550003"
+       inkscape:export-ydpi="68.550003">
       <rect
          ry="12.857142"
          rx="12.85714"
@@ -471,56 +470,564 @@
            style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono">PANIC</tspan></text>
     </g>
     <g
-       id="g6117"
-       transform="translate(77.781746,0)">
+       id="g6109"
+       transform="translate(-562.65496,129.29953)"
+       inkscape:export-filename="/home/rmo/src/connectomusic/net_on.png"
+       inkscape:export-xdpi="68.550003"
+       inkscape:export-ydpi="68.550003">
+      <rect
+         transform="matrix(0,-1,1,0,0,0)"
+         ry="12.857142"
+         rx="12.85714"
+         y="577.13098"
+         x="-150.22549"
+         height="47.738201"
+         width="70.929649"
+         id="rect6094"
+         style="fill:#f9f9f9;stroke:#000000;stroke-width:4" />
+      <rect
+         style="fill:#00ff00;stroke:#000000;stroke-width:3.99999952"
+         id="rect6103"
+         width="33.554005"
+         height="47.738201"
+         x="-118.91077"
+         y="577.13098"
+         rx="12.85714"
+         ry="12.857142"
+         transform="matrix(0,-1,1,0,0,0)" />
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         x="588.96277"
+         y="107.1708"
+         id="text6096"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan6098"
+           x="588.96277"
+           y="107.1708"
+           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono">ON</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         x="583.85773"
+         y="174.50504"
+         id="text6105"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan6107"
+           x="583.85773"
+           y="174.50504"
+           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono">NET</tspan></text>
+    </g>
+    <g
+       id="g7771"
+       transform="translate(0,-133.34014)"
+       inkscape:export-filename="/home/rmo/src/connectomusic/icon/net.png"
+       inkscape:export-xdpi="68.550003"
+       inkscape:export-ydpi="68.550003">
+      <rect
+         style="fill:#f9f9f9;stroke:#000000;stroke-width:4"
+         id="rect6130"
+         width="70.929649"
+         height="47.738201"
+         x="-281.65405"
+         y="14.476022"
+         rx="12.85714"
+         ry="12.857142"
+         transform="matrix(0,-1,1,0,0,0)" />
+      <rect
+         transform="matrix(0,-1,1,0,0,0)"
+         ry="12.857142"
+         rx="12.85714"
+         y="14.476022"
+         x="-275.59314"
+         height="47.738201"
+         width="33.554005"
+         id="rect6132"
+         style="fill:#ff0000;stroke:#000000;stroke-width:3.99999952" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text6134"
+         y="265.36838"
+         x="22.116119"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         xml:space="preserve"><tspan
+           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
+           y="265.36838"
+           x="22.116119"
+           id="tspan6136"
+           sodipodi:role="line">OFF</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text6138"
+         y="305.93359"
+         x="21.202766"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         xml:space="preserve"><tspan
+           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
+           y="305.93359"
+           x="21.202766"
+           id="tspan6140"
+           sodipodi:role="line">NET</tspan></text>
+    </g>
+    <g
+       id="g7844"
+       inkscape:export-filename="/home/rmo/src/connectomusic/burnbridges_on.png"
+       inkscape:export-xdpi="68.550003"
+       inkscape:export-ydpi="68.550003">
+      <rect
+         style="fill:#ffff00;stroke:#000000;stroke-width:4"
+         id="rect7623"
+         width="92.142853"
+         height="116.42857"
+         x="413.60626"
+         y="203.01851"
+         rx="12.857141"
+         ry="12.857142" />
+      <path
+         style="fill:none;stroke:#ff0000;stroke-width:6;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Arrow1Sstart);marker-end:url(#Arrow1Send)"
+         d="M 442.16589,255.88742 480.04661,218.0067"
+         id="path7625"
+         inkscape:connector-curvature="0" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text7627"
+         y="295.16135"
+         x="439.32693"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         xml:space="preserve"><tspan
+           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
+           y="295.16135"
+           x="439.32693"
+           id="tspan7629"
+           sodipodi:role="line">BURN</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         x="423.06717"
+         y="311.16135"
+         id="text7631"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan7633"
+           x="423.06717"
+           y="311.16135"
+           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono">BRIDGES</tspan></text>
+    </g>
+    <rect
+       style="fill:#ffff00;stroke:#000000;stroke-width:4"
+       id="rect7635"
+       width="92.142853"
+       height="116.42857"
+       x="313.60117"
+       y="203.01851"
+       rx="12.857141"
+       ry="12.857142"
+       inkscape:export-filename="/home/rmo/src/connectomusic/bidir_on.png"
+       inkscape:export-xdpi="68.550003"
+       inkscape:export-ydpi="68.550003" />
+    <rect
+       style="fill:#ffff00;stroke:#000000;stroke-width:4"
+       id="rect7639"
+       width="92.142853"
+       height="116.42857"
+       x="113.59097"
+       y="202.00836"
+       rx="12.857141"
+       ry="12.857142"
+       inkscape:export-filename="/home/rmo/src/connectomusic/up_on.png"
+       inkscape:export-xdpi="68.550003"
+       inkscape:export-ydpi="68.550003" />
+    <g
+       id="g7651"
+       transform="translate(46.991707,130.79374)">
+      <path
+         style="fill:none;stroke:#000000;stroke-width:6;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Arrow1Send);marker-end:url(#Arrow1Send)"
+         d="m 112.67069,118.07647 0,-25.714288"
+         id="path7641"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cc" />
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         x="89.986115"
+         y="158.79076"
+         id="text7643"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan7645"
+           x="89.986115"
+           y="158.79076"
+           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono">FLOW</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text7647"
+         y="174.79076"
+         x="101.59647"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         xml:space="preserve"><tspan
+           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
+           y="174.79076"
+           x="101.59647"
+           id="tspan7649"
+           sodipodi:role="line">UP</tspan></text>
+    </g>
+    <g
+       id="g7835"
+       inkscape:export-filename="/home/rmo/src/connectomusic/down_on.png"
+       inkscape:export-xdpi="68.550003"
+       inkscape:export-ydpi="68.550003">
+      <rect
+         style="fill:#ffff00;stroke:#000000;stroke-width:4"
+         id="rect7637"
+         width="92.142853"
+         height="116.42857"
+         x="213.59607"
+         y="203.01851"
+         rx="12.857141"
+         ry="12.857142" />
       <g
-         transform="translate(-640.43671,0)"
-         id="g6109">
-        <rect
-           style="fill:#f9f9f9;stroke:#000000;stroke-width:4"
-           id="rect6094"
-           width="70.929649"
-           height="47.738201"
-           x="-150.22549"
-           y="577.13098"
-           rx="12.85714"
-           ry="12.857142"
-           transform="matrix(0,-1,1,0,0,0)" />
-        <rect
-           transform="matrix(0,-1,1,0,0,0)"
-           ry="12.857142"
-           rx="12.85714"
-           y="577.13098"
-           x="-118.91077"
-           height="47.738201"
-           width="33.554005"
-           id="rect6103"
-           style="fill:#00ff00;stroke:#000000;stroke-width:3.99999952" />
+         transform="translate(72.755035,131.80389)"
+         id="g7668">
+        <text
+           xml:space="preserve"
+           style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+           x="164.22789"
+           y="158.79076"
+           id="text7658"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             id="tspan7660"
+             x="164.22789"
+             y="158.79076"
+             style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono">FLOW</tspan></text>
         <text
            sodipodi:linespacing="125%"
-           id="text6096"
-           y="107.1708"
-           x="588.96277"
+           id="text7662"
+           y="174.79076"
+           x="165.2606"
            style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
            xml:space="preserve"><tspan
              style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
-             y="107.1708"
-             x="588.96277"
-             id="tspan6098"
-             sodipodi:role="line">ON</tspan></text>
-        <text
-           sodipodi:linespacing="125%"
-           id="text6105"
-           y="174.50504"
-           x="583.85773"
-           style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-           xml:space="preserve"><tspan
-             style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
-             y="174.50504"
-             x="583.85773"
-             id="tspan6107"
-             sodipodi:role="line">NET</tspan></text>
+             y="174.79076"
+             x="165.2606"
+             id="tspan7664"
+             sodipodi:role="line">DOWN</tspan></text>
+        <path
+           style="fill:none;stroke:#000000;stroke-width:6;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Arrow1Send);marker-end:url(#Arrow1Send)"
+           d="m 186.91246,97.762182 0,25.714288"
+           id="path7666"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="cc" />
       </g>
     </g>
+    <g
+       id="g7685"
+       transform="translate(97.18437,136.02464)">
+      <path
+         inkscape:connector-curvature="0"
+         id="path7675"
+         d="M 243.54786,119.51683 281.42858,81.636107"
+         style="fill:none;stroke:#000000;stroke-width:6;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Arrow1Sstart);marker-end:url(#Arrow1Send)" />
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         x="247.0766"
+         y="159.04564"
+         id="text7677"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan7679"
+           x="247.0766"
+           y="159.04564"
+           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono">BI-</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text7681"
+         y="175.04564"
+         x="245.63959"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         xml:space="preserve"><tspan
+           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
+           y="175.04564"
+           x="245.63959"
+           id="tspan7683"
+           sodipodi:role="line">DIR</tspan></text>
+    </g>
+    <path
+       transform="translate(164.99667,130.30968)"
+       d="m 417.85715,105.57647 a 17.5,17.5 0 1 1 -35,0 17.5,17.5 0 1 1 35,0 z"
+       sodipodi:ry="17.5"
+       sodipodi:rx="17.5"
+       sodipodi:cy="105.57647"
+       sodipodi:cx="400.35715"
+       id="path7720"
+       style="fill:none;stroke:#000000;stroke-width:4;stroke-miterlimit:4;stroke-dasharray:none;marker-mid:url(#DotS)"
+       sodipodi:type="arc" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="538.19781"
+       y="289.10043"
+       id="text7722"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan7724"
+         x="538.19781"
+         y="289.10043"
+         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono">SPEED</tspan></text>
+    <path
+       sodipodi:type="arc"
+       style="fill:none;stroke:#000000;stroke-width:4;stroke-miterlimit:4;stroke-dasharray:none;marker-mid:url(#DotS)"
+       id="path7726"
+       sodipodi:cx="400.35715"
+       sodipodi:cy="105.57647"
+       sodipodi:rx="17.5"
+       sodipodi:ry="17.5"
+       d="m 417.85715,105.57647 a 17.5,17.5 0 1 1 -35,0 17.5,17.5 0 1 1 35,0 z"
+       transform="translate(249.36968,130.30968)" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text7728"
+       y="289.10043"
+       x="617.20947"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       xml:space="preserve"><tspan
+         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
+         y="289.10043"
+         x="617.20947"
+         id="tspan7730"
+         sodipodi:role="line">TARGET</tspan></text>
+    <path
+       inkscape:connector-curvature="0"
+       id="path7732"
+       d="m 564.98961,235.65385 17.29886,17.29886"
+       style="fill:none;stroke:#ff0000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       transform="matrix(1.7804878,0,0,1.7804878,-149.04203,50.68276)"
+       d="m 403.80849,104.01834 a 2.588516,2.588516 0 1 1 -5.17704,0 2.588516,2.588516 0 1 1 5.17704,0 z"
+       sodipodi:ry="2.588516"
+       sodipodi:rx="2.588516"
+       sodipodi:cy="104.01834"
+       sodipodi:cx="401.21997"
+       id="path7734"
+       style="fill:#ff0000;stroke:none"
+       sodipodi:type="arc" />
+    <path
+       style="fill:none;stroke:#ff0000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 650.42906,235.09557 17.29886,-17.29886"
+       id="path7736"
+       inkscape:connector-curvature="0" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#ff0000;stroke:none"
+       id="path7738"
+       sodipodi:cx="401.21997"
+       sodipodi:cy="104.01834"
+       sodipodi:rx="2.588516"
+       sodipodi:ry="2.588516"
+       d="m 403.80849,104.01834 a 2.588516,2.588516 0 1 1 -5.17704,0 2.588516,2.588516 0 1 1 5.17704,0 z"
+       transform="matrix(1.7804878,0,0,1.7804878,-64.669033,50.68276)" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text7740"
+       y="304.81473"
+       x="538.19781"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       xml:space="preserve"><tspan
+         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#999999;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
+         y="304.81473"
+         x="538.19781"
+         id="tspan7742"
+         sodipodi:role="line">225PXS</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="619.35156"
+       y="304.81473"
+       id="text7744"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan7746"
+         x="619.35156"
+         y="304.81473"
+         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#999999;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono">12NDS</tspan></text>
+    <g
+       transform="translate(680.84282,-6.0609146)"
+       id="g7748"
+       inkscape:export-filename="/home/rmo/src/connectomusic/saturate_on.png"
+       inkscape:export-xdpi="68.550003"
+       inkscape:export-ydpi="68.550003">
+      <rect
+         ry="12.857142"
+         rx="12.85714"
+         y="206.04897"
+         x="16.012283"
+         height="47.738201"
+         width="103.25453"
+         id="rect7750"
+         style="fill:#00ff00;stroke:#000000;stroke-width:3.99999976" />
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
+         x="24.287498"
+         y="236.47031"
+         id="text7752"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan7754"
+           x="24.287498"
+           y="236.47031"
+           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono;fill:#ffffff">SATURATE</tspan></text>
+    </g>
+    <g
+       transform="translate(557.60421,52.527932)"
+       id="g7756"
+       inkscape:export-filename="/home/rmo/src/connectomusic/panic_on.png"
+       inkscape:export-xdpi="68.550003"
+       inkscape:export-ydpi="68.550003">
+      <rect
+         style="fill:#ff0000;stroke:#000000;stroke-width:3.99999976"
+         id="rect7758"
+         width="103.25453"
+         height="47.738201"
+         x="137.23059"
+         y="206.04897"
+         rx="12.85714"
+         ry="12.857142" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text7760"
+         y="236.47031"
+         x="161.62054"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans"
+         xml:space="preserve"><tspan
+           style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono;fill:#ffffff"
+           y="236.47031"
+           x="161.62054"
+           id="tspan7762"
+           sodipodi:role="line">PANIC</tspan></text>
+    </g>
+    <text
+       sodipodi:linespacing="125%"
+       id="text7767"
+       y="11.979203"
+       x="9.0809355"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       xml:space="preserve"><tspan
+         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
+         y="11.979203"
+         x="9.0809355"
+         id="tspan7769"
+         sodipodi:role="line">NET</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="92.923599"
+       y="11.979203"
+       id="text7787"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan7789"
+         x="92.923599"
+         y="11.979203"
+         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono">UP</tspan></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text7791"
+       y="11.979203"
+       x="160.60382"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       xml:space="preserve"><tspan
+         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
+         y="11.979203"
+         x="160.60382"
+         id="tspan7793"
+         sodipodi:role="line">DOWN</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="231.3145"
+       y="11.979203"
+       id="text7795"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan7797"
+         x="231.3145"
+         y="11.979203"
+         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono">BIDIR</tspan></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text7799"
+       y="11.979203"
+       x="322.22821"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       xml:space="preserve"><tspan
+         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
+         y="11.979203"
+         x="322.22821"
+         id="tspan7801"
+         sodipodi:role="line">BURNBRIDGES</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="469.71048"
+       y="11.979203"
+       id="text7803"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan7805"
+         x="469.71048"
+         y="11.979203"
+         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono">SPEED</tspan></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text7807"
+       y="11.979203"
+       x="553.55316"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       xml:space="preserve"><tspan
+         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
+         y="11.979203"
+         x="553.55316"
+         id="tspan7809"
+         sodipodi:role="line">TARGET</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="651.53796"
+       y="11.979203"
+       id="text7811"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan7813"
+         x="651.53796"
+         y="11.979203"
+         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono">SATURATE</tspan></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text7815"
+       y="31.172102"
+       x="651.53796"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       xml:space="preserve"><tspan
+         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
+         y="31.172102"
+         x="651.53796"
+         id="tspan7817"
+         sodipodi:role="line">PANIC</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="-96.985069"
+       y="269.56812"
+       id="text7819"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan7821"
+         x="-96.985069"
+         y="269.56812"
+         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono">_ON</tspan></text>
   </g>
 </svg>
