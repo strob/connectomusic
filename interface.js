@@ -4,10 +4,6 @@ var TOOLBAR = function(graph) {
     this.$el = $("<div>", {id: "toolbar"});
 
     this.g.ontrigger = function(nid) {
-        if(that.LIVE) {
-            console.log("send", nid);
-            that.LIVE.send(JSON.stringify({type: "trigger", nid: nid}));
-        }
     }
 
     var bar = [
@@ -27,9 +23,6 @@ var TOOLBAR = function(graph) {
 
         {type: "buttongroup",
          buttons: ["saturate", "panic"]},
-
-        {type: "toggle",
-         name: "net"}
     ];
 
     var icon = function(name) {
@@ -79,11 +72,6 @@ var TOOLBAR = function(graph) {
                     .mouseout(function() {this.src = icon(button);})
                     .click(function() {
                         console.log(button);
-
-                        if(that.LIVE) {
-                            that.LIVE.send(JSON.stringify({type: "press",
-                                                           button: button}));
-                        }
 
                         if(that["on"+button]) {
                             that["on"+button]();
@@ -160,10 +148,6 @@ TOOLBAR.prototype.set = function(k, v, nobubble) {
     if(this["on"+k]) {
         this["on"+k](v);
     }
-
-    if(this.LIVE && !nobubble && k != "net") {
-        this.LIVE.send(JSON.stringify({type: "set", key: k, value: v}));
-    }
 };
 TOOLBAR.prototype.toggle = function(k) {
     this.set(k, !this.g.params[k]);
@@ -181,48 +165,6 @@ TOOLBAR.prototype.onmode = function(v) {
     // XXX: not always!
     this.g.clearburn();
     this.g.compute_edges();
-};
-TOOLBAR.prototype.onnet = function(net) {
-    var that = this;
-    if(net) {
-        var url = "ws://" + window.location.hostname + ":8124";
-        this.LIVE = new WebSocket(url);
-        this.LIVE.onmessage = function(msg) {
-            // console.log("MSG", msg);
-            var msg = JSON.parse(msg.data);
-            if(msg.type === "trigger") {
-                // simulate graph click
-                console.log("recv'd click", msg.nid, that.g.nodes[msg.nid]);
-                that.g.trigger(that.g.nodes[msg.nid]);
-            }
-            else if(msg.type === "press") {
-                console.log("recv'd button", msg.button);
-                that["on"+msg.button]();
-            }
-            else if(msg.type ==="set") {
-                console.log("recv'd param", msg.key, msg.value);
-                that.set(msg.key, msg.value, true);
-            }
-            else if(msg.type === "reset") {
-                console.log("reset from server", msg);
-                for(var key in msg.params) {
-                    that.set(key, msg.params[key], true);
-                }
-            }
-            else {
-                console.log("unknown message", msg);
-            }
-        }
-    }
-    else {
-        // XXX: how to properly disconnect?
-        console.log("LIVE", this.LIVE);
-        this.LIVE.close();
-        this.LIVE = undefined;
-    }
-
-    this.$el.find(".toggle")
-        .attr("src", net ? this.icon_on("net") : this.icon("net"));
 };
 TOOLBAR.prototype.onsaturate = function() {
     for(var i=0; i< (this.g.params.target * this.g.TARGET_MAX); i++) {
