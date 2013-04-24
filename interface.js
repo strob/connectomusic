@@ -268,3 +268,38 @@ TOOLBAR.prototype.onspeed = function(val) {
 TOOLBAR.prototype.ontarget = function(val) {
     this.turnKnob("target", val);
 };
+
+
+var SOUNDS = function(N) {
+    var that = this;
+    this.$el = $("<div>", {id: "sounds"});
+    this.N = N;                 // number of sounds
+
+    this.soundmap = {};         // num -> [sound]
+    this.soundvizmap = {};      // num -> $soundlist
+
+    for(var i=0; i<N; i++) {
+        // Wrap in a closure so that anonymous functions have access
+        // to the index
+        (function(num) {
+            var $soundlist = $("<ul>")
+                .addClass("slist");
+            that.soundvizmap[num] = $soundlist;
+            var $s = $("<div>")
+                .addClass("sound")
+                .appendTo(that.$el)
+                .append($("<a>", {href: "#"})
+                        .addClass("name")
+                        .text(""+(num))
+                        .click(function() {
+                            console.log("click on", num);
+                        }))
+                .append($("<input>", {type: "file"})
+                        .addClass("upload")
+                        .change(function(ev) {
+                            console.log("file event", ev);
+                        }))
+                .append($soundlist);
+        })(i+1);
+    }
+};

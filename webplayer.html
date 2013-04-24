@@ -2,6 +2,7 @@
   <head>
     <title>instrument</title>
     <script src="jquery.js"></script>
+
     <script src="instrument.js"></script>
     <script src="interface.js"></script>
     <style>
@@ -36,18 +37,28 @@ body {
   margin: 10px;
   cursor: ns-resize;
 }
+
+#sounds {
+  position: fixed;
+  bottom: 35px;
+  right: 10px;
+  height: 300px;
+  overflow: auto;
+}
     </style>
   </head>
   <body>
     <script>
         // STARTUP
-var g;
+var g,t,s;
 $.getJSON('graph.json', {}, function(res) {
     g = new GRAPH(res);
     t = new TOOLBAR(g);
+    s = new SOUNDS(19);
     $("body")
         .append(g.$el)
-        .append(t.$el);
+        .append(t.$el)
+        .append(s.$el);
 });
 
     </script>
