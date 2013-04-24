@@ -29,8 +29,10 @@ EdgeState.prototype.get_position = function() {
     });
 };
 
- var GRAPH = function(spec) {
+var GRAPH = function(spec, snds) {
     var that = this;
+
+    this.snds = snds;
 
      // user-controllable parameters
      this.params = {

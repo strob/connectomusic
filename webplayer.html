@@ -52,9 +52,9 @@ body {
         // STARTUP
 var g,t,s;
 $.getJSON('graph.json', {}, function(res) {
-    g = new GRAPH(res);
-    t = new TOOLBAR(g);
     s = new SOUNDS(19);
+    g = new GRAPH(res, s);
+    t = new TOOLBAR(g);
     $("body")
         .append(g.$el)
         .append(t.$el)

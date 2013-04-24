@@ -303,3 +303,20 @@ var SOUNDS = function(N) {
         })(i+1);
     }
 };
+SOUNDS.prototype.add = function(nid, name, filepath) {
+    var that = this;
+    this.soundmap[nid] = (this.soundmap[nid]||[]) + [filepath];
+    this.soundvizmap[nid]
+        .append($("<li>")
+                .text(filename)
+                .click(function() {
+                    // delete
+                    this.remove();
+                    that.remove(nid, filepath);
+                }));
+};
+SOUNDS.prototype.remove = function(nid, filepath) {
+    // remove from map (*not* from viz)
+    var idx = this.soundmap[nid].indexOf(filepath);
+    return this.soundmap[nid].splice(idx,1);
+};
