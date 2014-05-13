@@ -95,6 +95,40 @@ def tune():
     current_number = (current_number + 1) % 19
     print 'selected', current_number
 
+def keyboard_in(type, key):
+    if type == 'key-release':
+        return
+    else:
+        print key, type
+
+    if key == 'x':
+        p.select_by_coords(CENTER)
+    elif key == 'c':
+        p.select_by_coords(CORNERS)
+    elif key == 'b':
+        p.burntoggle();
+    elif key == 'i':
+        p.bidirectionaltoggle();
+    elif key == 'f':
+        p.flip();
+    elif key == 's':
+        p.set_sound_version(2)
+
+    elif key == 'q':
+        inhibit()
+    elif key == 'a':
+        saturate()
+
+    elif key in '13579':
+        p._speed = pow(int(key), 2) * 3
+
+    elif key in '02468':
+        p._target = pow(max(0, int(key)+1), 2) * 3
+
+    elif key == 'space':
+        p.trigger_selection()
+        
+
 def midi_in(*a):
     print a
     if a[1] == 20:
