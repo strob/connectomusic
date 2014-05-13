@@ -33,6 +33,7 @@ var GRAPH = function(spec, snds) {
     var that = this;
 
     this.snds = snds;
+    this.sources = {};          // node_id -> Source (allows for panic)
 
      // user-controllable parameters
      this.params = {
@@ -151,7 +152,7 @@ GRAPH.prototype.trigger = function(node) {
     var that = this;
 
     // Only trigger if we're below target
-    if(this.nplaying >= (this.TARGET_MAX * this.params.target) || (node.id in this._nodeburn)) {
+    if(this.nplaying >= (this.TARGET_MAX * this.params.target) || (node.id in this._nodeburn) || (node.id in this.sources)) {
         return;
     }
     this.nplaying += 1;
@@ -162,16 +163,29 @@ GRAPH.prototype.trigger = function(node) {
     $node.addClass('playing');
 
     if(a) {
-        console.log("got sound", node.nedges, a);
-        a.ontimeupdate = function() {
-            var percent = a.currentTime / a.duration;
-            $node
-                .css({width: 10*(1-percent),
-                      height:10*(1-percent)})
-                .offset({left: node.pt[0]-5*(1-percent),
-                         top: node.pt[1]-5*(1-percent)});
-        };
-        a.onended = function() {    // XXX: 'bind'/'unbind'?
+        // console.log("got sound", node.nedges, a);
+
+        // Trigger through WebAudioAPI
+        var source = myAudioContext.createBufferSource(); // creates a sound source
+        source.buffer = a;
+        source.connect(myAudioContext.destination);
+        source.start(0);
+
+        that.sources[node.id] = source;
+
+        // XXX: Show playback progress!
+        // 
+        // a.ontimeupdate = function() {
+        //     var percent = a.currentTime / a.duration;
+        //     $node
+        //         .css({width: 10*(1-percent),
+        //               height:10*(1-percent)})
+        //         .offset({left: node.pt[0]-5*(1-percent),
+        //                  top: node.pt[1]-5*(1-percent)});
+        // };
+        source.onended = function() {    // XXX: 'bind'/'unbind'?
+            delete that.sources[node.id];
+
             that.nplaying -= 1;
 
             if(that.params.mode === "burnbridges") {
@@ -190,7 +204,7 @@ GRAPH.prototype.trigger = function(node) {
                 }
             });
         };
-        a.play();
+        // a.play();
     }
     else {
         that.nplaying -= 1;
@@ -256,36 +270,6 @@ GRAPH.prototype.draw_base = function() {
     }
     ctx.stroke();
 };
-// GRAPH.prototype.load_sounds = function() {
-//     var that = this;
-//     $.getJSON(this.params.sounds + '.json', {}, function(snd) {
-//         that.set_sounds(snd);
-//     });
-// };
-// GRAPH.prototype.set_sounds = function(snds) {
-//     this.sounds = {};
-//     for (var key in snds) {
-//         this.sounds[key] = snds[key].map(function(x) {
-//             var a = new Audio(x + '.ogg'); // XXX: or mp3!
-//             a.load();
-//             a.onload = function() {
-//                 // XXX: Update visualization (?)
-//                 console.log("Loaded!", x);
-//             }
-//             return a;
-//         });
-//     }
-// };
-// GRAPH.prototype.get_sound = function(n) {
-//     if(!(n in this.sounds)) {
-//         console.log('no sound for n', n);
-//         n = 19;
-//     }
-//     var out = this.sounds[n][0];
-//     this.sounds[n] = this.sounds[n].slice(1).concat([out]);
-//     return out;
-// };
-
 GRAPH.prototype.get_sound = function(n) {
     if(!this.snds.soundmap[n]) {
         console.log("no sound for", n);
@@ -293,7 +277,8 @@ GRAPH.prototype.get_sound = function(n) {
     }
     var out = this.snds.soundmap[n][0];
     this.snds.soundmap[n] = this.snds.soundmap[n].slice(1).concat([out]);
-    return out.get_sound();
+    //return out.get_sound();
+    return out;
 };
 
         // UTILITY

@@ -174,11 +174,16 @@ TOOLBAR.prototype.onsaturate = function() {
 };
 TOOLBAR.prototype.onpanic = function() {
     this.g.state_edges = [];
-    for(var key in this.g.sounds) {
-        this.g.sounds[key].forEach(function(a) {
-            a.pause();
-            a.currentTime = 0.0;
-        });
+    // for(var key in this.g.sounds) {
+    //     this.g.sounds[key].forEach(function(a) {
+    //         a.pause();
+    //         a.currentTime = 0.0;
+    //     });
+    // }
+    for(var key in this.g.sources) {
+        this.g.sources[key].onended = null;
+        this.g.sources[key].stop(0);
+        delete this.g.sources[key];
     }
     $(".node")
         .removeClass("playing");
@@ -211,73 +216,12 @@ TOOLBAR.prototype.ontarget = function(val) {
     this.turnKnob("target", val);
 };
 
-
 var SOUNDS = function(N) {
     var that = this;
-    this.$el = $("<div>", {id: "sounds"});
     this.N = N;                 // number of sounds
 
     this.soundmap = {};         // num -> [sound]
-    this.soundvizmap = {};      // num -> $soundlist
-
-    for(var i=0; i<N; i++) {
-        // Wrap in a closure so that anonymous functions have access
-        // to the index
-        (function(num) {
-            var $soundlist = $("<ul>")
-                .addClass("slist");
-            that.soundvizmap[num] = $soundlist;
-            var $s = $("<div>")
-                .addClass("sound")
-                .appendTo(that.$el)
-                .append($("<a>", {href: "#"})
-                        .addClass("name")
-                        .text(""+(num))
-                        .click(function() {
-                            console.log("click on", num);
-                        }))
-                .append($("<input>", {type: "file"})
-                        .addClass("upload")
-                        .change(function(ev) {
-                            console.log("file event", ev);
-
-                            for(var i=0; i<ev.target.files.length; i++) {
-                                (function(file) {
-                                    var reader = new FileReader();
-                                    reader.onload = function(e) {
-                                        var samp = new Sample({
-                                            name: file.name,
-                                            num: num});
-                                        samp.add_sound(e.target.result);
-                                        console.log("saving file", file);
-                                        samp.save();
-                                        that.add(samp);
-                                    };
-                                    reader.readAsDataURL(file);
-                                })(ev.target.files[i]);
-                            }
-                        }))
-                .append($soundlist);
-        })(i+1);
-    }
 };
-SOUNDS.prototype.add = function(snd) {
-    var that = this;
-    var nid = snd.num;
-    var filepath = snd.get_path();
-    this.soundmap[nid] = (this.soundmap[nid]||[]).concat([snd]);
-    this.soundvizmap[nid]
-        .append($("<li>")
-                .text(snd.name)
-                .click(function() {
-                    // delete
-                    this.remove();
-                    that.remove(snd);
-                }));
-};
-SOUNDS.prototype.remove = function(snd) {
-    // remove from map (*not* from viz)
-    var idx = this.soundmap[nid].indexOf(snd);
-    snd.deleteme();
-    return this.soundmap[nid].splice(idx,1);
-};
+SOUNDS.prototype.add_buffer = function(nid, buf) {
+    this.soundmap[nid] = (this.soundmap[nid] || []).concat([buf]);
+}
