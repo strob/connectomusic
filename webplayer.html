@@ -2,7 +2,7 @@
   <head>
     <title>instrument</title>
     <script src="jquery.js"></script>
-
+    <script src="i3.js"></script>
     <script src="instrument.js"></script>
     <script src="interface.js"></script>
     <style>
@@ -42,7 +42,7 @@ body {
   position: fixed;
   bottom: 35px;
   right: 10px;
-  height: 300px;
+  height: 700px;
   overflow: auto;
 }
     </style>
@@ -50,15 +50,60 @@ body {
   <body>
     <script>
         // STARTUP
-var g,t,s;
+var g,t;
+var snds;
+var ego = new i3.Ego();
+var Sample = function(doc) {
+    i3.SuperModel.call(this, ego, doc);
+    this.type = "sample";
+    this.name = this.name || "[unnamed sample]";
+    this.num = this.num || 7;
+    this.attachname = this.attachname || "sample.wav";
+    this.loop = this.loop || false;
+};
+Sample.prototype = new i3.SuperModel;
+Sample.prototype.add_sound = function(dataurl) {
+    var content_type = dataurl.slice(dataurl.indexOf(":")+1, dataurl.indexOf(";"))
+    var ext = content_type.split("/")[1];
+    data = dataurl.slice(dataurl.indexOf(",") + 1);
+
+    this.attachname = "sample." + ext;
+    this._attachments = {};
+    this._attachments[this.attachname] = {
+            content_type: content_type,
+            data: data};
+
+    this.__snd = new Audio(dataurl);
+    this.__snd.load();
+};
+Sample.prototype.get_path = function() {
+    return this.__ego.db + this._id + "/" + this.attachname;
+};
+Sample.prototype.get_sound = function() {
+    if(!this.__snd) {
+        this.__snd = new Audio(this.get_path());
+        this.__snd.load();
+    }
+    return this.__snd;
+};
+
+ego.oncreate = function(doc) {
+    if(doc.type === "sample"){
+        var samp = new Sample(doc);
+        samp.get_sound();       // preload
+        snds.add(samp);
+    }
+};
 $.getJSON('graph.json', {}, function(res) {
-    s = new SOUNDS(19);
-    g = new GRAPH(res, s);
+    snds = new SOUNDS(19);
+    g = new GRAPH(res, snds);
     t = new TOOLBAR(g);
     $("body")
         .append(g.$el)
         .append(t.$el)
-        .append(s.$el);
+        .append(snds.$el);
+
+    ego.track();
 });
 
     </script>

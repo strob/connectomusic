@@ -66,7 +66,7 @@ var GRAPH = function(spec, snds) {
      this.nplaying = 0;
 
      this.clearburn();
-     this.load_sounds();
+     // this.load_sounds();
 
      // Start a timer to manage edges
      var T = 0.1;               // seconds
@@ -157,17 +157,42 @@ GRAPH.prototype.trigger = function(node) {
     this.nplaying += 1;
 
     var a = that.get_sound(node.nedges);
+
     var $node = that.$nodes[node.id];
     $node.addClass('playing');
-    a.ontimeupdate = function() {
-        var percent = a.currentTime / a.duration;
-        $node
-            .css({width: 10*(1-percent),
-                  height:10*(1-percent)})
-            .offset({left: node.pt[0]-5*(1-percent),
-                     top: node.pt[1]-5*(1-percent)});
-    };
-    a.onended = function() {    // XXX: 'bind'/'unbind'?
+
+    if(a) {
+        console.log("got sound", node.nedges, a);
+        a.ontimeupdate = function() {
+            var percent = a.currentTime / a.duration;
+            $node
+                .css({width: 10*(1-percent),
+                      height:10*(1-percent)})
+                .offset({left: node.pt[0]-5*(1-percent),
+                         top: node.pt[1]-5*(1-percent)});
+        };
+        a.onended = function() {    // XXX: 'bind'/'unbind'?
+            that.nplaying -= 1;
+
+            if(that.params.mode === "burnbridges") {
+                that._nodeburn[node.id] = node;
+            }
+
+            $node.removeClass('playing')
+                .css({width: 10,
+                      height:10})
+                .offset({left: node.pt[0]-5,
+                         top: node.pt[1]-5});
+
+            (that.edges[node.id] || []).forEach(function(edge) {
+                if(!(edge.id in that._edgeburn)) {
+                    that.state_edges.push(new EdgeState(edge));
+                }
+            });
+        };
+        a.play();
+    }
+    else {
         that.nplaying -= 1;
 
         if(that.params.mode === "burnbridges") {
@@ -185,9 +210,7 @@ GRAPH.prototype.trigger = function(node) {
                 that.state_edges.push(new EdgeState(edge));
             }
         });
-    };
-    a.play();
-
+    }
 };
 GRAPH.prototype.compute_edges = function() {
     var that = this;
@@ -233,34 +256,44 @@ GRAPH.prototype.draw_base = function() {
     }
     ctx.stroke();
 };
-GRAPH.prototype.load_sounds = function() {
-    var that = this;
-    $.getJSON(this.params.sounds + '.json', {}, function(snd) {
-        that.set_sounds(snd);
-    });
-};
-GRAPH.prototype.set_sounds = function(snds) {
-    this.sounds = {};
-    for (var key in snds) {
-        this.sounds[key] = snds[key].map(function(x) {
-            var a = new Audio(x + '.ogg'); // XXX: or mp3!
-            a.load();
-            a.onload = function() {
-                // XXX: Update visualization (?)
-                console.log("Loaded!", x);
-            }
-            return a;
-        });
-    }
-};
+// GRAPH.prototype.load_sounds = function() {
+//     var that = this;
+//     $.getJSON(this.params.sounds + '.json', {}, function(snd) {
+//         that.set_sounds(snd);
+//     });
+// };
+// GRAPH.prototype.set_sounds = function(snds) {
+//     this.sounds = {};
+//     for (var key in snds) {
+//         this.sounds[key] = snds[key].map(function(x) {
+//             var a = new Audio(x + '.ogg'); // XXX: or mp3!
+//             a.load();
+//             a.onload = function() {
+//                 // XXX: Update visualization (?)
+//                 console.log("Loaded!", x);
+//             }
+//             return a;
+//         });
+//     }
+// };
+// GRAPH.prototype.get_sound = function(n) {
+//     if(!(n in this.sounds)) {
+//         console.log('no sound for n', n);
+//         n = 19;
+//     }
+//     var out = this.sounds[n][0];
+//     this.sounds[n] = this.sounds[n].slice(1).concat([out]);
+//     return out;
+// };
+
 GRAPH.prototype.get_sound = function(n) {
-    if(!(n in this.sounds)) {
-        console.log('no sound for n', n);
-        n = 19;
+    if(!this.snds.soundmap[n]) {
+        console.log("no sound for", n);
+        return;
     }
-    var out = this.sounds[n][0];
-    this.sounds[n] = this.sounds[n].slice(1).concat([out]);
-    return out;
+    var out = this.snds.soundmap[n][0];
+    this.snds.soundmap[n] = this.snds.soundmap[n].slice(1).concat([out]);
+    return out.get_sound();
 };
 
         // UTILITY

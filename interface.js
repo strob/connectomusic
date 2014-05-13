@@ -240,25 +240,44 @@ var SOUNDS = function(N) {
                         .addClass("upload")
                         .change(function(ev) {
                             console.log("file event", ev);
+
+                            for(var i=0; i<ev.target.files.length; i++) {
+                                (function(file) {
+                                    var reader = new FileReader();
+                                    reader.onload = function(e) {
+                                        var samp = new Sample({
+                                            name: file.name,
+                                            num: num});
+                                        samp.add_sound(e.target.result);
+                                        console.log("saving file", file);
+                                        samp.save();
+                                        that.add(samp);
+                                    };
+                                    reader.readAsDataURL(file);
+                                })(ev.target.files[i]);
+                            }
                         }))
                 .append($soundlist);
         })(i+1);
     }
 };
-SOUNDS.prototype.add = function(nid, name, filepath) {
+SOUNDS.prototype.add = function(snd) {
     var that = this;
-    this.soundmap[nid] = (this.soundmap[nid]||[]) + [filepath];
+    var nid = snd.num;
+    var filepath = snd.get_path();
+    this.soundmap[nid] = (this.soundmap[nid]||[]).concat([snd]);
     this.soundvizmap[nid]
         .append($("<li>")
-                .text(filename)
+                .text(snd.name)
                 .click(function() {
                     // delete
                     this.remove();
-                    that.remove(nid, filepath);
+                    that.remove(snd);
                 }));
 };
-SOUNDS.prototype.remove = function(nid, filepath) {
+SOUNDS.prototype.remove = function(snd) {
     // remove from map (*not* from viz)
-    var idx = this.soundmap[nid].indexOf(filepath);
+    var idx = this.soundmap[nid].indexOf(snd);
+    snd.deleteme();
     return this.soundmap[nid].splice(idx,1);
 };
