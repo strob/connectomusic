@@ -14,12 +14,12 @@ var TOOLBAR = function(graph) {
         {type: "knob",
          name: "speed",
          min: 0,
-         max: 250},
+         max: 50},
 
         {type: "knob",
          name: "target",
          min: 0,
-         max: 100},
+         max: 20},
 
         {type: "buttongroup",
          buttons: ["saturate", "panic"]},

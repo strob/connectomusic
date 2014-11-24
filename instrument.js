@@ -1,4 +1,3 @@
-
 var EDGE = function(a, b, id) {
     this.a = a;
     this.b = b;
@@ -43,24 +42,41 @@ var GRAPH = function(spec, snds) {
          mode: "down",
          net: false
      };
-     this.SPEED_MAX = 250;
-     this.TARGET_MAX = 100;
+     this.SPEED_MAX = 50;
+     this.TARGET_MAX = 20;
 
     this.nodes = spec.nodes;
     this._edgespec = spec.edges;
 
+    // W & H are the effective size of the graph.
+    // However, due to diferent screen sizes and backing scales, the
+    // actual size of the canvas may be considerably different.
     this.W = 1200;
     this.H = 1240;
+
+    // Use document w/h to compute a display size
+    var max_display_w = document.body.clientWidth - 300; // 300 is the sidebar size.
+    var max_display_h = document.body.clientHeight - 20; // 20 is a rough symmetry
+    var display_ratio = Math.min(1, Math.min(
+        max_display_w / this.W,
+        max_display_h / this.H));
+    this.px_ratio = display_ratio * BACKING_SCALE;
+    this.VIEW_W = this.W * display_ratio;
+    this.VIEW_H = this.H * display_ratio;
 
     this.$el = $("<div>");
 
     this.$canvas = $("<canvas>", {id: "base"})
-        .attr({width: this.W,
-              height:this.H})
+        .attr({width: this.W * this.px_ratio,
+              height:this.H * this.px_ratio})
+        .css({width: this.VIEW_W,
+                height:this.VIEW_H})
         .appendTo(this.$el);
     this.$overlay = $("<canvas>", {id: "overlay"})
-        .attr({width: this.W,
-               height:this.H})
+        .attr({width: this.W * this.px_ratio,
+               height:this.H * this.px_ratio})
+        .css({width: this.VIEW_W,
+                height:this.VIEW_H})
          .appendTo(this.$el);
 
     this.state_edges = [];
@@ -74,8 +90,8 @@ var GRAPH = function(spec, snds) {
      this.edgeinterval = window.setInterval(function() {
          // Clear overlays
          that.$overlay
-             .attr({width: that.W,
-                    height:that.H})
+             .attr({width: that.W * that.px_ratio,
+                    height:that.H * that.px_ratio})
 
          // ...and update
          var ctx = that.$overlay[0].getContext('2d');
@@ -86,8 +102,8 @@ var GRAPH = function(spec, snds) {
             ctx.beginPath();
             for(var key in that._edgeburn) {
                 var e = that._edgeburn[key];
-                ctx.moveTo(e.a.pt[0], e.a.pt[1]);
-                ctx.lineTo(e.b.pt[0], e.b.pt[1]);
+                ctx.moveTo(e.a.pt[0]*that.px_ratio, e.a.pt[1]*that.px_ratio);
+                ctx.lineTo(e.b.pt[0]*that.px_ratio, e.b.pt[1]*that.px_ratio);
             }
             ctx.stroke();
         }
@@ -108,9 +124,9 @@ var GRAPH = function(spec, snds) {
 
              }
              else {
-                 ctx.moveTo(edgestate.edge.a.pt[0], edgestate.edge.a.pt[1]);
+                 ctx.moveTo(edgestate.edge.a.pt[0]*that.px_ratio, edgestate.edge.a.pt[1]*that.px_ratio);
                  var pos = edgestate.get_position();
-                 ctx.lineTo(pos[0], pos[1]);
+                 ctx.lineTo(pos[0]*that.px_ratio, pos[1]*that.px_ratio);
              }
          });
 
@@ -126,8 +142,8 @@ var GRAPH = function(spec, snds) {
 
         var $node = $("<div>")
             .addClass('node')
-            .offset({left: node.pt[0]-5,
-                     top: node.pt[1]-5})
+            .offset({left: node.pt[0]*that.px_ratio-5,
+                     top: node.pt[1]*that.px_ratio-5})
             .click(function() {
                 that.trigger(node);
                 that.ontrigger(idx);
@@ -195,8 +211,8 @@ GRAPH.prototype.trigger = function(node) {
             $node.removeClass('playing')
                 .css({width: 10,
                       height:10})
-                .offset({left: node.pt[0]-5,
-                         top: node.pt[1]-5});
+                .offset({left: node.pt[0]*that.px_ratio-5,
+                         top: node.pt[1]*that.px_ratio-5});
 
             (that.edges[node.id] || []).forEach(function(edge) {
                 if(!(edge.id in that._edgeburn)) {
@@ -216,8 +232,8 @@ GRAPH.prototype.trigger = function(node) {
         $node.removeClass('playing')
             .css({width: 10,
                   height:10})
-            .offset({left: node.pt[0]-5,
-                     top: node.pt[1]-5});
+            .offset({left: node.pt[0]*that.px_ratio-5,
+                     top: node.pt[1]*that.px_ratio-5});
 
         (that.edges[node.id] || []).forEach(function(edge) {
             if(!(edge.id in that._edgeburn)) {
@@ -264,8 +280,8 @@ GRAPH.prototype.draw_base = function() {
         this.edges[k].forEach(function(edge) {
             var a = edge.a;
             var b = edge.b;
-            ctx.moveTo(a.pt[0], a.pt[1]);
-            ctx.lineTo(b.pt[0], b.pt[1]);
+            ctx.moveTo(a.pt[0]*that.px_ratio, a.pt[1]*that.px_ratio);
+            ctx.lineTo(b.pt[0]*that.px_ratio, b.pt[1]*that.px_ratio);
         })
     }
     ctx.stroke();

@@ -1,8 +1,7 @@
-<html>
+<html manifest="webplayer.manifest">
   <head>
     <title>instrument</title>
     <script src="base64-binary.js"></script>
-    <script src="jquery.js"></script>
     <script src="jquery.js"></script>
     <script src="instrument.js"></script>
     <script src="interface.js"></script>
@@ -26,9 +25,11 @@ body {
   position: absolute;
 }
 #toolbar {
-  position: fixed;
+  position: absolute;
   top: 35px;
   right: 10px;
+  width: 300px;
+  z-index: 100;
 }
 .button, .toggle, .option {
   cursor: pointer;
@@ -43,6 +44,14 @@ body {
   <body>
     <script>
 // STARTUP
+
+// Compute backing scale for high-density displays.
+var BACKING_SCALE = 1;
+if ('devicePixelRatio' in window) {
+    if (window.devicePixelRatio > 1) {
+        BACKING_SCALE = window.devicePixelRatio;
+    }
+}
 
 // Initialize audio context
 var myAudioContext;
@@ -101,18 +110,6 @@ function load(name) {
 }
 
 home();
-
-// $.getJSON('graph.json', {}, function(res) {
-//     snds = new SOUNDS(19);
-//     g = new GRAPH(res, snds);
-//     t = new TOOLBAR(g);
-//     $("body")
-//         .append(g.$el)
-//         .append(t.$el);
-//         // .append(snds.$el);
-
-//     // ego.track();
-// });
 
     </script>
   </body>
