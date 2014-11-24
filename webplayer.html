@@ -1,5 +1,6 @@
-<html manifest="webplayer.manifest">
+<html>
   <head>
+    <meta charset="utf-8" />
     <title>instrument</title>
     <script src="base64-binary.js"></script>
     <script src="jquery.js"></script>
@@ -10,6 +11,7 @@ body {
   background-color: white;
   margin: 0;
   padding: 0;
+  font-family: helvetica, sans, sans-serif;
 }
 .node {
   position: absolute;
@@ -39,9 +41,52 @@ body {
   margin: 10px;
   cursor: ns-resize;
 }
+#welcome {
+  padding: 20px;
+}
     </style>
   </head>
   <body>
+
+<div id="welcome">
+
+  <div class="attribution">
+Marc Matter (voice & turntables) / Robert M Ochshorn (software
+    engineering & coding):
+    </div>
+
+    <h2>
+A Propagation Of The New Lettrist Alphabet / Une Propagation Du Nouvel
+    Alphabet Lettrique
+    </h2>
+
+    <b><i>
+-> INTERACTIVE DYNAMIC GRAPHIC SCORE VERSION</i></b><br>
+
+(<a href="http://www.discogs.com/Marc-Matter-Robert-M-Ochshorn-Untitled/release/4105959">vinyl-version on discogs</a>)<br>
+<br>
+<br>
+
+
+Sounds: Voice-Snippets using the original 19 sound letters of the Lettrist Alphabet* have been manipulated with turntablist techniques.<br>
+
+Graphic Score: drawing by Francois Norguet originally released in OU Revue** as interpreted by a graph-theoretic computer program.<br>
+
+
+-> USE BUTTONS ON THE RIGHT TO START PLAY<br>
+
+-> ALTER PARAMETERS BY CHANGING "SPEED" AND "TARGET" VALUES<br>
+
+-> DETERMINE DIRECTIONS OF THE FLOW WITH "UP" / "DOWN" AND "BI-DIRECTIONAL" / "BURN BRIDGES"<br>
+<br>
+
+
+<small>
+*(in Isidore Isou: Introduction à une nouvelle poésie et à une nouvelle musique; Paris 1947) <br>
+** Nr. 40/41, edited by Henri Chopin in 1972)
+    </small>
+  </div>
+
     <script>
 // STARTUP
 
@@ -69,7 +114,7 @@ var snds;
 var SND_OPTS = ["s0", "s1", "s2"];
 
 function home() {
-    document.body.innerHTML = "";
+    //document.body.innerHTML = "";
     SND_OPTS.forEach(function(key) {
         var $but = document.createElement("button");
         $but.innerHTML = key;
