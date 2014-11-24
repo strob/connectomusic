@@ -74,20 +74,23 @@ A Propagation Of The New Lettrist Alphabet / Une Propagation Du Nouvel
 
 (<a href="http://www.discogs.com/Marc-Matter-Robert-M-Ochshorn-Untitled/release/4105959">vinyl-version on discogs</a>)<br>
 <br>
-<br>
-
 
 Sounds: Voice-Snippets using the original 19 sound letters of the Lettrist Alphabet* have been manipulated with turntablist techniques.<br>
 
-Graphic Score: drawing by Francois Norguet originally released in OU Revue** as interpreted by a graph-theoretic computer program.<br>
+Graphic Score: drawing by Francois Norguet originally released in OU
+Revue** as interpreted by a graph-theoretic computer program.<br>
 
--> CLICK (RAW) FOR THE UNALTERED VOICE RECORDINGS*** AND (MANIPULATED) FOR THE VOICE RECORDINGS ALTERED BY TURNTABLES / MIXING<br>
+<div id="buttons"></div>
+<i>
+-> ON THIS PAGE, CLICK (RAW) FOR THE UNALTERED VOICE RECORDINGS*** AND (MANIPULATED) FOR THE VOICE RECORDINGS ALTERED BY TURNTABLES / MIXING<br>
 
--> CLICK ANYWHERE ON THE GRAPH TO START PLAYBACK<br>
+-> THEN, CLICK ANYWHERE ON THE GRAPH TO START PLAYBACK<br>
 
 -> ALTER PARAMETERS BY CHANGING "SPEED" AND "TARGET" VALUES<br>
 
--> DETERMINE DIRECTIONS OF THE FLOW WITH "UP" / "DOWN" AND "BI-DIRECTIONAL" / "BURN BRIDGES"<br>
+-> DETERMINE DIRECTIONS OF THE FLOW WITH "UP" / "DOWN" AND
+"BI-DIRECTIONAL" / "BURN BRIDGES"<br>
+</i>
 <br>
 
 
@@ -131,7 +134,7 @@ function home() {
     SND_OPTS.forEach(function(key) {
         var $but = document.createElement("button");
         $but.innerHTML = SND_NAMES[key];
-        document.body.appendChild($but);
+        $("#buttons")[0].appendChild($but);
         $but.onclick = function() {
             load(key);
         }
