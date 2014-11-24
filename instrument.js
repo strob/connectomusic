@@ -60,6 +60,7 @@ var GRAPH = function(spec, snds) {
     var display_ratio = Math.min(1, Math.min(
         max_display_w / this.W,
         max_display_h / this.H));
+    this.display_ratio = display_ratio;
     this.px_ratio = display_ratio * BACKING_SCALE;
     this.VIEW_W = this.W * display_ratio;
     this.VIEW_H = this.H * display_ratio;
@@ -142,8 +143,8 @@ var GRAPH = function(spec, snds) {
 
         var $node = $("<div>")
             .addClass('node')
-            .offset({left: node.pt[0]*that.px_ratio-5,
-                     top: node.pt[1]*that.px_ratio-5})
+            .offset({left: node.pt[0] * that.display_ratio-5,
+                     top: node.pt[1] * that.display_ratio-5})
             .click(function() {
                 that.trigger(node);
                 that.ontrigger(idx);
@@ -211,8 +212,8 @@ GRAPH.prototype.trigger = function(node) {
             $node.removeClass('playing')
                 .css({width: 10,
                       height:10})
-                .offset({left: node.pt[0]*that.px_ratio-5,
-                         top: node.pt[1]*that.px_ratio-5});
+                .offset({left: node.pt[0]*that.display_ratio-5,
+                         top: node.pt[1]*that.display_ratio-5});
 
             (that.edges[node.id] || []).forEach(function(edge) {
                 if(!(edge.id in that._edgeburn)) {
@@ -232,8 +233,8 @@ GRAPH.prototype.trigger = function(node) {
         $node.removeClass('playing')
             .css({width: 10,
                   height:10})
-            .offset({left: node.pt[0]*that.px_ratio-5,
-                     top: node.pt[1]*that.px_ratio-5});
+            .offset({left: node.pt[0]*that.display_ratio-5,
+                     top: node.pt[1]*that.display_ratio-5});
 
         (that.edges[node.id] || []).forEach(function(edge) {
             if(!(edge.id in that._edgeburn)) {
