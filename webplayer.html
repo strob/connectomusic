@@ -44,6 +44,15 @@ body {
 #welcome {
   padding: 20px;
 }
+button {
+  font-size: 300%;
+  background-color: yellow;
+  margin: 20px;
+  cursor: pointer;
+}
+button:hover {
+  background-color: cyan;
+}
     </style>
   </head>
   <body>
@@ -72,8 +81,9 @@ Sounds: Voice-Snippets using the original 19 sound letters of the Lettrist Alpha
 
 Graphic Score: drawing by Francois Norguet originally released in OU Revue** as interpreted by a graph-theoretic computer program.<br>
 
+-> CLICK (RAW) FOR THE UNALTERED VOICE RECORDINGS*** AND (MANIPULATED) FOR THE VOICE RECORDINGS ALTERED BY TURNTABLES / MIXING<br>
 
--> USE BUTTONS ON THE RIGHT TO START PLAY<br>
+-> CLICK ANYWHERE ON THE GRAPH TO START PLAYBACK<br>
 
 -> ALTER PARAMETERS BY CHANGING "SPEED" AND "TARGET" VALUES<br>
 
@@ -84,6 +94,8 @@ Graphic Score: drawing by Francois Norguet originally released in OU Revue** as 
 <small>
 *(in Isidore Isou: Introduction à une nouvelle poésie et à une nouvelle musique; Paris 1947) <br>
 ** Nr. 40/41, edited by Henri Chopin in 1972)
+<br>
+*** Recorded in 2012 by Marc Matter in Maastricht.
     </small>
   </div>
 
@@ -111,13 +123,14 @@ if ('AudioContext' in window) {
 var g,t;
 var snds;
 
-var SND_OPTS = ["s0", "s1", "s2"];
+var SND_OPTS = ["s0", "s2"];
+var SND_NAMES = {s0: "RAW", s2: "MANIPULATED"};
 
 function home() {
     //document.body.innerHTML = "";
     SND_OPTS.forEach(function(key) {
         var $but = document.createElement("button");
-        $but.innerHTML = key;
+        $but.innerHTML = SND_NAMES[key];
         document.body.appendChild($but);
         $but.onclick = function() {
             load(key);
